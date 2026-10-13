@@ -12,19 +12,33 @@
 :root{
   --bg:#0b0e14; --card:#151a24; --card2:#1d2431; --line:#2a3344;
   --text:#f4f7fb; --dim:#98a3b8;
-  --red:#ff3b3b; --yellow:#ffc21a; --green:#2ee66b; --blue:#3d8bff;
+  --red:#ff3b3b; --yellow:#ffc21a; --green:#2ee66b; --blue:#3d8bff; --orange:#ff8a2a;
+  --esc:#ffd6a0; --myc:#9fe6ff;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+input,textarea{user-select:text;-webkit-user-select:text}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Myanmar","Myanmar Text","Padauk",sans-serif;overflow-x:hidden}
 button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
 button:active{transform:scale(.98)}
 #app{min-height:100%;display:flex;flex-direction:column;padding:14px;gap:14px;max-width:1400px;margin:0 auto}
 
+/* three-language block: Spanish + Burmese BIG, English smaller */
+.lg{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;line-height:1.2;--big:clamp(22px,3.4vw,34px);--sm:clamp(14px,1.9vw,19px)}
+.lg.left{align-items:flex-start;text-align:left}
+.lg .es,.lg .my{font-weight:900;font-size:var(--big)}
+.lg .es{color:var(--esc)} .lg .my{color:var(--myc);line-height:1.5}
+.lg .en{font-style:normal;font-weight:700;font-size:var(--sm);opacity:.8;color:inherit}
+.lg.xl{--big:clamp(30px,5.2vw,50px);--sm:clamp(17px,2.4vw,24px)}
+.lg.lgx{--big:clamp(26px,4vw,40px);--sm:clamp(16px,2.2vw,22px)}
+.lg.sm{--big:clamp(17px,2.3vw,23px);--sm:14px}
+.lg.xs{--big:16px;--sm:13px}
+.bigact,.send,.cbtn,.banner,.yes,.danger,.rbtn.sel,.u{--esc:currentColor;--myc:currentColor}
+
 /* top bar */
 .top{display:flex;align-items:center;gap:14px;background:var(--card);border:2px solid var(--line);border-radius:22px;padding:12px 16px}
-.lamps{display:flex;gap:10px}
-.lamp{width:42px;height:42px;border-radius:50%;background:#222a38;border:3px solid #323c50;transition:.2s}
+.lamps{display:flex;gap:9px}
+.lamp{width:40px;height:40px;border-radius:50%;background:#222a38;border:3px solid #323c50;transition:.2s}
 .lamp.r.on{background:var(--red);border-color:#ff9a9a;box-shadow:0 0 28px 6px rgba(255,59,59,.65)}
 .lamp.y.on{background:var(--yellow);border-color:#ffe28a;box-shadow:0 0 28px 6px rgba(255,194,26,.6)}
 .lamp.b.on{background:var(--blue);border-color:#a8cbff;box-shadow:0 0 28px 6px rgba(61,139,255,.65)}
@@ -32,8 +46,7 @@ button:active{transform:scale(.98)}
 .lamp.pulse{animation:pulse .8s infinite}
 @keyframes pulse{50%{opacity:.35}}
 .status{flex:1;min-width:0}
-.status .s1{font-size:clamp(22px,3.6vw,36px);font-weight:900;line-height:1.1}
-.status .s2{font-size:clamp(14px,2vw,19px);color:var(--dim);margin-top:2px;line-height:1.35}
+.status .cnt{font-size:14px;color:var(--dim);font-weight:700;margin-bottom:2px;letter-spacing:.04em}
 .tbtn{background:var(--card2);border:2px solid var(--line);border-radius:16px;padding:12px 16px;font-size:18px;font-weight:700;min-height:56px;white-space:nowrap}
 .tbtn.upd{border-color:var(--blue);color:#cfe1ff}
 
@@ -43,91 +56,82 @@ button:active{transform:scale(.98)}
 @media (min-width:900px) and (orientation:landscape){.home.has-open{grid-template-columns:3fr 2fr}.openwrap{order:0}}
 .issues{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;align-content:start}
 @media (min-width:1000px){.issues{grid-template-columns:repeat(3,1fr)}}
-.ibtn{background:var(--card);border:3px solid var(--line);border-radius:26px;min-height:200px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px}
+.ibtn{background:var(--card);border:3px solid var(--line);border-radius:26px;min-height:200px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
 .ibtn .ic{font-size:54px;line-height:1}
-.ibtn .en{font-size:clamp(26px,4vw,40px);font-weight:900;line-height:1.1}
-.ibtn .es{font-size:clamp(17px,2.4vw,24px);color:#ffd6a0;font-weight:700}
-.ibtn .my{font-size:clamp(18px,2.6vw,26px);color:#9fe6ff;font-weight:700;line-height:1.5}
 .ibtn.other{grid-column:span 2}
 @media (min-width:1000px){.ibtn.other{grid-column:span 3}}
 .ibtn:active{background:var(--card2);border-color:var(--blue)}
 
-.openwrap h2{margin:2px 4px 10px;font-size:20px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+.openwrap h2{margin:2px 4px 10px;font-size:18px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
 .ocard{display:flex;gap:0;width:100%;text-align:left;background:var(--card);border:3px solid var(--line);border-radius:22px;overflow:hidden;margin-bottom:12px;min-height:110px}
 .ocard .bar{width:22px;flex:none}
-.ocard .body{padding:12px 16px;flex:1;min-width:0}
-.ocard .n{font-size:28px;font-weight:900;line-height:1.1}
-.ocard .n2{font-size:18px;color:var(--dim);margin-top:2px}
-.ocard .st{margin-top:6px;font-size:17px;font-weight:700}
+.ocard .body{padding:12px 16px;flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.ocard .st{font-size:16px;font-weight:700;color:var(--dim)}
+.ocard .cf{font-size:17px;font-weight:900;color:var(--orange)}
 .ocard .el{font-size:30px;font-weight:900;align-self:center;padding-right:16px;font-variant-numeric:tabular-nums}
 .bar.red{background:var(--red)} .bar.yellow{background:var(--yellow)} .bar.green{background:var(--green)} .bar.blue{background:var(--blue)}
 .ocard.red{border-color:var(--red)} .ocard.yellow{border-color:var(--yellow)} .ocard.blue{border-color:var(--blue)}
-.ocard .u{display:inline-block;margin-left:10px;font-size:14px;font-weight:800;border-radius:99px;padding:2px 10px;color:#10131a;vertical-align:middle}
-.u.red{background:var(--red);color:#fff!important} .u.yellow{background:var(--yellow)}
+.u{display:inline-block;font-size:13px;font-weight:800;border-radius:99px;padding:2px 10px;color:#10131a;align-self:flex-start}
+.u.red{background:var(--red);color:#fff} .u.yellow{background:var(--yellow)}
 .ocard.flash{animation:flash 1s infinite}
 .ocard.flashb{animation:flashb 1s infinite}
 @keyframes flash{50%{background:#3a1218}}
 @keyframes flashb{50%{background:#10244a}}
 
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--dim);padding:24px;border:2px dashed var(--line);border-radius:22px;font-size:20px;gap:4px}
-.empty b{color:var(--green);font-size:26px}
-
 /* sub screens */
 .head{display:flex;align-items:center;gap:14px}
-.back{background:var(--card2);border:2px solid var(--line);border-radius:18px;min-height:72px;min-width:150px;padding:0 20px;font-size:22px;font-weight:800;line-height:1.2}
-.back small{display:block;font-size:14px;color:var(--dim);font-weight:600}
+.back{background:var(--card2);border:2px solid var(--line);border-radius:18px;min-height:72px;min-width:150px;padding:0 20px}
 .titlebox{background:var(--card);border:3px solid var(--line);border-radius:22px;padding:16px;text-align:center}
-.titlebox .en{font-size:clamp(34px,6vw,56px);font-weight:900;line-height:1.1}
-.titlebox .es{font-size:clamp(20px,3.2vw,30px);color:#ffd6a0;font-weight:700;margin-top:4px}
-.titlebox .my{font-size:clamp(22px,3.4vw,32px);color:#9fe6ff;font-weight:700;margin-top:4px;line-height:1.5}
-.titlebox .ic{font-size:60px;line-height:1}
+.titlebox .ic{font-size:56px;line-height:1}
 
 .colors{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:640px){.colors{grid-template-columns:1fr}}
 .cbtn{border-radius:26px;min-height:230px;padding:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;border:6px solid transparent;color:#10131a}
 .cbtn.red{background:var(--red)} .cbtn.yellow{background:var(--yellow)}
-.cbtn .en{font-size:clamp(30px,5vw,48px);font-weight:900;line-height:1.05}
-.cbtn .d{font-size:clamp(17px,2.4vw,23px);font-weight:700;line-height:1.35}
 .cbtn.dim{opacity:.38}
 .cbtn.sel{border-color:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.25)}
 .cbtn .chk{font-size:40px;height:44px}
-.send{border-radius:26px;min-height:130px;font-size:clamp(32px,5vw,50px);font-weight:900;background:var(--blue);color:#fff;width:100%;line-height:1.15}
-.send small{display:block;font-size:clamp(18px,2.6vw,26px);font-weight:700;opacity:.9}
+.send{border-radius:26px;min-height:130px;background:var(--blue);color:#fff;width:100%;display:flex;align-items:center;justify-content:center}
 .send[disabled]{background:#222a38;color:#667086;cursor:not-allowed}
 
 /* detail */
-.banner{border-radius:26px;padding:18px;text-align:center;color:#10131a}
+.banner{border-radius:26px;padding:18px;text-align:center;color:#10131a;display:flex;flex-direction:column;align-items:center;gap:8px}
 .banner.red{background:var(--red)} .banner.yellow{background:var(--yellow)} .banner.green{background:var(--green)} .banner.gray{background:#556} .banner.blue{background:var(--blue);color:#fff}
-.turn{border:3px solid var(--blue);border-radius:20px;padding:12px 16px;text-align:center;font-size:clamp(20px,3vw,28px);font-weight:900;line-height:1.3;background:#0f1d38}
-.turn small{display:block;font-size:clamp(16px,2.2vw,21px);font-weight:700;color:#9fc4ff}
-.banner .en{font-size:clamp(36px,7vw,64px);font-weight:900;line-height:1.05}
-.banner .es,.banner .my{font-size:clamp(20px,3.4vw,32px);font-weight:800;margin-top:4px;line-height:1.5}
-.banner .tag{display:inline-block;margin-top:8px;background:rgba(0,0,0,.22);color:#fff;border-radius:99px;padding:6px 18px;font-size:20px;font-weight:800}
+.banner .tag{display:inline-block;background:rgba(0,0,0,.22);color:#fff;border-radius:99px;padding:6px 18px;font-size:19px;font-weight:800}
+.banner .cfb{background:var(--orange);color:#1c0e00;border-radius:16px;padding:8px 18px;font-size:22px;font-weight:900}
 .banner.flash{animation:bflash 1s infinite}
 @keyframes bflash{50%{filter:brightness(.55)}}
+.turn{border:3px solid var(--blue);border-radius:20px;padding:12px 16px;background:#0f1d38;display:flex;justify-content:center}
 .tl{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:6px 18px}
-.trow{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.trow{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--line)}
 .trow:last-child{border-bottom:0}
 .trow .dot{width:26px;height:26px;border-radius:50%;background:#2a3344;flex:none}
 .trow.done .dot{background:var(--green)}
-.trow .lbl{flex:1;font-size:22px;font-weight:800;line-height:1.25}
-.trow .lbl small{display:block;font-size:15px;color:var(--dim);font-weight:600}
-.trow .tm{font-size:28px;font-weight:900;font-variant-numeric:tabular-nums}
+.trow.cf.done .dot{background:var(--orange)}
+.trow .lbl{flex:1}
+.trow .tm{font-size:26px;font-weight:900;font-variant-numeric:tabular-nums}
 .trow .tm.none{color:#4a5468}
-.bigact{border-radius:26px;min-height:150px;font-size:clamp(32px,5.4vw,54px);font-weight:900;width:100%;line-height:1.15}
-.bigact small{display:block;font-size:clamp(18px,2.6vw,26px);font-weight:700;opacity:.92}
+.bigact{border-radius:26px;min-height:150px;width:100%;display:flex;align-items:center;justify-content:center;padding:10px}
 .bigact.ack{background:var(--blue);color:#fff}
 .bigact.res{background:var(--green);color:#06210f}
+.bigact.cant{background:var(--orange);color:#1c0e00}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.pair{grid-template-columns:1fr}}
 .linkbtn{background:transparent;border:2px solid var(--line);border-radius:18px;min-height:64px;font-size:19px;font-weight:700;color:var(--dim);width:100%}
+
+/* can't-fix reasons */
+.reasons{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.reasons{grid-template-columns:1fr}}
+.rbtn{background:var(--card);border:4px solid var(--line);border-radius:26px;min-height:150px;padding:14px;display:flex;align-items:center;justify-content:center}
+.rbtn.sel{background:var(--orange);color:#1c0e00;border-color:#fff}
+.rbtn.dim{opacity:.4}
+textarea{width:100%;min-height:110px;border-radius:20px;border:3px solid var(--orange);background:#10151f;color:var(--text);font:inherit;font-size:26px;padding:14px;resize:none}
 
 /* modal */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}
-.sheet{background:var(--card);border:3px solid var(--line);border-radius:28px;padding:22px;width:100%;max-width:640px;display:flex;flex-direction:column;gap:14px;text-align:center}
-.sheet h3{margin:0;font-size:clamp(28px,5vw,42px);line-height:1.15}
-.sheet p{margin:0;color:var(--dim);font-size:20px;line-height:1.4}
+.sheet{background:var(--card);border:3px solid var(--line);border-radius:28px;padding:22px;width:100%;max-width:680px;display:flex;flex-direction:column;gap:16px;text-align:center;align-items:stretch}
 .sheet .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.sheet .row button{min-height:110px;border-radius:20px;font-size:26px;font-weight:900;line-height:1.15}
-.sheet .row button small{display:block;font-size:16px;font-weight:700;opacity:.9}
+.sheet .row button{min-height:120px;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:8px}
 .yes{background:var(--green);color:#06210f} .no{background:var(--card2);border:2px solid var(--line)!important}
 .danger{background:var(--red);color:#fff}
 
@@ -136,13 +140,15 @@ button:active{transform:scale(.98)}
 .hcard.red{border-left-color:var(--red)} .hcard.yellow{border-left-color:var(--yellow)}
 .hcard .t{font-size:24px;font-weight:900}
 .hcard .t span{font-size:16px;color:var(--dim);font-weight:600;margin-left:8px}
+.hcard .cfl{color:var(--orange);font-weight:800;font-size:17px;margin-top:4px}
 .hcard .g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;font-size:16px;color:var(--dim)}
 .hcard .g b{display:block;color:var(--text);font-size:20px;font-variant-numeric:tabular-nums}
 .hcard .g i{display:block;font-style:normal;font-size:14px;color:#c8a24a}
 .hbar{display:flex;gap:12px;flex-wrap:wrap}
 .hbar .tbtn{flex:1;min-height:64px}
+.empty{padding:24px;text-align:center;color:var(--dim);font-size:20px;border:2px dashed var(--line);border-radius:22px}
 
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#fff;color:#10131a;padding:16px 26px;border-radius:99px;font-size:22px;font-weight:800;z-index:60;box-shadow:0 8px 30px rgba(0,0,0,.6)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#fff;color:#10131a;padding:16px 26px;border-radius:99px;font-size:22px;font-weight:800;z-index:60;box-shadow:0 8px 30px rgba(0,0,0,.6);max-width:92vw;text-align:center}
 .ver{text-align:center;color:#4a5468;font-size:14px;padding:6px}
 </style>
 </head>
@@ -151,16 +157,22 @@ button:active{transform:scale(.98)}
 <div id="overlay"></div>
 
 <script>
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
-/* ---------- text ---------- */
+/* ---------- text: [English, Spanish, Burmese] ---------- */
 const TYPES = {
-  fold:    {ic:'📃', en:'Fold Issue',     es:'Problema de Doblez',     my:'ခေါက်ခြင်း ပြဿနာ'},
-  glue:    {ic:'💧', en:'Glue Issue',     es:'Problema de Pegamento',  my:'ကော် ပြဿနာ'},
-  crack:   {ic:'⚡', en:'Cracking Issue', es:'Problema de Grietas',    my:'အက်ကွဲခြင်း ပြဿနာ'},
-  burst:   {ic:'💥', en:'Bursting Issue', es:'Problema de Reventado',  my:'ပေါက်ကွဲခြင်း ပြဿနာ'},
-  other:   {ic:'❓', en:'Other Issues',   es:'Otros Problemas',        my:'အခြား ပြဿနာများ'}
+  fold:  {ic:'📃', t:['Fold Issue','Problema de Doblez','ခေါက်ခြင်း ပြဿနာ']},
+  glue:  {ic:'💧', t:['Glue Issue','Problema de Pegamento','ကော် ပြဿနာ']},
+  crack: {ic:'⚡', t:['Cracking Issue','Problema de Grietas','အက်ကွဲခြင်း ပြဿနာ']},
+  burst: {ic:'💥', t:['Bursting Issue','Problema de Reventado','ပေါက်ကွဲခြင်း ပြဿနာ']},
+  other: {ic:'❓', t:['Other Issues','Otros Problemas','အခြား ပြဿနာများ']}
+};
+const REASONS = {
+  die:   {ic:'🔪', t:['Die Cut','Troquel','ဒိုင်ကပ်']},
+  paper: {ic:'📄', t:['Paper','Papel','စက္ကူ']},
+  cad:   {ic:'📐', t:['CAD (Design)','CAD (Diseño)','CAD (ဒီဇိုင်း)']},
+  other: {ic:'✏️', t:['Other','Otro','အခြား']}
 };
 const URG = {
   red:    {en:'RED',    d:['Need help NOW','¡Necesito ayuda YA!','ချက်ချင်း အကူအညီလိုသည်'], tag:['Urgent','Urgente','အရေးပေါ်']},
@@ -168,30 +180,42 @@ const URG = {
 };
 const T = {
   allgood:['ALL GOOD','TODO BIEN','အားလုံး ကောင်းသည်'],
-  waiting:['Waiting for operator','Esperando al operador','အော်ပရေတာကို စောင့်နေသည်'],
   acked:['Operator is on it','El operador está en ello','အော်ပရေတာ လုပ်ဆောင်နေသည်'],
+  waiting:['Waiting for operator','Esperando al operador','အော်ပရေတာကို စောင့်နေသည်'],
   sent:['Sent','Enviado','ပို့ပြီး'],
   ack:['Operator confirmed','Operador confirmó','အော်ပရေတာ လက်ခံပြီး'],
-  resolved:['Packers confirmed fixed','Empacadores confirmaron','ထုပ်ပိုးသူ အတည်ပြုပြီး'],
+  cantfixed:["Operator can't fix",'El operador no puede arreglarlo','အော်ပရေတာ ပြင်၍ မရ'],
   opfixed:['Operator fixed it','El operador lo arregló','အော်ပရေတာ ပြင်ပြီး'],
+  resolved:['Packers confirmed fixed','Empacadores confirmaron','ထုပ်ပိုးသူ အတည်ပြုပြီး'],
   waitpack:['Waiting for packers to confirm','Esperando confirmación de empacadores','ထုပ်ပိုးသူ အတည်ပြုရန် စောင့်နေသည်'],
-  pconfirm:['CONFIRM FIXED','CONFIRMAR RESUELTO','ပြင်ပြီးကြောင်း အတည်ပြုသည်'],
-  turn0:['Operator: tap CONFIRM','Operador: toque CONFIRMAR','အော်ပရေတာ – အတည်ပြုရန် နှိပ်ပါ'],
-  turn1:['Operator: tap ISSUE RESOLVED when fixed','Operador: toque cuando esté arreglado','အော်ပရေတာ – ပြင်ပြီးလျှင် နှိပ်ပါ'],
-  turn2:['Packers: check the boxes, then confirm','Empacadores: revisen las cajas y confirmen','ထုပ်ပိုးသူများ – စစ်ဆေးပြီး အတည်ပြုပါ'],
   back:['Back','Atrás','နောက်သို့'],
   send:['SEND','ENVIAR','ပို့မည်'],
   confirm:['CONFIRM','CONFIRMAR','အတည်ပြုသည်'],
   fixed:['ISSUE RESOLVED','PROBLEMA RESUELTO','ပြဿနာ ဖြေရှင်းပြီး'],
-  pickColor:['How urgent?','¿Qué tan urgente?','ဘယ်လောက် အရေးကြီးသနည်း']
+  cant:["CAN'T FIX",'NO SE PUEDE ARREGLAR','ပြင်၍ မရပါ'],
+  why:["Why can't it be fixed?",'¿Por qué no se puede arreglar?','ဘာကြောင့် ပြင်မရတာလဲ'],
+  pconfirm:['CONFIRM FIXED','CONFIRMAR RESUELTO','ပြင်ပြီးကြောင်း အတည်ပြုသည်'],
+  turn0:['Operator: tap CONFIRM','Operador: toque CONFIRMAR','အော်ပရေတာ – အတည်ပြုရန် နှိပ်ပါ'],
+  turn1:['Operator: choose one','Operador: elija una opción','အော်ပရေတာ – တစ်ခု ရွေးပါ'],
+  turn2:['Packers: check the boxes, then confirm','Empacadores: revisen las cajas y confirmen','ထုပ်ပိုးသူများ – စစ်ဆေးပြီး အတည်ပြုပါ'],
+  tapfix:['Operator: tap ISSUE RESOLVED once fixed','Operador: toque cuando esté arreglado','အော်ပရေတာ – ပြင်ပြီးလျှင် နှိပ်ပါ'],
+  notyet:['NOT YET','TODAVÍA NO','မပြီးသေးပါ'],
+  yesfixed:['YES, FIXED','SÍ, ARREGLADO','ဟုတ်ကဲ့ ပြင်ပြီး'],
+  yesgood:['YES, GOOD','SÍ, BIEN','ဟုတ်ကဲ့ ကောင်းပြီ'],
+  isfixed:['Is the problem fixed?','¿Está arreglado el problema?','ပြဿနာ ပြင်ပြီးပြီလား'],
+  boxesgood:['Are the boxes good now?','¿Las cajas están bien ahora?','ဘူးများ ကောင်းပြီလား'],
+  cancelq:['Cancel this issue?','¿Cancelar este problema?','ဤပြဿနာကို ပယ်ဖျက်မလား'],
+  yescancel:['YES, CANCEL','SÍ, CANCELAR','ဟုတ်ကဲ့ ပယ်ဖျက်မည်'],
+  nokeep:['NO, KEEP','NO, MANTENER','မဟုတ်ပါ ဆက်ထားမည်'],
+  typeit:['Type the reason…','Escriba el motivo…','အကြောင်းရင်း ရေးပါ…']
 };
-const tri = k => `${T[k][0]}<small>${T[k][1]} · ${T[k][2]}</small>`;
+const lg = (a, cls='', extra='') => `<div class="lg ${cls}"><span class="es">${a[1]}</span><span class="my">${a[2]}</span><i class="en">${a[0]}</i>${extra}</div>`;
 
 /* ---------- state ---------- */
 let issues = [];
 try { issues = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch(e){ issues = []; }
 const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(issues)); } catch(e){} };
-let view = {name:'home'};          // home | color | detail | history
+let view = {name:'home'};          // home | color | detail | cant | history
 const $ = s => document.querySelector(s);
 const isOpen = i => !i.resolvedAt && !i.cancelledAt;
 const byId = id => issues.find(i => i.id === id);
@@ -203,7 +227,8 @@ const fmtDur = ms => {
   const s = Math.max(0, Math.floor(ms/1000)), h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60;
   return h ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}:${String(x).padStart(2,'0')}`;
 };
-const nameBlock = (t, cls) => `<div class="en">${TYPES[t].en}</div><div class="es">${TYPES[t].es}</div><div class="my">${TYPES[t].my}</div>`;
+const cfText = i => i.cantFixReason ? (i.cantFixReason === 'other' && i.cantFixNote ? `Other: ${i.cantFixNote}` : REASONS[i.cantFixReason].t[0]) : '';
+const hasCF = i => i.cantFixAt && !i.opResolvedAt;
 
 /* light priority: unacknowledged red > unacknowledged yellow > blue (operator confirmed, not yet closed by packers) > green */
 function overall(){
@@ -217,51 +242,50 @@ const cardColor = i => i.ackAt ? 'blue' : i.color;
 
 function toast(msg){
   const d = document.createElement('div'); d.className = 'toast'; d.textContent = msg;
-  document.body.appendChild(d); setTimeout(() => d.remove(), 2600);
+  document.body.appendChild(d); setTimeout(() => d.remove(), 2800);
 }
 
 /* ---------- views ---------- */
 function topbar(){
   const o = overall(), open = issues.filter(isOpen);
-  const unacked = o === 'red';
   const needPack = open.some(i => i.opResolvedAt);
-  const msg = o === 'green' ? [`${T.allgood[0]}`, `${T.allgood[1]} · ${T.allgood[2]}`]
-    : [`${open.length} OPEN ISSUE${open.length>1?'S':''}`,
-       o === 'red' ? 'URGENT · URGENTE · အရေးပေါ်'
-       : o === 'yellow' ? 'ATTENTION · ATENCIÓN · အာရုံစိုက်ပါ'
-       : needPack ? 'PACKERS: CONFIRM · EMPACADORES: CONFIRMEN · အတည်ပြုပါ'
-       : 'OPERATOR WORKING · OPERADOR TRABAJANDO · လုပ်ဆောင်နေသည်'];
+  const n = open.length;
+  const sub = o === 'green' ? T.allgood
+    : o === 'red' ? ['URGENT','URGENTE','အရေးပေါ်']
+    : o === 'yellow' ? ['ATTENTION','ATENCIÓN','အာရုံစိုက်ပါ']
+    : needPack ? ['PACKERS: CONFIRM','EMPACADORES: CONFIRMEN','ထုပ်ပိုးသူများ – အတည်ပြုပါ']
+    : ['OPERATOR WORKING','OPERADOR TRABAJANDO','အော်ပရေတာ လုပ်ဆောင်နေသည်'];
   return `<div class="top">
     <div class="lamps">
-      <div class="lamp r ${o==='red'?'on':''} ${unacked?'pulse':''}"></div>
+      <div class="lamp r ${o==='red'?'on pulse':''}"></div>
       <div class="lamp y ${o==='yellow'?'on':''}"></div>
       <div class="lamp b ${o==='blue'?'on':''} ${o==='blue'&&needPack?'pulse':''}"></div>
       <div class="lamp g ${o==='green'?'on':''}"></div>
     </div>
-    <div class="status"><div class="s1">${msg[0]}</div><div class="s2">${msg[1]}</div></div>
+    <div class="status">${n?`<div class="cnt">${n} OPEN · ${n} ABIERTO${n>1?'S':''}</div>`:''}${lg(sub,'left')}</div>
     <button class="tbtn" data-act="history">📋 Log</button>
     <button class="tbtn upd" data-act="update">⟳ Update</button>
   </div>`;
 }
 
 function statusLine(i){
-  if (i.cancelledAt) return 'Cancelled';
-  if (i.resolvedAt) return `✔ ${T.resolved[0]}`;
-  if (i.opResolvedAt) return `👆 ${T.waitpack[0]}`;
-  if (i.ackAt) return `🔧 ${T.acked[0]}`;
-  return `⏳ ${T.waiting[0]}`;
+  if (i.opResolvedAt) return `👆 ${T.waitpack[1]} · ${T.waitpack[2]}`;
+  if (i.ackAt) return `🔧 ${T.acked[1]} · ${T.acked[2]}`;
+  return `⏳ ${T.waiting[1]} · ${T.waiting[2]}`;
 }
 
 function renderHome(){
   const open = issues.filter(isOpen).sort((a,b) => (a.color===b.color ? a.submittedAt-b.submittedAt : a.color==='red'?-1:1));
   const btns = Object.keys(TYPES).map(k => `
     <button class="ibtn ${k==='other'?'other':''}" data-act="pick" data-type="${k}">
-      <div class="ic">${TYPES[k].ic}</div>${nameBlock(k)}
+      <div class="ic">${TYPES[k].ic}</div>${lg(TYPES[k].t,'lgx')}
     </button>`).join('');
   const cards = open.map(i => `
     <button class="ocard ${cardColor(i)} ${i.color==='red'&&!i.ackAt?'flash':''} ${i.opResolvedAt?'flashb':''}" data-act="open" data-id="${i.id}">
       <div class="bar ${cardColor(i)}"></div>
-      <div class="body"><div class="n">${TYPES[i.type].en}<span class="u ${i.color}">${URG[i.color].en}</span></div><div class="n2">${TYPES[i.type].es}</div>
+      <div class="body">${lg(TYPES[i.type].t,'left md')}
+        <span class="u ${i.color}">${URG[i.color].en}</span>
+        ${hasCF(i)?`<div class="cf">⚠ ${T.cant[0]} · ${cfText(i)}</div>`:''}
         <div class="st">${statusLine(i)}</div></div>
       <div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>
     </button>`).join('');
@@ -272,17 +296,29 @@ function renderHome(){
     </div><div class="ver">v${APP_VERSION}</div>`;
 }
 
+const backBtn = () => `<button class="back" data-act="home">${lg(T.back,'sm')}</button>`;
+
 function renderColor(){
   const t = view.type, sel = view.color;
   const cb = c => `<button class="cbtn ${c} ${sel&&sel!==c?'dim':''} ${sel===c?'sel':''}" data-act="color" data-color="${c}">
-      <div class="chk">${sel===c?'✔':''}</div>
-      <div class="en">${URG[c].en}</div>
-      ${URG[c].d.map(x=>`<div class="d">${x}</div>`).join('')}
+      <div class="chk">${sel===c?'✔':''}</div>${lg(URG[c].d,'xl')}
     </button>`;
-  return `<div class="head"><button class="back" data-act="home">← ${T.back[0]}<small>${T.back[1]} · ${T.back[2]}</small></button></div>
-    <div class="titlebox"><div class="ic">${TYPES[t].ic}</div>${nameBlock(t)}</div>
+  return `<div class="head">${backBtn()}</div>
+    <div class="titlebox"><div class="ic">${TYPES[t].ic}</div>${lg(TYPES[t].t,'xl')}</div>
     <div class="colors">${cb('red')}${cb('yellow')}</div>
-    <button class="send" data-act="send" ${sel?'':'disabled'}>${tri('send')}</button>`;
+    <button class="send" data-act="send" ${sel?'':'disabled'}>${lg(T.send,'lgx')}</button>`;
+}
+
+function renderCant(){
+  const i = byId(view.id); if (!i) return renderHome();
+  const r = view.reason;
+  const rb = k => `<button class="rbtn ${r===k?'sel':''} ${r&&r!==k?'dim':''}" data-act="reason" data-r="${k}">${lg(REASONS[k].t,'xl')}</button>`;
+  const note = r === 'other' ? `<textarea id="note" placeholder="${T.typeit[0]} / ${T.typeit[1]} / ${T.typeit[2]}">${view.note||''}</textarea>` : '';
+  return `<div class="head"><button class="back" data-act="open" data-id="${i.id}">${lg(T.back,'sm')}</button></div>
+    <div class="titlebox">${lg(T.why,'xl')}<div style="margin-top:8px;color:var(--dim);font-size:20px">${TYPES[i.type].t[0]}</div></div>
+    <div class="reasons">${rb('die')}${rb('paper')}${rb('cad')}${rb('other')}</div>
+    ${note}
+    <button class="send" data-act="sendcant" ${r?'':'disabled'} style="background:${r?'var(--orange)':''};${r?'color:#1c0e00':''}">${lg(T.confirm,'lgx')}</button>`;
 }
 
 function renderDetail(){
@@ -291,26 +327,30 @@ function renderDetail(){
   const done = !!i.resolvedAt, cancelled = !!i.cancelledAt;
   const cls = cancelled ? 'gray' : done ? 'green' : cardColor(i);
   const tagText = cancelled ? 'Cancelled' : done ? 'Resolved · Resuelto · ဖြေရှင်းပြီး' : `${URG[i.color].en} · ${URG[i.color].tag.join(' · ')}`;
-  const row = (k, ts) => `<div class="trow ${ts?'done':''}"><div class="dot"></div>
-      <div class="lbl">${T[k][0]}<small>${T[k][1]} · ${T[k][2]}</small></div>
+  const row = (k, ts, extra='', cfRow=false) => `<div class="trow ${ts?'done':''} ${cfRow?'cf':''}"><div class="dot"></div>
+      <div class="lbl">${lg(T[k],'left sm')}${extra}</div>
       <div class="tm ${ts?'':'none'}">${fmtTime(ts)}</div></div>`;
   let action = '';
   if (!cancelled && !done){
     const stage = !i.ackAt ? 0 : !i.opResolvedAt ? 1 : 2;
-    const turn = `<div class="turn">${T['turn'+stage][0]}<small>${T['turn'+stage][1]} · ${T['turn'+stage][2]}</small></div>`;
+    const tk = stage === 1 && i.cantFixAt ? 'tapfix' : 'turn'+stage;
+    const turn = `<div class="turn">${lg(T[tk],'md')}</div>`;
     action = turn + (stage === 0
-      ? `<button class="bigact ack" data-act="ack" data-id="${i.id}">${tri('confirm')}</button>`
+      ? `<button class="bigact ack" data-act="ack" data-id="${i.id}">${lg(T.confirm,'xl')}</button>`
       : stage === 1
-      ? `<button class="bigact res" data-act="askop" data-id="${i.id}">${tri('fixed')}</button>`
-      : `<button class="bigact res" data-act="askres" data-id="${i.id}">${tri('pconfirm')}</button>`);
+      ? `<div class="pair"><button class="bigact res" data-act="askop" data-id="${i.id}">${lg(T.fixed,'lgx')}</button>
+         <button class="bigact cant" data-act="cantfix" data-id="${i.id}">${lg(T.cant,'lgx')}</button></div>`
+      : `<button class="bigact res" data-act="askres" data-id="${i.id}">${lg(T.pconfirm,'xl')}</button>`);
     action += `<button class="linkbtn" data-act="askcancel" data-id="${i.id}">Sent by mistake? Cancel</button>`;
   }
-  return `<div class="head"><button class="back" data-act="home">← ${T.back[0]}<small>${T.back[1]} · ${T.back[2]}</small></button>
+  const cfBadge = hasCF(i) && !done ? `<div class="cfb">⚠ ${T.cant[0]} · ${cfText(i)}</div>` : '';
+  const cfRow = i.cantFixAt ? row('cantfixed', i.cantFixAt, `<div style="color:var(--orange);font-weight:800;font-size:17px;margin-top:2px">${cfText(i)}</div>`, true) : '';
+  return `<div class="head">${backBtn()}
       <div style="flex:1"></div>${!cancelled&&!done?`<div class="el" style="font-size:40px;font-weight:900" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>`:''}</div>
     <div class="banner ${cls} ${(!cancelled&&!done&&i.color==='red'&&!i.ackAt)?'flash':''}">
-      ${nameBlock(i.type)}<span class="tag">${tagText}</span></div>
+      ${lg(TYPES[i.type].t,'xl')}<span class="tag">${tagText}</span>${cfBadge}</div>
     ${action}
-    <div class="tl">${row('sent', i.submittedAt)}${row('ack', i.ackAt)}${row('opfixed', i.opResolvedAt)}${row('resolved', i.resolvedAt)}</div>`;
+    <div class="tl">${row('sent', i.submittedAt)}${row('ack', i.ackAt)}${cfRow}${row('opfixed', i.opResolvedAt)}${row('resolved', i.resolvedAt)}</div>`;
 }
 
 function renderHistory(){
@@ -319,13 +359,14 @@ function renderHistory(){
     const resp = i.ackAt ? fmtDur(i.ackAt - i.submittedAt) : '—';
     const fix = i.resolvedAt ? fmtDur(i.resolvedAt - i.submittedAt) : '—';
     const st = i.cancelledAt ? 'Cancelled' : i.resolvedAt ? 'Resolved' : 'Open';
-    return `<div class="hcard ${i.color}"><div class="t">${TYPES[i.type].en}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)}</span></div>
+    return `<div class="hcard ${i.color}"><div class="t">${TYPES[i.type].t[0]}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)}</span></div>
+      ${i.cantFixAt?`<div class="cfl">⚠ Can't fix (${fmtTime(i.cantFixAt)}): ${cfText(i)}</div>`:''}
       <div class="g"><div>Sent<b>${fmtTime(i.submittedAt)}</b></div>
       <div>Op. confirmed<b>${fmtTime(i.ackAt)}</b><i>response ${resp}</i></div>
       <div>Op. fixed<b>${fmtTime(i.opResolvedAt)}</b><i>repair ${i.opResolvedAt&&i.ackAt?fmtDur(i.opResolvedAt-i.ackAt):'—'}</i></div>
       <div>Packers OK<b>${fmtTime(i.resolvedAt)}</b><i>total ${fix}</i></div></div></div>`;
-  }).join('') || '<div class="empty"><b>No issues logged yet</b>Nothing to show</div>';
-  return `<div class="head"><button class="back" data-act="home">← ${T.back[0]}<small>${T.back[1]} · ${T.back[2]}</small></button>
+  }).join('') || '<div class="empty">No issues logged yet</div>';
+  return `<div class="head">${backBtn()}
       <div style="font-size:30px;font-weight:900">Issue Log</div></div>
     <div class="hbar"><button class="tbtn" data-act="csv">⬇ Download CSV</button><button class="tbtn" data-act="clearlog" style="color:#ff9a9a">🗑 Clear log</button></div>
     <div>${cards}</div><div class="ver">v${APP_VERSION}</div>`;
@@ -333,22 +374,26 @@ function renderHistory(){
 
 function render(){
   const v = view.name;
-  $('#app').innerHTML = v==='color' ? renderColor() : v==='detail' ? renderDetail() : v==='history' ? renderHistory() : renderHome();
+  $('#app').innerHTML = v==='color' ? renderColor() : v==='detail' ? renderDetail() : v==='cant' ? renderCant() : v==='history' ? renderHistory() : renderHome();
   window.scrollTo(0,0);
 }
 
 /* ---------- modal ---------- */
 function modal(html){ $('#overlay').innerHTML = `<div class="modal"><div class="sheet">${html}</div></div>`; }
 function closeModal(){ $('#overlay').innerHTML = ''; }
+const askModal = (q, noLbl, yesLbl, yesCls, yesAct, id, sub) => modal(`${lg(q,'xl')}${sub?`<div style="color:var(--dim);font-size:20px">${sub}</div>`:''}
+  <div class="row"><button class="no" data-act="closemodal">${lg(noLbl,'md')}</button>
+  <button class="${yesCls}" data-act="${yesAct}" data-id="${id}">${lg(yesLbl,'md')}</button></div>`);
 
 /* ---------- actions ---------- */
 function exportCsv(){
   const q = v => `"${String(v).replace(/"/g,'""')}"`;
   const iso = ts => ts ? new Date(ts).toLocaleString() : '';
-  const rows = [['Issue','Urgency','Status','Sent','Operator confirmed','Operator fixed','Packers confirmed resolved','Response (min)','Total (min)']];
+  const rows = [['Issue','Urgency','Status','Sent','Operator confirmed',"Can't fix time","Can't fix reason","Can't fix note",'Operator fixed','Packers confirmed resolved','Response (min)','Total (min)']];
   [...issues].sort((a,b)=>a.submittedAt-b.submittedAt).forEach(i => rows.push([
-    TYPES[i.type].en, i.color, i.cancelledAt?'cancelled':i.resolvedAt?'resolved':'open',
-    iso(i.submittedAt), iso(i.ackAt), iso(i.opResolvedAt), iso(i.resolvedAt),
+    TYPES[i.type].t[0], i.color, i.cancelledAt?'cancelled':i.resolvedAt?'resolved':'open',
+    iso(i.submittedAt), iso(i.ackAt), iso(i.cantFixAt), i.cantFixReason ? REASONS[i.cantFixReason].t[0] : '', i.cantFixNote || '',
+    iso(i.opResolvedAt), iso(i.resolvedAt),
     i.ackAt ? ((i.ackAt-i.submittedAt)/60000).toFixed(1) : '',
     i.resolvedAt ? ((i.resolvedAt-i.submittedAt)/60000).toFixed(1) : '']));
   const blob = new Blob([rows.map(r=>r.map(q).join(',')).join('\r\n')], {type:'text/csv'});
@@ -369,6 +414,8 @@ async function updateApp(){
   } catch(e){ toast('No internet – try again'); }
 }
 
+document.addEventListener('input', e => { if (e.target.id === 'note') view.note = e.target.value; });
+
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b) return;
   const act = b.dataset.act, id = b.dataset.id;
@@ -380,30 +427,27 @@ document.addEventListener('click', e => {
     case 'color': view.color = b.dataset.color; render(); break;
     case 'send':
       if (!view.color) return;
-      issues.push({id:'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,5), type:view.type, color:view.color, submittedAt:Date.now(), ackAt:null, resolvedAt:null, cancelledAt:null});
+      issues.push({id:'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,5), type:view.type, color:view.color, submittedAt:Date.now(), ackAt:null, opResolvedAt:null, resolvedAt:null, cancelledAt:null});
       save(); view = {name:'home'}; render(); toast('✔ Sent · Enviado · ပို့ပြီး'); break;
     case 'open': view = {name:'detail', id}; render(); break;
     case 'ack': { const i = byId(id); if (i && !i.ackAt){ i.ackAt = Date.now(); save(); render(); } break; }
-    case 'askop':
-      modal(`<h3>${T.fixed[0]}?</h3><p>${T.fixed[1]}? · ${T.fixed[2]}?<br>Operator: is the problem fixed?</p>
-        <div class="row"><button class="no" data-act="closemodal">NOT YET<small>Todavía no · မပြီးသေးပါ</small></button>
-        <button class="yes" data-act="opres" data-id="${id}">YES, FIXED<small>Sí, arreglado · ဟုတ်ကဲ့ ပြင်ပြီး</small></button></div>`); break;
+    case 'askop': askModal(T.isfixed, T.notyet, T.yesfixed, 'yes', 'opres', id, 'Operator'); break;
     case 'opres': { const i = byId(id); if (i && i.ackAt && !i.opResolvedAt){ i.opResolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('🔵 Packers: please confirm · confirmen · အတည်ပြုပါ'); break; }
-    case 'askres':
-      modal(`<h3>${T.pconfirm[0]}?</h3><p>${T.pconfirm[1]}? · ${T.pconfirm[2]}?<br>Packers: are the boxes good now?</p>
-        <div class="row"><button class="no" data-act="closemodal">NOT YET<small>Todavía no · မပြီးသေးပါ</small></button>
-        <button class="yes" data-act="res" data-id="${id}">YES, GOOD<small>Sí, bien · ဟုတ်ကဲ့ ကောင်းပြီ</small></button></div>`); break;
+    case 'cantfix': view = {name:'cant', id, reason:null, note:''}; render(); break;
+    case 'reason': view.reason = b.dataset.r; render(); { const n = $('#note'); if (n) n.focus(); } break;
+    case 'sendcant': {
+      const i = byId(view.id);
+      if (i && view.reason){ i.cantFixAt = Date.now(); i.cantFixReason = view.reason; i.cantFixNote = view.reason === 'other' ? (view.note || '').trim() : ''; save(); }
+      view = {name:'home'}; render(); toast("⚠ Can't fix recorded · No se puede arreglar · ပြင်၍ မရ"); break; }
+    case 'askres': askModal(T.boxesgood, T.notyet, T.yesgood, 'yes', 'res', id, 'Packers'); break;
     case 'res': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ i.resolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('🟢 Resolved · Resuelto · ဖြေရှင်းပြီး'); break; }
-    case 'askcancel':
-      modal(`<h3>Cancel this issue?</h3><p>It was sent by mistake.<br>Enviado por error · မှားပို့မိသည်</p>
-        <div class="row"><button class="no" data-act="closemodal">NO · KEEP<small>No · မဟုတ်ပါ</small></button>
-        <button class="danger" data-act="cancel" data-id="${id}">YES, CANCEL<small>Sí, cancelar · ပယ်ဖျက်မည်</small></button></div>`); break;
+    case 'askcancel': askModal(T.cancelq, T.nokeep, T.yescancel, 'danger', 'cancel', id, 'Sent by mistake'); break;
     case 'cancel': { const i = byId(id); if (i && isOpen(i)){ i.cancelledAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); break; }
     case 'closemodal': closeModal(); break;
     case 'csv': exportCsv(); break;
     case 'clearlog':
-      modal(`<h3>Clear the whole log?</h3><p>This deletes all saved issues on this tablet. Download the CSV first if you need it.</p>
-        <div class="row"><button class="no" data-act="closemodal">NO · KEEP</button><button class="danger" data-act="doclear">YES, CLEAR</button></div>`); break;
+      modal(`<div style="font-size:32px;font-weight:900">Clear the whole log?</div><div style="color:var(--dim);font-size:20px">This deletes all saved issues on this tablet. Download the CSV first if you need it.</div>
+        <div class="row"><button class="no" data-act="closemodal" style="font-size:24px;font-weight:900">NO · KEEP</button><button class="danger" data-act="doclear" style="font-size:24px;font-weight:900">YES, CLEAR</button></div>`); break;
     case 'doclear': issues = []; save(); closeModal(); render(); break;
   }
 });
