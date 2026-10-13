@@ -24,9 +24,10 @@ button:active{transform:scale(.98)}
 /* top bar */
 .top{display:flex;align-items:center;gap:14px;background:var(--card);border:2px solid var(--line);border-radius:22px;padding:12px 16px}
 .lamps{display:flex;gap:10px}
-.lamp{width:46px;height:46px;border-radius:50%;background:#222a38;border:3px solid #323c50;transition:.2s}
+.lamp{width:42px;height:42px;border-radius:50%;background:#222a38;border:3px solid #323c50;transition:.2s}
 .lamp.r.on{background:var(--red);border-color:#ff9a9a;box-shadow:0 0 28px 6px rgba(255,59,59,.65)}
 .lamp.y.on{background:var(--yellow);border-color:#ffe28a;box-shadow:0 0 28px 6px rgba(255,194,26,.6)}
+.lamp.b.on{background:var(--blue);border-color:#a8cbff;box-shadow:0 0 28px 6px rgba(61,139,255,.65)}
 .lamp.g.on{background:var(--green);border-color:#9bffbc;box-shadow:0 0 28px 6px rgba(46,230,107,.55)}
 .lamp.pulse{animation:pulse .8s infinite}
 @keyframes pulse{50%{opacity:.35}}
@@ -59,10 +60,14 @@ button:active{transform:scale(.98)}
 .ocard .n2{font-size:18px;color:var(--dim);margin-top:2px}
 .ocard .st{margin-top:6px;font-size:17px;font-weight:700}
 .ocard .el{font-size:30px;font-weight:900;align-self:center;padding-right:16px;font-variant-numeric:tabular-nums}
-.bar.red{background:var(--red)} .bar.yellow{background:var(--yellow)} .bar.green{background:var(--green)}
-.ocard.red{border-color:var(--red)} .ocard.yellow{border-color:var(--yellow)}
+.bar.red{background:var(--red)} .bar.yellow{background:var(--yellow)} .bar.green{background:var(--green)} .bar.blue{background:var(--blue)}
+.ocard.red{border-color:var(--red)} .ocard.yellow{border-color:var(--yellow)} .ocard.blue{border-color:var(--blue)}
+.ocard .u{display:inline-block;margin-left:10px;font-size:14px;font-weight:800;border-radius:99px;padding:2px 10px;color:#10131a;vertical-align:middle}
+.u.red{background:var(--red);color:#fff!important} .u.yellow{background:var(--yellow)}
 .ocard.flash{animation:flash 1s infinite}
+.ocard.flashb{animation:flashb 1s infinite}
 @keyframes flash{50%{background:#3a1218}}
+@keyframes flashb{50%{background:#10244a}}
 
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--dim);padding:24px;border:2px dashed var(--line);border-radius:22px;font-size:20px;gap:4px}
 .empty b{color:var(--green);font-size:26px}
@@ -92,7 +97,9 @@ button:active{transform:scale(.98)}
 
 /* detail */
 .banner{border-radius:26px;padding:18px;text-align:center;color:#10131a}
-.banner.red{background:var(--red)} .banner.yellow{background:var(--yellow)} .banner.green{background:var(--green)} .banner.gray{background:#556}
+.banner.red{background:var(--red)} .banner.yellow{background:var(--yellow)} .banner.green{background:var(--green)} .banner.gray{background:#556} .banner.blue{background:var(--blue);color:#fff}
+.turn{border:3px solid var(--blue);border-radius:20px;padding:12px 16px;text-align:center;font-size:clamp(20px,3vw,28px);font-weight:900;line-height:1.3;background:#0f1d38}
+.turn small{display:block;font-size:clamp(16px,2.2vw,21px);font-weight:700;color:#9fc4ff}
 .banner .en{font-size:clamp(36px,7vw,64px);font-weight:900;line-height:1.05}
 .banner .es,.banner .my{font-size:clamp(20px,3.4vw,32px);font-weight:800;margin-top:4px;line-height:1.5}
 .banner .tag{display:inline-block;margin-top:8px;background:rgba(0,0,0,.22);color:#fff;border-radius:99px;padding:6px 18px;font-size:20px;font-weight:800}
@@ -129,7 +136,7 @@ button:active{transform:scale(.98)}
 .hcard.red{border-left-color:var(--red)} .hcard.yellow{border-left-color:var(--yellow)}
 .hcard .t{font-size:24px;font-weight:900}
 .hcard .t span{font-size:16px;color:var(--dim);font-weight:600;margin-left:8px}
-.hcard .g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;font-size:16px;color:var(--dim)}
+.hcard .g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;font-size:16px;color:var(--dim)}
 .hcard .g b{display:block;color:var(--text);font-size:20px;font-variant-numeric:tabular-nums}
 .hcard .g i{display:block;font-style:normal;font-size:14px;color:#c8a24a}
 .hbar{display:flex;gap:12px;flex-wrap:wrap}
@@ -144,7 +151,7 @@ button:active{transform:scale(.98)}
 <div id="overlay"></div>
 
 <script>
-const APP_VERSION = '1.0.1';
+const APP_VERSION = '1.1.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text ---------- */
@@ -165,7 +172,13 @@ const T = {
   acked:['Operator is on it','El operador está en ello','အော်ပရေတာ လုပ်ဆောင်နေသည်'],
   sent:['Sent','Enviado','ပို့ပြီး'],
   ack:['Operator confirmed','Operador confirmó','အော်ပရေတာ လက်ခံပြီး'],
-  resolved:['Resolved','Resuelto','ဖြေရှင်းပြီး'],
+  resolved:['Packers confirmed fixed','Empacadores confirmaron','ထုပ်ပိုးသူ အတည်ပြုပြီး'],
+  opfixed:['Operator fixed it','El operador lo arregló','အော်ပရေတာ ပြင်ပြီး'],
+  waitpack:['Waiting for packers to confirm','Esperando confirmación de empacadores','ထုပ်ပိုးသူ အတည်ပြုရန် စောင့်နေသည်'],
+  pconfirm:['CONFIRM FIXED','CONFIRMAR RESUELTO','ပြင်ပြီးကြောင်း အတည်ပြုသည်'],
+  turn0:['Operator: tap CONFIRM','Operador: toque CONFIRMAR','အော်ပရေတာ – အတည်ပြုရန် နှိပ်ပါ'],
+  turn1:['Operator: tap ISSUE RESOLVED when fixed','Operador: toque cuando esté arreglado','အော်ပရေတာ – ပြင်ပြီးလျှင် နှိပ်ပါ'],
+  turn2:['Packers: check the boxes, then confirm','Empacadores: revisen las cajas y confirmen','ထုပ်ပိုးသူများ – စစ်ဆေးပြီး အတည်ပြုပါ'],
   back:['Back','Atrás','နောက်သို့'],
   send:['SEND','ENVIAR','ပို့မည်'],
   confirm:['CONFIRM','CONFIRMAR','အတည်ပြုသည်'],
@@ -192,12 +205,15 @@ const fmtDur = ms => {
 };
 const nameBlock = (t, cls) => `<div class="en">${TYPES[t].en}</div><div class="es">${TYPES[t].es}</div><div class="my">${TYPES[t].my}</div>`;
 
+/* light priority: unacknowledged red > unacknowledged yellow > blue (operator confirmed, not yet closed by packers) > green */
 function overall(){
   const open = issues.filter(isOpen);
-  if (open.some(i => i.color === 'red')) return 'red';
-  if (open.length) return 'yellow';
+  if (open.some(i => !i.ackAt && i.color === 'red')) return 'red';
+  if (open.some(i => !i.ackAt)) return 'yellow';
+  if (open.length) return 'blue';
   return 'green';
 }
+const cardColor = i => i.ackAt ? 'blue' : i.color;
 
 function toast(msg){
   const d = document.createElement('div'); d.className = 'toast'; d.textContent = msg;
@@ -207,13 +223,19 @@ function toast(msg){
 /* ---------- views ---------- */
 function topbar(){
   const o = overall(), open = issues.filter(isOpen);
-  const unacked = open.some(i => i.color === 'red' && !i.ackAt);
+  const unacked = o === 'red';
+  const needPack = open.some(i => i.opResolvedAt);
   const msg = o === 'green' ? [`${T.allgood[0]}`, `${T.allgood[1]} · ${T.allgood[2]}`]
-    : [`${open.length} OPEN ISSUE${open.length>1?'S':''}`, o === 'red' ? 'URGENT · URGENTE · အရေးပေါ်' : 'ATTENTION · ATENCIÓN · အာရုံစိုက်ပါ'];
+    : [`${open.length} OPEN ISSUE${open.length>1?'S':''}`,
+       o === 'red' ? 'URGENT · URGENTE · အရေးပေါ်'
+       : o === 'yellow' ? 'ATTENTION · ATENCIÓN · အာရုံစိုက်ပါ'
+       : needPack ? 'PACKERS: CONFIRM · EMPACADORES: CONFIRMEN · အတည်ပြုပါ'
+       : 'OPERATOR WORKING · OPERADOR TRABAJANDO · လုပ်ဆောင်နေသည်'];
   return `<div class="top">
     <div class="lamps">
       <div class="lamp r ${o==='red'?'on':''} ${unacked?'pulse':''}"></div>
       <div class="lamp y ${o==='yellow'?'on':''}"></div>
+      <div class="lamp b ${o==='blue'?'on':''} ${o==='blue'&&needPack?'pulse':''}"></div>
       <div class="lamp g ${o==='green'?'on':''}"></div>
     </div>
     <div class="status"><div class="s1">${msg[0]}</div><div class="s2">${msg[1]}</div></div>
@@ -225,7 +247,8 @@ function topbar(){
 function statusLine(i){
   if (i.cancelledAt) return 'Cancelled';
   if (i.resolvedAt) return `✔ ${T.resolved[0]}`;
-  if (i.ackAt) return `✔ ${T.acked[0]}`;
+  if (i.opResolvedAt) return `👆 ${T.waitpack[0]}`;
+  if (i.ackAt) return `🔧 ${T.acked[0]}`;
   return `⏳ ${T.waiting[0]}`;
 }
 
@@ -236,9 +259,9 @@ function renderHome(){
       <div class="ic">${TYPES[k].ic}</div>${nameBlock(k)}
     </button>`).join('');
   const cards = open.map(i => `
-    <button class="ocard ${i.color} ${i.color==='red'&&!i.ackAt?'flash':''}" data-act="open" data-id="${i.id}">
-      <div class="bar ${i.color}"></div>
-      <div class="body"><div class="n">${TYPES[i.type].en}</div><div class="n2">${TYPES[i.type].es}</div>
+    <button class="ocard ${cardColor(i)} ${i.color==='red'&&!i.ackAt?'flash':''} ${i.opResolvedAt?'flashb':''}" data-act="open" data-id="${i.id}">
+      <div class="bar ${cardColor(i)}"></div>
+      <div class="body"><div class="n">${TYPES[i.type].en}<span class="u ${i.color}">${URG[i.color].en}</span></div><div class="n2">${TYPES[i.type].es}</div>
         <div class="st">${statusLine(i)}</div></div>
       <div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>
     </button>`).join('');
@@ -266,24 +289,28 @@ function renderDetail(){
   const i = byId(view.id);
   if (!i) return renderHome();
   const done = !!i.resolvedAt, cancelled = !!i.cancelledAt;
-  const cls = cancelled ? 'gray' : done ? 'green' : i.color;
-  const tagText = cancelled ? 'Cancelled' : done ? `${T.resolved[0]} · ${T.resolved[1]} · ${T.resolved[2]}` : URG[i.color].tag.join(' · ');
+  const cls = cancelled ? 'gray' : done ? 'green' : cardColor(i);
+  const tagText = cancelled ? 'Cancelled' : done ? 'Resolved · Resuelto · ဖြေရှင်းပြီး' : `${URG[i.color].en} · ${URG[i.color].tag.join(' · ')}`;
   const row = (k, ts) => `<div class="trow ${ts?'done':''}"><div class="dot"></div>
       <div class="lbl">${T[k][0]}<small>${T[k][1]} · ${T[k][2]}</small></div>
       <div class="tm ${ts?'':'none'}">${fmtTime(ts)}</div></div>`;
   let action = '';
   if (!cancelled && !done){
-    action = !i.ackAt
+    const stage = !i.ackAt ? 0 : !i.opResolvedAt ? 1 : 2;
+    const turn = `<div class="turn">${T['turn'+stage][0]}<small>${T['turn'+stage][1]} · ${T['turn'+stage][2]}</small></div>`;
+    action = turn + (stage === 0
       ? `<button class="bigact ack" data-act="ack" data-id="${i.id}">${tri('confirm')}</button>`
-      : `<button class="bigact res" data-act="askres" data-id="${i.id}">${tri('fixed')}</button>`;
+      : stage === 1
+      ? `<button class="bigact res" data-act="askop" data-id="${i.id}">${tri('fixed')}</button>`
+      : `<button class="bigact res" data-act="askres" data-id="${i.id}">${tri('pconfirm')}</button>`);
     action += `<button class="linkbtn" data-act="askcancel" data-id="${i.id}">Sent by mistake? Cancel</button>`;
   }
   return `<div class="head"><button class="back" data-act="home">← ${T.back[0]}<small>${T.back[1]} · ${T.back[2]}</small></button>
       <div style="flex:1"></div>${!cancelled&&!done?`<div class="el" style="font-size:40px;font-weight:900" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>`:''}</div>
     <div class="banner ${cls} ${(!cancelled&&!done&&i.color==='red'&&!i.ackAt)?'flash':''}">
       ${nameBlock(i.type)}<span class="tag">${tagText}</span></div>
-    <div class="tl">${row('sent', i.submittedAt)}${row('ack', i.ackAt)}${row('resolved', i.resolvedAt)}</div>
-    ${action}`;
+    ${action}
+    <div class="tl">${row('sent', i.submittedAt)}${row('ack', i.ackAt)}${row('opfixed', i.opResolvedAt)}${row('resolved', i.resolvedAt)}</div>`;
 }
 
 function renderHistory(){
@@ -294,8 +321,9 @@ function renderHistory(){
     const st = i.cancelledAt ? 'Cancelled' : i.resolvedAt ? 'Resolved' : 'Open';
     return `<div class="hcard ${i.color}"><div class="t">${TYPES[i.type].en}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)}</span></div>
       <div class="g"><div>Sent<b>${fmtTime(i.submittedAt)}</b></div>
-      <div>Acknowledged<b>${fmtTime(i.ackAt)}</b><i>response ${resp}</i></div>
-      <div>Resolved<b>${fmtTime(i.resolvedAt)}</b><i>total ${fix}</i></div></div></div>`;
+      <div>Op. confirmed<b>${fmtTime(i.ackAt)}</b><i>response ${resp}</i></div>
+      <div>Op. fixed<b>${fmtTime(i.opResolvedAt)}</b><i>repair ${i.opResolvedAt&&i.ackAt?fmtDur(i.opResolvedAt-i.ackAt):'—'}</i></div>
+      <div>Packers OK<b>${fmtTime(i.resolvedAt)}</b><i>total ${fix}</i></div></div></div>`;
   }).join('') || '<div class="empty"><b>No issues logged yet</b>Nothing to show</div>';
   return `<div class="head"><button class="back" data-act="home">← ${T.back[0]}<small>${T.back[1]} · ${T.back[2]}</small></button>
       <div style="font-size:30px;font-weight:900">Issue Log</div></div>
@@ -317,10 +345,10 @@ function closeModal(){ $('#overlay').innerHTML = ''; }
 function exportCsv(){
   const q = v => `"${String(v).replace(/"/g,'""')}"`;
   const iso = ts => ts ? new Date(ts).toLocaleString() : '';
-  const rows = [['Issue','Urgency','Status','Sent','Acknowledged','Resolved','Response (min)','Total (min)']];
+  const rows = [['Issue','Urgency','Status','Sent','Operator confirmed','Operator fixed','Packers confirmed resolved','Response (min)','Total (min)']];
   [...issues].sort((a,b)=>a.submittedAt-b.submittedAt).forEach(i => rows.push([
     TYPES[i.type].en, i.color, i.cancelledAt?'cancelled':i.resolvedAt?'resolved':'open',
-    iso(i.submittedAt), iso(i.ackAt), iso(i.resolvedAt),
+    iso(i.submittedAt), iso(i.ackAt), iso(i.opResolvedAt), iso(i.resolvedAt),
     i.ackAt ? ((i.ackAt-i.submittedAt)/60000).toFixed(1) : '',
     i.resolvedAt ? ((i.resolvedAt-i.submittedAt)/60000).toFixed(1) : '']));
   const blob = new Blob([rows.map(r=>r.map(q).join(',')).join('\r\n')], {type:'text/csv'});
@@ -356,11 +384,16 @@ document.addEventListener('click', e => {
       save(); view = {name:'home'}; render(); toast('✔ Sent · Enviado · ပို့ပြီး'); break;
     case 'open': view = {name:'detail', id}; render(); break;
     case 'ack': { const i = byId(id); if (i && !i.ackAt){ i.ackAt = Date.now(); save(); render(); } break; }
-    case 'askres':
-      modal(`<h3>${T.fixed[0]}?</h3><p>${T.fixed[1]}? · ${T.fixed[2]}?<br>Is the problem really fixed?</p>
+    case 'askop':
+      modal(`<h3>${T.fixed[0]}?</h3><p>${T.fixed[1]}? · ${T.fixed[2]}?<br>Operator: is the problem fixed?</p>
         <div class="row"><button class="no" data-act="closemodal">NOT YET<small>Todavía no · မပြီးသေးပါ</small></button>
-        <button class="yes" data-act="res" data-id="${id}">YES, FIXED<small>Sí, resuelto · ဟုတ်ကဲ့ ပြီးပါပြီ</small></button></div>`); break;
-    case 'res': { const i = byId(id); if (i && !i.resolvedAt){ i.resolvedAt = Date.now(); save(); } closeModal(); render(); toast('🟢 Resolved · Resuelto · ဖြေရှင်းပြီး'); break; }
+        <button class="yes" data-act="opres" data-id="${id}">YES, FIXED<small>Sí, arreglado · ဟုတ်ကဲ့ ပြင်ပြီး</small></button></div>`); break;
+    case 'opres': { const i = byId(id); if (i && i.ackAt && !i.opResolvedAt){ i.opResolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('🔵 Packers: please confirm · confirmen · အတည်ပြုပါ'); break; }
+    case 'askres':
+      modal(`<h3>${T.pconfirm[0]}?</h3><p>${T.pconfirm[1]}? · ${T.pconfirm[2]}?<br>Packers: are the boxes good now?</p>
+        <div class="row"><button class="no" data-act="closemodal">NOT YET<small>Todavía no · မပြီးသေးပါ</small></button>
+        <button class="yes" data-act="res" data-id="${id}">YES, GOOD<small>Sí, bien · ဟုတ်ကဲ့ ကောင်းပြီ</small></button></div>`); break;
+    case 'res': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ i.resolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('🟢 Resolved · Resuelto · ဖြေရှင်းပြီး'); break; }
     case 'askcancel':
       modal(`<h3>Cancel this issue?</h3><p>It was sent by mistake.<br>Enviado por error · မှားပို့မိသည်</p>
         <div class="row"><button class="no" data-act="closemodal">NO · KEEP<small>No · မဟုတ်ပါ</small></button>
