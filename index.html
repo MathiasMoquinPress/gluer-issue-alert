@@ -38,7 +38,8 @@ button:active{transform:scale(.98)}
 
 /* home */
 .home{display:grid;grid-template-columns:1fr;gap:14px;flex:1}
-@media (min-width:900px) and (orientation:landscape){.home.has-open{grid-template-columns:3fr 2fr}}
+.openwrap{order:-1}
+@media (min-width:900px) and (orientation:landscape){.home.has-open{grid-template-columns:3fr 2fr}.openwrap{order:0}}
 .issues{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;align-content:start}
 @media (min-width:1000px){.issues{grid-template-columns:repeat(3,1fr)}}
 .ibtn{background:var(--card);border:3px solid var(--line);border-radius:26px;min-height:200px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px}
@@ -143,7 +144,7 @@ button:active{transform:scale(.98)}
 <div id="overlay"></div>
 
 <script>
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text ---------- */
