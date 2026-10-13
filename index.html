@@ -33,7 +33,7 @@ button:active{transform:scale(.98)}
 .lg.left{align-items:flex-start;text-align:left}
 .lg .es,.lg .my{font-weight:900;font-size:var(--u);overflow-wrap:anywhere}
 .lg .es{color:var(--esc)} .lg .my{color:var(--myc);line-height:1.45}
-.lg .en{font-style:normal;font-weight:700;font-size:calc(var(--u)*.55);opacity:.82}
+.lg .en{font-style:normal;font-weight:800;font-size:calc(var(--u)*.78);opacity:1;color:#fff}
 .lg.xl{--u:calc(var(--vu)*4.6)}
 .banner .lg.xl{--u:calc(var(--vu)*3.9)}
 .lg.md{--u:calc(var(--vu)*3)}
@@ -61,6 +61,7 @@ button:active{transform:scale(.98)}
 .lamp.pulse{animation:pulse .8s infinite}
 @keyframes pulse{50%{opacity:.35}}
 .status{flex:1;min-width:0}
+@media (min-width:700px){.status .lg.inline{--u:calc(var(--vu)*3.2)}}
 .status .cnt{font-size:calc(var(--vu)*1.9);color:var(--dim);font-weight:800;letter-spacing:.03em}
 .tbtn{background:var(--card2);border:2px solid var(--line);border-radius:calc(var(--vu)*2);padding:0 calc(var(--vu)*2);font-size:calc(var(--vu)*2.6);font-weight:800;min-height:calc(var(--vu)*7.5);white-space:nowrap}
 .tbtn.upd{border-color:var(--blue);color:#cfe1ff}
@@ -69,7 +70,8 @@ button:active{transform:scale(.98)}
 .home{flex:1;min-height:0;display:grid;gap:var(--g);grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
 .home:not(.has-open){grid-template-rows:minmax(0,1fr)}
 .openwrap{order:-1;max-height:42vh;max-height:42dvh;overflow-y:auto;min-height:0}
-@media (max-height:720px){.lg.xl .en,.turn .en,.trow .en,.ocard .en{display:none}.openwrap h2{display:none}.openwrap{max-height:36dvh}.trow .tm{font-size:calc(var(--vu)*2.6)}}
+@media (max-height:720px){.openwrap h2{display:none}.openwrap{max-height:36dvh}.trow .tm{font-size:calc(var(--vu)*2.6)}}
+@media (max-height:720px) and (orientation:portrait){.banner .en,.turn .en,.ocard .en{display:none}}
 .openwrap h2{margin:0 4px calc(var(--vu)*.8);font-size:calc(var(--vu)*1.9);color:var(--dim);letter-spacing:.05em;text-transform:uppercase}
 .issues{min-height:0;display:grid;gap:var(--g);grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}
 .ibtn{background:var(--card);border:3px solid var(--line);border-radius:calc(var(--vu)*3);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--vu)*.6);text-align:center}
@@ -196,7 +198,7 @@ textarea{flex:none;width:100%;height:calc(var(--vu)*13);border-radius:calc(var(-
 <div id="overlay"></div>
 
 <script>
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.3.1';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
