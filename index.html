@@ -16,7 +16,7 @@
   --bg:#0b0e14; --card:#151a24; --card2:#1d2431; --line:#2a3344;
   --text:#f4f7fb; --dim:#98a3b8;
   --red:#ff3b3b; --yellow:#ffc21a; --green:#2ee66b; --blue:#3d8bff; --orange:#ff8a2a;
-  --esc:#ffd6a0; --myc:#9fe6ff;
+  --hot:#ff2323; --esc:#ffd6a0; --myc:#9fe6ff;
 }
 @supports (height:1dvh){:root{--vu:min(1dvh,1.8vw)}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
@@ -62,7 +62,8 @@ button:active{transform:scale(.98)}
 @keyframes pulse{50%{opacity:.35}}
 .status{flex:1;min-width:0}
 @media (min-width:700px){.status .lg.inline{--u:calc(var(--vu)*3.2)}}
-.status .cnt{font-size:calc(var(--vu)*1.9);color:var(--dim);font-weight:800;letter-spacing:.03em}
+.status .cnt{font-size:calc(var(--vu)*2.6);color:var(--hot);font-weight:900;letter-spacing:.02em;line-height:1.1;text-shadow:0 0 14px rgba(255,35,35,.45)}
+.status .cnt b{font-size:calc(var(--vu)*4.6);font-weight:900;line-height:1}
 .tbtn{background:var(--card2);border:2px solid var(--line);border-radius:calc(var(--vu)*2);padding:0 calc(var(--vu)*2);font-size:calc(var(--vu)*2.6);font-weight:800;min-height:calc(var(--vu)*7.5);white-space:nowrap}
 .tbtn.upd{border-color:var(--blue);color:#cfe1ff}
 
@@ -90,7 +91,7 @@ button:active{transform:scale(.98)}
 .ocard .st{font-size:calc(var(--vu)*2);font-weight:700;color:var(--dim)}
 .ocard .cf{font-size:calc(var(--vu)*2.2);font-weight:900;color:var(--orange)}
 .ocard .right{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:calc(var(--vu)*.5);padding-right:calc(var(--vu)*1.6)}
-.ocard .el{font-size:calc(var(--vu)*3.6);font-weight:900;font-variant-numeric:tabular-nums}
+.ocard .el{font-size:calc(var(--vu)*5.4);color:var(--hot);font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
 .ocard .st{font-size:calc(var(--vu)*2.6)}
 .bar.red{background:var(--red)} .bar.yellow{background:var(--yellow)} .bar.green{background:var(--green)} .bar.blue{background:var(--blue)}
 .ocard.red{border-color:var(--red)} .ocard.yellow{border-color:var(--yellow)} .ocard.blue{border-color:var(--blue)}
@@ -105,7 +106,7 @@ button:active{transform:scale(.98)}
 .head{flex:none;display:flex;align-items:center;gap:calc(var(--vu)*1.6)}
 .back{background:var(--card2);border:2px solid var(--line);border-radius:calc(var(--vu)*2.2);min-height:calc(var(--vu)*8.5);min-width:calc(var(--vu)*17);padding:0 calc(var(--vu)*2)}
 .head .title{font-size:calc(var(--vu)*4);font-weight:900}
-.head .el{font-size:calc(var(--vu)*5);font-weight:900;font-variant-numeric:tabular-nums}
+.head .el{font-size:calc(var(--vu)*7.5);color:var(--hot);font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
 .titlebox{flex:none;background:var(--card);border:3px solid var(--line);border-radius:calc(var(--vu)*2.4);padding:calc(var(--vu)*1.2);display:flex;align-items:center;justify-content:center;gap:calc(var(--vu)*2.5)}
 .titlebox .ic{font-size:calc(var(--vu)*7);line-height:1}
 .titlebox .sub{color:var(--dim);font-size:calc(var(--vu)*2.2);font-weight:700;margin-top:2px}
@@ -157,6 +158,7 @@ button:active{transform:scale(.98)}
 @media (max-height:720px) and (orientation:portrait){.dr .turn{display:none}.trow:not(.done){display:none}}
 @media (orientation:portrait) and (max-height:1100px){.trow:not(.done){display:none}.trow .en{display:none}}
 @media (orientation:portrait) and (min-width:600px){.pair{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:minmax(0,1fr)}}
+@media (max-width:600px){.top{flex-wrap:wrap;row-gap:calc(var(--vu)*.6)}.lamps{margin-right:auto}.status{order:3;flex:1 0 100%;display:flex;align-items:baseline;flex-wrap:wrap;gap:0 calc(var(--vu)*1.5)}.status .cnt{font-size:calc(var(--vu)*2.4)}.status .cnt b{font-size:calc(var(--vu)*3.6)}}
 @media (max-width:600px){.tbtn .tx{display:none}.tbtn{padding:0 calc(var(--vu)*2.2)}}
 /* can't-fix reasons */
 .reasons{flex:1;min-height:0;display:grid;gap:var(--g);grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
@@ -198,7 +200,7 @@ textarea{flex:none;width:100%;height:calc(var(--vu)*13);border-radius:calc(var(-
 <div id="overlay"></div>
 
 <script>
-const APP_VERSION = '1.3.1';
+const APP_VERSION = '1.4.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -304,7 +306,7 @@ function topbar(){
       <div class="lamp b ${o==='blue'?'on':''} ${o==='blue'&&needPack?'pulse':''}"></div>
       <div class="lamp g ${o==='green'?'on':''}"></div>
     </div>
-    <div class="status">${n?`<div class="cnt">${n} OPEN · ${n} ABIERTO${n>1?'S':''}</div>`:''}${lg(sub,'inline xl2')}</div>
+    <div class="status">${n?`<div class="cnt"><b>${n}</b> OPEN · <b>${n}</b> ABIERTO${n>1?'S':''}</div>`:''}${lg(sub,'inline xl2')}</div>
     <button class="tbtn" data-act="history">📋<span class="tx"> Log</span></button>
     <button class="tbtn upd" data-act="update">⟳<span class="tx"> Update</span></button>
   </div>`;
