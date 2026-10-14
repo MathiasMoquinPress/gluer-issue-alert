@@ -217,29 +217,69 @@ textarea{flex:none;width:100%;height:calc(var(--vu)*13);border-radius:calc(var(-
 .trow .why.qa-ok{color:var(--green)} .trow .why.qa-no{color:var(--red)}
 @media (orientation:portrait){.banner .cfb{display:none}.who{font-size:calc(var(--vu)*2.2);flex-wrap:nowrap;white-space:nowrap}.who small{display:none}}
 .linkbtn.wide{min-height:calc(var(--vu)*6.5)}
+
+/* ===== polish: clean cards, futuristic icons ===== */
+html{background:var(--bg)}
+body{background:radial-gradient(120% 80% at 50% -10%,#121b2e 0%,var(--bg) 62%) fixed}
+.ibtn,.ocard,.top,.tl,.titlebox,.rbtn:not(.sel){background:linear-gradient(180deg,#182131,#121824)}
+.ocard{padding:0}
+.send{padding:0 2%}
+.ico{width:1em;height:1em;flex:none;display:inline-block;vertical-align:-.16em;overflow:visible}
+.ibtn .ic,.titlebox .ic{display:grid;place-items:center;border-radius:30%;background:linear-gradient(150deg,rgba(109,243,255,.15),rgba(122,139,255,.08));border:1.5px solid rgba(122,170,255,.3);box-shadow:inset 0 0 18px rgba(109,243,255,.07),0 0 22px rgba(109,243,255,.06)}
+.ibtn .ic{width:min(27cqh,22cqw);height:min(27cqh,22cqw);font-size:0}
+.ibtn .ic .ico,.titlebox .ic .ico{width:66%;height:66%;filter:drop-shadow(0 0 5px rgba(109,243,255,.5))}
+.titlebox .ic{width:calc(var(--vu)*8.5);height:calc(var(--vu)*8.5);font-size:0}
+.rbtn{flex-direction:column;gap:calc(var(--vu)*.8)}
+.rbtn .ico{width:min(30cqh,26cqw);height:min(30cqh,26cqw);filter:drop-shadow(0 0 5px rgba(109,243,255,.4))}
+.rbtn .lg{--u:min(9cqw,9.5cqh)}
+.rbtn.sel .ico,.rbtn.sel .ico [stroke]{stroke:#1c0e00;filter:none}
+.rbtn.sel .ico circle{fill:#1c0e00}
+.tbtn{display:inline-flex;align-items:center;gap:calc(var(--vu)*.9)}
+.tbtn .ico{width:calc(var(--vu)*3.6);height:calc(var(--vu)*3.6);vertical-align:0}
+.linkbtn{display:inline-flex;align-items:center;justify-content:center;gap:calc(var(--vu)*.9)}
+.linkbtn .ico{width:calc(var(--vu)*2.8);height:calc(var(--vu)*2.8);vertical-align:0}
+.who .ico{width:1.05em;height:1.05em;align-self:center}
+.cf .ico,.cfb .ico,.cfl .ico{width:1.15em;height:1.15em;vertical-align:-.2em}
+.ocard .st{display:inline-flex}
+.ocard .st .ico{width:calc(var(--vu)*3.8);height:calc(var(--vu)*3.8);vertical-align:0}
+.s-siren{color:var(--red)} .s-wrench{color:var(--blue)} .s-check{color:var(--green)} .s-clock{color:var(--yellow)}
+.cbtn .chk .ico{width:calc(var(--vu)*5);height:calc(var(--vu)*5);vertical-align:0;stroke-width:3.4}
+.back{display:inline-flex;align-items:center;justify-content:center;gap:calc(var(--vu)*1)}
+.back .ico{width:calc(var(--vu)*3.4);height:calc(var(--vu)*3.4);vertical-align:0;flex:none}
+.bar{align-self:stretch}
+.ibtn .ic{width:min(36cqh,32cqw);height:min(36cqh,32cqw)}
+.ibtn .ic .ico,.titlebox .ic .ico{width:70%;height:70%}
+.who{display:inline-grid;grid-template-columns:auto 1fr;column-gap:.55em;row-gap:0;align-items:center;flex-wrap:nowrap;white-space:normal;border-radius:calc(var(--vu)*2.6);padding:calc(var(--vu)*.7) calc(var(--vu)*2);line-height:1.2}
+.who .ico{grid-row:1 / span 2;width:1.25em;height:1.25em}
+.who small{grid-column:2;white-space:nowrap}
+.titlebox > div:not(.ic){text-align:center;display:flex;flex-direction:column;align-items:center}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <div id="overlay"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="ig" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#6df3ff"/><stop offset="1" stop-color="#8a7bff"/></linearGradient>
+  <linearGradient id="ia" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#ff6b6b"/></linearGradient>
+</defs></svg>
 
 <script>
-const APP_VERSION = '1.6.0';
+const APP_VERSION = '1.7.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
 const TYPES = {
-  fold:  {ic:'📃', t:['Fold Issue','Problema de Doblez','ခေါက်ခြင်း ပြဿနာ']},
-  glue:  {ic:'💧', t:['Glue Issue','Problema de Pegamento','ကော် ပြဿနာ']},
-  crack: {ic:'⚡', t:['Cracking Issue','Problema de Grietas','အက်ကွဲခြင်း ပြဿနာ']},
-  burst: {ic:'💥', t:['Bursting Issue','Problema de Reventado','ပေါက်ကွဲခြင်း ပြဿနာ']},
-  other: {ic:'❓', t:['Other Issues','Otros Problemas','အခြား ပြဿနာများ']}
+  fold:  {ic:'fold', t:['Fold Issue','Problema de Doblez','ခေါက်ခြင်း ပြဿနာ']},
+  glue:  {ic:'glue', t:['Glue Issue','Problema de Pegamento','ကော် ပြဿနာ']},
+  crack: {ic:'crack', t:['Cracking Issue','Problema de Grietas','အက်ကွဲခြင်း ပြဿနာ']},
+  burst: {ic:'burst', t:['Bursting Issue','Problema de Reventado','ပေါက်ကွဲခြင်း ပြဿနာ']},
+  other: {ic:'other', t:['Other Issues','Otros Problemas','အခြား ပြဿနာများ']}
 };
 const REASONS = {
-  die:   {t:['Die Cut','Troquel','ဒိုင်ကပ်']},
-  paper: {t:['Paper','Papel','စက္ကူ']},
-  cad:   {t:['CAD (Design)','CAD (Diseño)','CAD (ဒီဇိုင်း)']},
-  other: {t:['Other','Otro','အခြား']}
+  die:   {ic:'die', t:['Die Cut','Troquel','ဒိုင်ကပ်']},
+  paper: {ic:'paper', t:['Paper','Papel','စက္ကူ']},
+  cad:   {ic:'cad', t:['CAD (Design)','CAD (Diseño)','CAD (ဒီဇိုင်း)']},
+  other: {ic:'pen', t:['Other','Otro','အခြား']}
 };
 const URG = {
   red:    {en:'RED',    d:['Need help NOW','¡Necesito ayuda YA!','ချက်ချင်း အကူအညီလိုသည်'], tag:['Urgent','Urgente','အရေးပေါ်']},
@@ -290,6 +330,36 @@ const T = {
   typeit:['Type the reason…','Escriba el motivo…','အကြောင်းရင်း ရေးပါ…']
 };
 const TS = {escalated:['Escalated','Escalado','တင်ပြပြီး'], qa:['QA / Manager','QA / Gerente','QA / မန်နေဂျာ'], sent:['Sent','Enviado','ပို့ပြီး'], ack:['Operator in','Operador listo','အော်ပရေတာ လက်ခံ'], cantfixed:["Can't fix",'No se puede','ပြင်မရ'], opfixed:['Op. fixed','Arreglado','ပြင်ပြီး'], resolved:['Packers OK','Empacadores OK','ထုပ်ပိုးသူ OK']};
+const IC = {
+  fold:'<path d="M8 12h16v26H8z"/><path d="M24 12l16 5v26l-16-5"/><path d="M24 6v37" stroke="url(#ia)"/>',
+  glue:'<path d="M12 25h18v13a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4z"/><path d="M16 25v-5h10v5"/><path d="M19 20l2-10 2 10"/><path d="M38 24c-3 4.5-4.5 7-4.5 9a4.5 4.5 0 0 0 9 0c0-2-1.5-4.5-4.5-9z" stroke="url(#ia)"/>',
+  crack:'<rect x="9" y="8" width="30" height="33" rx="4"/><path d="M27 8l-5 9 7 5-6 8 4 4-2 7" stroke="url(#ia)"/><path d="M29 22l6-2" stroke="url(#ia)"/>',
+  burst:'<path d="M8 18h12l-2 6 3 6-3 8H8z"/><path d="M40 18H28l2 6-3 6 3 8h10z"/><path d="M24 5v6M14 8l2 5M34 8l-2 5" stroke="url(#ia)"/>',
+  other:'<path d="M24 5l16.5 9.5v19L24 43 7.5 33.5v-19z"/><path d="M24 16v11" stroke="url(#ia)"/><circle cx="24" cy="33" r="1.7" fill="url(#ia)" stroke="none"/>',
+  die:'<path d="M12 8h24l-3 9H15z"/><path d="M15 13h18" stroke="url(#ia)"/><rect x="7" y="23" width="34" height="18" rx="3" stroke-dasharray="3 4"/>',
+  paper:'<path d="M12 6h17l9 9v27H12z"/><path d="M29 6v9h9"/><path d="M18 25h14M18 32h14M18 39h8" stroke="url(#ia)"/>',
+  cad:'<path d="M24 5l16 9v20L24 43 8 34V14z"/><path d="M8 14l16 9 16-9M24 23v20" stroke="url(#ia)"/>',
+  pen:'<path d="M31 7l10 10-22 22-12 2 2-12z"/><path d="M26 12l10 10" stroke="url(#ia)"/>',
+  clock:'<circle cx="24" cy="24" r="17"/><path d="M24 14v10l7 5"/>',
+  wrench:'<path d="M33 7a10 10 0 0 0-9 13L7 37l4 4 17-17a10 10 0 0 0 13-9l-7 6-5-1-1-5z"/>',
+  check:'<path d="M9 25l10 10 20-22"/>',
+  checkc:'<circle cx="24" cy="24" r="17"/><path d="M16 25l6 6 11-13"/>',
+  siren:'<path d="M13 37V27a11 11 0 0 1 22 0v10"/><path d="M8 41h32"/><path d="M24 6v5M9 13l4 4M39 13l-4 4"/><path d="M19 37V28"/>',
+  warn:'<path d="M24 6L44 40H4z"/><path d="M24 19v11"/><path d="M24 35v.5"/>',
+  arrow:'<path d="M9 24h28M27 13l11 11-11 11"/>',
+  chev:'<path d="M30 10L16 24l14 14"/>',
+  log:'<path d="M17 12h25M17 24h25M17 36h25"/><path d="M7 12h.5M7 24h.5M7 36h.5"/>',
+  refresh:'<path d="M41 22A17 17 0 0 0 11 14M7 7v9h9"/><path d="M7 26a17 17 0 0 0 30 8M41 41v-9h-9"/>',
+  x:'<path d="M12 12l24 24M36 12L12 36"/>',
+  undo:'<path d="M17 11L6 22l11 11"/><path d="M6 22h24a11 11 0 0 1 0 22H20"/>',
+  dl:'<path d="M24 6v26M14 23l10 10 10-10M8 42h32"/>',
+  trash:'<path d="M9 14h30M18 14V8h12v6M13 14l2 28h18l2-28"/>'
+};
+const ico = (n, cls='') => {
+  const cc = cls.includes('cc');
+  const inner = cc ? IC[n].split('url(#ia)').join('currentColor') : IC[n];
+  return '<svg class="ico ' + cls + '" viewBox="0 0 48 48" fill="none" stroke="' + (cc ? 'currentColor' : 'url(#ig)') + '" stroke-width="' + (cc ? 3 : 2.4) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+};
 const lg = (a, cls='') => `<div class="lg ${cls}"><span class="es">${a[1]}</span><span class="my">${a[2]}</span><i class="en">${a[0]}</i></div>`;
 
 /* ---------- state ---------- */
@@ -334,7 +404,7 @@ function topbar(){
   const needPack = open.some(i => i.opResolvedAt);
   const n = open.length;
   const sub = o === 'green' ? T.allgood
-    : o === 'cop' ? ['QA / MANAGER NEEDED','SE NECESITA QA / GERENTE','QA / မန်နေဂျာ လိုအပ်သည်']
+    : o === 'cop' ? ['QA / MANAGER NEEDED','QA / GERENTE','QA / မန်နေဂျာ']
     : o === 'red' ? ['URGENT','URGENTE','အရေးပေါ်']
     : o === 'yellow' ? ['ATTENTION','ATENCIÓN','အာရုံစိုက်ပါ']
     : needPack ? ['PACKERS: CONFIRM','EMPACADORES: CONFIRMEN','ထုပ်ပိုးသူများ – အတည်ပြုပါ']
@@ -347,32 +417,32 @@ function topbar(){
       <div class="lamp g ${o==='green'?'on':''}"></div>
     </div>
     <div class="status">${n?`<div class="cnt"><b>${n}</b> OPEN · <b>${n}</b> ABIERTO${n>1?'S':''}</div>`:''}${lg(sub,'inline xl2')}</div>
-    <button class="tbtn" data-act="history">📋<span class="tx"> Log</span></button>
-    <button class="tbtn upd" data-act="update">⟳<span class="tx"> Update</span></button>
+    <button class="tbtn" data-act="history">${ico('log','cc')}<span class="tx">Log</span></button>
+    <button class="tbtn upd" data-act="update">${ico('refresh','cc')}<span class="tx">Update</span></button>
   </div>`;
 }
 
 const WHO = {op:['OPERATOR','OPERADOR','အော်ပရေတာ'], pk:['PACKERS','EMPACADORES','ထုပ်ပိုးသူများ'], qa:['QA / MANAGER','QA / GERENTE','QA / မန်နေဂျာ']};
-const whoTag = i => { const k = isEsc(i) ? 'qa' : (i.opResolvedAt || i.cantFixAt) ? 'pk' : 'op'; const w = WHO[k]; return `<span class="who ${k}">👉 ${w[1]} · ${w[2]}<small>${w[0]}</small></span>`; };
-const statusEmoji = i => isEsc(i) ? '🚨' : (i.opResolvedAt || i.cantFixAt) ? '👆' : i.ackAt ? '🔧' : '⏳';
+const whoTag = i => { const k = isEsc(i) ? 'qa' : (i.opResolvedAt || i.cantFixAt) ? 'pk' : 'op'; const w = WHO[k]; return `<span class="who ${k}">${ico('arrow','cc')}<span>${w[1]} · ${w[2]}</span><small>${w[0]}</small></span>`; };
+const statusEmoji = i => { const k = isEsc(i) ? ['siren','siren'] : (i.opResolvedAt || i.cantFixAt) ? ['checkc','check'] : i.ackAt ? ['wrench','wrench'] : ['clock','clock']; return ico(k[0],'cc s-'+k[1]); };
 function statusLine(i){
-  if (i.opResolvedAt) return `👆 ${T.waitpack[1]}`;
-  if (i.ackAt) return `🔧 ${T.acked[1]}`;
-  return `⏳ ${T.waiting[1]}`;
+  if (i.opResolvedAt) return T.waitpack[1];
+  if (i.ackAt) return T.acked[1];
+  return T.waiting[1];
 }
 
 function renderHome(){
   const open = issues.filter(isOpen).sort((a,b) => (a.color===b.color ? a.submittedAt-b.submittedAt : a.color==='red'?-1:1));
   const btns = Object.keys(TYPES).map(k => `
     <button class="ibtn ${k==='other'?'other':''}" data-act="pick" data-type="${k}">
-      <div class="ic">${TYPES[k].ic}</div>${lg(TYPES[k].t)}
+      <div class="ic">${ico(TYPES[k].ic)}</div>${lg(TYPES[k].t)}
     </button>`).join('');
   const cards = open.map(i => `
     <button class="ocard ${cardColor(i)} ${i.color==='red'&&!i.ackAt?'flash':''} ${(i.opResolvedAt||(i.cantFixAt&&!isEsc(i)))?'flashb':''}" data-act="open" data-id="${i.id}">
       <div class="bar ${cardColor(i)}"></div>
       <div class="body">${lg(TYPES[i.type].t,'inline')}
         ${whoTag(i)}
-        ${i.cantFixAt&&!i.opResolvedAt?`<div class="cf">⚠ ${T.cant[0]} · ${cfText(i)}</div>`:''}</div>
+        ${i.cantFixAt&&!i.opResolvedAt?`<div class="cf">${ico('warn','cc')} ${T.cant[0]} · ${cfText(i)}</div>`:''}</div>
       <div class="right"><div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>
         <div class="meta"><span class="u ${i.color}">${URG[i.color].en}</span><span class="st">${statusEmoji(i)}</span></div></div>
     </button>`).join('');
@@ -383,15 +453,15 @@ function renderHome(){
     </div><div class="ver">v${APP_VERSION}</div>`;
 }
 
-const backBtn = () => `<button class="back" data-act="home">${lg(T.back,'sm')}</button>`;
+const backBtn = () => `<button class="back" data-act="home">${ico('chev','cc')}${lg(T.back,'sm')}</button>`;
 
 function renderColor(){
   const t = view.type, sel = view.color;
   const cb = c => `<button class="cbtn ${c} ${sel&&sel!==c?'dim':''} ${sel===c?'sel':''}" data-act="color" data-color="${c}">
-      ${sel===c?'<span class="chk">✔</span>':''}${lg(URG[c].d)}
+      ${sel===c?'<span class="chk">'+ico('check','cc')+'</span>':''}${lg(URG[c].d)}
     </button>`;
   return `<div class="head">${backBtn()}</div>
-    <div class="titlebox"><div class="ic">${TYPES[t].ic}</div>${lg(TYPES[t].t,'md')}</div>
+    <div class="titlebox"><div class="ic">${ico(TYPES[t].ic)}</div>${lg(TYPES[t].t,'md')}</div>
     <div class="colors">${cb('red')}${cb('yellow')}</div>
     <button class="send" data-act="send" ${sel?'':'disabled'}>${lg(T.send)}</button>`;
 }
@@ -399,9 +469,9 @@ function renderColor(){
 function renderCant(){
   const i = byId(view.id); if (!i) return renderHome();
   const r = view.reason;
-  const rb = k => `<button class="rbtn ${r===k?'sel':''} ${r&&r!==k?'dim':''}" data-act="reason" data-r="${k}">${lg(REASONS[k].t)}</button>`;
+  const rb = k => `<button class="rbtn ${r===k?'sel':''} ${r&&r!==k?'dim':''}" data-act="reason" data-r="${k}">${ico(REASONS[k].ic)}${lg(REASONS[k].t)}</button>`;
   const note = r === 'other' ? `<textarea id="note" placeholder="${T.typeit[0]} / ${T.typeit[1]} / ${T.typeit[2]}">${view.note||''}</textarea>` : '';
-  return `<div class="head"><button class="back" data-act="open" data-id="${i.id}">${lg(T.back,'sm')}</button></div>
+  return `<div class="head"><button class="back" data-act="open" data-id="${i.id}">${ico('chev','cc')}${lg(T.back,'sm')}</button></div>
     <div class="titlebox"><div>${lg(T.why,'md')}<div class="sub">${TYPES[i.type].t[0]}</div></div></div>
     <div class="reasons">${rb('die')}${rb('paper')}${rb('cad')}${rb('other')}</div>
     ${note}
@@ -426,7 +496,7 @@ function renderDetail(){
          <button class="bigact no" data-act="askqa" data-d="rejected" data-id="${i.id}">${lg(T.notapproved)}</button></div>`
       : stage === 'cf'
       ? `<button class="bigact esc" data-act="askesc" data-id="${i.id}">${lg(T.escal)}</button>
-         <button class="linkbtn wide" data-act="retry" data-id="${i.id}">↩ ${T.retry[1]} · ${T.retry[2]}</button>`
+         <button class="linkbtn wide" data-act="retry" data-id="${i.id}">${ico('undo','cc')}${T.retry[1]} · ${T.retry[2]}</button>`
       : stage === 0
       ? `<button class="bigact ack" data-act="ack" data-id="${i.id}">${lg(T.confirm)}</button>`
       : stage === 1
@@ -434,10 +504,10 @@ function renderDetail(){
          <button class="bigact cant" data-act="cantfix" data-id="${i.id}">${lg(T.cant)}</button></div>`
       : `<button class="bigact res" data-act="askres" data-id="${i.id}">${lg(T.pconfirm)}</button>`);
   }
-  const cfBadge = i.cantFixAt && !i.opResolvedAt && !done ? `<div class="cfb">⚠ ${T.cant[0]} · ${cfText(i)}</div>` : '';
+  const cfBadge = i.cantFixAt && !i.opResolvedAt && !done ? `<div class="cfb">${ico('warn','cc')} ${T.cant[0]} · ${cfText(i)}</div>` : '';
   const cfRow = i.cantFixAt ? row('cantfixed', i.cantFixAt, `<div class="why">${cfText(i)}</div>`, true) : '';
   return `<div class="head">${backBtn()}
-      <div style="flex:1"></div>${!cancelled&&!done?`<button class="linkbtn" data-act="askcancel" data-id="${i.id}">✕ Cancel</button>`:''}${!cancelled&&!done?`<div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>`:''}</div>
+      <div style="flex:1"></div>${!cancelled&&!done?`<button class="linkbtn" data-act="askcancel" data-id="${i.id}">${ico('x','cc')}Cancel</button>`:''}${!cancelled&&!done?`<div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>`:''}</div>
     <div class="dgrid">
       <div class="banner ${cls} ${(!cancelled&&!done&&i.color==='red'&&!i.ackAt)?'flash':''}">
         ${lg(TYPES[i.type].t,'xl')}<div class="badges"><span class="tag">${tagText}</span>${cfBadge}</div></div>
@@ -454,15 +524,15 @@ function renderHistory(){
     const fix = closeAt ? fmtDur(closeAt - i.submittedAt) : '—';
     const st = i.cancelledAt ? 'Cancelled' : i.qaAt ? 'QA ' + (i.qaDecision === 'approved' ? 'Approved' : 'Not approved') : i.resolvedAt ? 'Resolved' : i.escalatedAt ? 'ESCALATED' : 'Open';
     return `<div class="hcard ${i.color}"><div class="t">${TYPES[i.type].t[0]}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)}</span></div>
-      ${i.cantFixAt?`<div class="cfl">⚠ Can't fix (${fmtTime(i.cantFixAt)}): ${cfText(i)}</div>`:''}
-      ${i.escalatedAt?`<div class="cfl">🚨 Escalated ${fmtTime(i.escalatedAt)}${i.qaAt?` → QA ${i.qaDecision==='approved'?'APPROVED':'NOT APPROVED'} ${fmtTime(i.qaAt)}`:' – waiting for QA / Manager'}</div>`:''}
+      ${i.cantFixAt?`<div class="cfl">Can't fix (${fmtTime(i.cantFixAt)}): ${cfText(i)}</div>`:''}
+      ${i.escalatedAt?`<div class="cfl">Escalated ${fmtTime(i.escalatedAt)}${i.qaAt?` → QA ${i.qaDecision==='approved'?'APPROVED':'NOT APPROVED'} ${fmtTime(i.qaAt)}`:' – waiting for QA / Manager'}</div>`:''}
       <div class="g"><div>Sent<b>${fmtTime(i.submittedAt)}</b></div>
       <div>Op. confirmed<b>${fmtTime(i.ackAt)}</b><i>response ${resp}</i></div>
       <div>Op. fixed<b>${fmtTime(i.opResolvedAt)}</b><i>repair ${i.opResolvedAt&&i.ackAt?fmtDur(i.opResolvedAt-i.ackAt):'—'}</i></div>
       <div>Packers OK<b>${fmtTime(i.resolvedAt)}</b><i>total ${fix}</i></div></div></div>`;
   }).join('') || '<div class="empty">No issues logged yet</div>';
   return `<div class="head">${backBtn()}<div class="title">Issue Log</div></div>
-    <div class="hbar"><button class="tbtn" data-act="csv">⬇ Download CSV</button><button class="tbtn" data-act="clearlog" style="color:#ff9a9a">🗑 Clear log</button></div>
+    <div class="hbar"><button class="tbtn" data-act="csv">${ico('dl','cc')}Download CSV</button><button class="tbtn" data-act="clearlog" style="color:#ff9a9a">${ico('trash','cc')}Clear log</button></div>
     <div class="hist">${cards}</div><div class="ver">v${APP_VERSION}</div>`;
 }
 
@@ -521,24 +591,24 @@ document.addEventListener('click', e => {
     case 'send':
       if (!view.color) return;
       issues.push({id:'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,5), type:view.type, color:view.color, submittedAt:Date.now(), ackAt:null, opResolvedAt:null, resolvedAt:null, cancelledAt:null});
-      save(); view = {name:'home'}; render(); toast('✔ Sent · Enviado · ပို့ပြီး'); break;
+      save(); view = {name:'home'}; render(); toast('Sent · Enviado · ပို့ပြီး'); break;
     case 'open': view = {name:'detail', id}; render(); break;
     case 'ack': { const i = byId(id); if (i && !i.ackAt){ i.ackAt = Date.now(); save(); render(); } break; }
     case 'askop': askModal(T.isfixed, T.notyet, T.yesfixed, 'yes', 'opres', id, 'Operator'); break;
-    case 'opres': { const i = byId(id); if (i && i.ackAt && !i.opResolvedAt){ i.opResolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('🔵 Packers: please confirm · confirmen · အတည်ပြုပါ'); break; }
+    case 'opres': { const i = byId(id); if (i && i.ackAt && !i.opResolvedAt){ i.opResolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('Packers: please confirm · confirmen · အတည်ပြုပါ'); break; }
     case 'askesc': askModal(T.escq, T.notyet, T.yesesc, 'yes', 'esc', id, 'Packers'); break;
-    case 'esc': { const i = byId(id); if (i && i.cantFixAt && !i.escalatedAt){ i.escalatedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('🚨 Escalated · Escalado · တင်ပြပြီး'); break; }
+    case 'esc': { const i = byId(id); if (i && i.cantFixAt && !i.escalatedAt){ i.escalatedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('Escalated · Escalado · တင်ပြပြီး'); break; }
     case 'retry': { const i = byId(id); if (i && i.cantFixAt && !i.escalatedAt){ (i.cfHistory = i.cfHistory || []).push({at:i.cantFixAt, reason:i.cantFixReason, note:i.cantFixNote}); i.cantFixAt = null; i.cantFixReason = null; i.cantFixNote = ''; save(); render(); } break; }
     case 'askqa': { const ap = b.dataset.d === 'approved'; askModal(ap ? T.appq : T.nappq, T.notyet, ap ? T.yesapp : T.yesnapp, ap ? 'yes' : 'danger', ap ? 'qaok' : 'qano', id, 'QA / Manager'); break; }
-    case 'qaok': case 'qano': { const i = byId(id); if (i && isEsc(i)){ i.qaAt = Date.now(); i.qaDecision = act === 'qaok' ? 'approved' : 'rejected'; save(); } closeModal(); view = {name:'home'}; render(); toast(act === 'qaok' ? '🟢 Approved · Aprobado · ခွင့်ပြုသည်' : '⛔ Not approved · No aprobado · ခွင့်မပြုပါ'); break; }
+    case 'qaok': case 'qano': { const i = byId(id); if (i && isEsc(i)){ i.qaAt = Date.now(); i.qaDecision = act === 'qaok' ? 'approved' : 'rejected'; save(); } closeModal(); view = {name:'home'}; render(); toast(act === 'qaok' ? 'Approved · Aprobado · ခွင့်ပြုသည်' : 'Not approved · No aprobado · ခွင့်မပြုပါ'); break; }
     case 'cantfix': view = {name:'cant', id, reason:null, note:''}; render(); break;
     case 'reason': view.reason = b.dataset.r; render(); { const n = $('#note'); if (n) n.focus(); } break;
     case 'sendcant': {
       const i = byId(view.id);
       if (i && view.reason){ i.cantFixAt = Date.now(); i.cantFixReason = view.reason; i.cantFixNote = view.reason === 'other' ? (view.note || '').trim() : ''; save(); }
-      view = {name:'home'}; render(); toast("⚠ Can't fix recorded · No se puede arreglar · ပြင်၍ မရ"); break; }
+      view = {name:'home'}; render(); toast("Can't fix recorded · No se puede arreglar · ပြင်၍ မရ"); break; }
     case 'askres': askModal(T.boxesgood, T.notyet, T.yesgood, 'yes', 'res', id, 'Packers'); break;
-    case 'res': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ i.resolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('🟢 Resolved · Resuelto · ဖြေရှင်းပြီး'); break; }
+    case 'res': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ i.resolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('Resolved · Resuelto · ဖြေရှင်းပြီး'); break; }
     case 'askcancel': askModal(T.cancelq, T.nokeep, T.yescancel, 'danger', 'cancel', id, 'Sent by mistake'); break;
     case 'cancel': { const i = byId(id); if (i && isOpen(i)){ i.cancelledAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); break; }
     case 'closemodal': closeModal(); break;
