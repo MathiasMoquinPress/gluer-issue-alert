@@ -371,7 +371,16 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
   .ocard .oi > .cf{justify-self:start}
   .ocard .who{padding-top:calc(var(--vu)*.5);padding-bottom:calc(var(--vu)*.5)}
 }
-@media (orientation:landscape) and (min-width:800px) and (max-width:1099px) and (min-height:700px){.openwrap{max-height:42dvh}}
+@media (orientation:landscape) and (min-width:800px) and (max-width:1099px) and (min-height:700px){.openwrap{max-height:47dvh}}
+/* accent edge: a flush band clipped by the card's own curve (outer edge matches the card, inner edge is straight) */
+.ocard{position:relative;overflow:hidden;border-left-width:3px;--ac:var(--line)}
+.ocard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:calc(var(--vu)*2.2);background:var(--ac)}
+.ocard.red,.ocard.cop{--ac:var(--red)} .ocard.yellow{--ac:var(--yellow)} .ocard.blue{--ac:var(--blue)}
+@keyframes copCard{0%{border-color:var(--red);background:#3a1218;--ac:var(--red)}50%{border-color:var(--blue);background:#10244a;--ac:var(--blue)}}
+.ocard .oi{padding-left:calc(var(--vu)*4.4) !important}
+.hcard{position:relative;overflow:hidden;border-left-width:2px;border-left-color:var(--line);--ac:var(--line);padding-left:calc(var(--vu)*4.2)}
+.hcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:calc(var(--vu)*1.8);background:var(--ac)}
+.hcard.red{--ac:var(--red);border-left-color:var(--line)} .hcard.yellow{--ac:var(--yellow);border-left-color:var(--line)}
 </style>
 </head>
 <body>
@@ -383,7 +392,7 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '1.8.0';
+const APP_VERSION = '1.8.1';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
