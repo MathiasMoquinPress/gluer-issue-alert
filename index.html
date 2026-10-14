@@ -71,7 +71,7 @@ button:active{transform:scale(.98)}
 .home{flex:1;min-height:0;display:grid;gap:var(--g);grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
 .home:not(.has-open){grid-template-rows:minmax(0,1fr)}
 .openwrap{order:-1;max-height:42vh;max-height:42dvh;overflow-y:auto;min-height:0}
-@media (max-height:720px){.openwrap h2{display:none}.openwrap{max-height:36dvh}.trow .tm{font-size:calc(var(--vu)*2.6)}}
+@media (max-height:720px){.openwrap h2{display:none}.openwrap{max-height:41dvh}.trow .tm{font-size:calc(var(--vu)*2.6)}}
 @media (max-height:720px) and (orientation:portrait){.banner .en,.turn .en,.ocard .en{display:none}}
 .openwrap h2{margin:0 4px calc(var(--vu)*.8);font-size:calc(var(--vu)*1.9);color:var(--dim);letter-spacing:.05em;text-transform:uppercase}
 .issues{min-height:0;display:grid;gap:var(--g);grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}
@@ -90,6 +90,10 @@ button:active{transform:scale(.98)}
 .ocard .meta{display:flex;align-items:center;gap:calc(var(--vu)*1.2);flex-wrap:wrap}
 .ocard .st{font-size:calc(var(--vu)*2);font-weight:700;color:var(--dim)}
 .ocard .cf{font-size:calc(var(--vu)*2.2);font-weight:900;color:var(--orange)}
+.who{display:inline-flex;align-self:flex-start;align-items:baseline;gap:0 calc(var(--vu)*1.2);flex-wrap:wrap;border-radius:99px;padding:calc(var(--vu)*.5) calc(var(--vu)*1.8);font-weight:900;font-size:calc(var(--vu)*2.8);line-height:1.2}
+.who small{font-size:calc(var(--vu)*2);font-weight:800;opacity:.95}
+.who.op{background:#fff;color:#10131a}
+.who.pk{background:var(--blue);color:#fff}
 .ocard .right{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:calc(var(--vu)*.5);padding-right:calc(var(--vu)*1.6)}
 .ocard .el{font-size:calc(var(--vu)*5.4);color:var(--hot);font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
 .ocard .st{font-size:calc(var(--vu)*2.6)}
@@ -158,6 +162,7 @@ button:active{transform:scale(.98)}
 @media (max-height:720px) and (orientation:portrait){.dr .turn{display:none}.trow:not(.done){display:none}}
 @media (orientation:portrait) and (max-height:1100px){.trow:not(.done){display:none}.trow .en{display:none}}
 @media (orientation:portrait) and (min-width:600px){.pair{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:minmax(0,1fr)}}
+@media (max-width:600px){.who small{display:none}.who{font-size:calc(var(--vu)*2.1);padding:calc(var(--vu)*.3) calc(var(--vu)*1.4)}.ocard .lg.inline{--u:calc(var(--vu)*2.4)}}
 @media (max-width:600px){.top{flex-wrap:wrap;row-gap:calc(var(--vu)*.6)}.lamps{margin-right:auto}.status{order:3;flex:1 0 100%;display:flex;align-items:baseline;flex-wrap:wrap;gap:0 calc(var(--vu)*1.5)}.status .cnt{font-size:calc(var(--vu)*2.4)}.status .cnt b{font-size:calc(var(--vu)*3.6)}}
 @media (max-width:600px){.tbtn .tx{display:none}.tbtn{padding:0 calc(var(--vu)*2.2)}}
 /* can't-fix reasons */
@@ -200,7 +205,7 @@ textarea{flex:none;width:100%;height:calc(var(--vu)*13);border-radius:calc(var(-
 <div id="overlay"></div>
 
 <script>
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.5.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -312,6 +317,8 @@ function topbar(){
   </div>`;
 }
 
+const WHO = {op:['OPERATOR','OPERADOR','အော်ပရေတာ'], pk:['PACKERS','EMPACADORES','ထုပ်ပိုးသူများ']};
+const whoTag = i => { const k = i.opResolvedAt ? 'pk' : 'op'; const w = WHO[k]; return `<span class="who ${k}">👉 ${w[1]} · ${w[2]}<small>${w[0]}</small></span>`; };
 const statusEmoji = i => i.opResolvedAt ? '👆' : i.ackAt ? '🔧' : '⏳';
 function statusLine(i){
   if (i.opResolvedAt) return `👆 ${T.waitpack[1]}`;
@@ -329,6 +336,7 @@ function renderHome(){
     <button class="ocard ${cardColor(i)} ${i.color==='red'&&!i.ackAt?'flash':''} ${i.opResolvedAt?'flashb':''}" data-act="open" data-id="${i.id}">
       <div class="bar ${cardColor(i)}"></div>
       <div class="body">${lg(TYPES[i.type].t,'inline')}
+        ${whoTag(i)}
         ${hasCF(i)?`<div class="cf">⚠ ${T.cant[0]} · ${cfText(i)}</div>`:''}</div>
       <div class="right"><div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>
         <div class="meta"><span class="u ${i.color}">${URG[i.color].en}</span><span class="st">${statusEmoji(i)}</span></div></div>
