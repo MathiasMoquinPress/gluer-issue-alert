@@ -110,7 +110,7 @@ button:active{transform:scale(.98)}
 .head{flex:none;display:flex;align-items:center;gap:calc(var(--vu)*1.6)}
 .back{background:var(--card2);border:2px solid var(--line);border-radius:calc(var(--vu)*2.2);min-height:calc(var(--vu)*8.5);min-width:calc(var(--vu)*17);padding:0 calc(var(--vu)*2)}
 .head .title{font-size:calc(var(--vu)*4);font-weight:900}
-.head .el{font-size:calc(var(--vu)*7.5);color:var(--hot);font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.head .el{font-size:calc(var(--vu)*6.5);color:var(--hot);font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
 .titlebox{flex:none;background:var(--card);border:3px solid var(--line);border-radius:calc(var(--vu)*2.4);padding:calc(var(--vu)*1.2);display:flex;align-items:center;justify-content:center;gap:calc(var(--vu)*2.5)}
 .titlebox .ic{font-size:calc(var(--vu)*7);line-height:1}
 .titlebox .sub{color:var(--dim);font-size:calc(var(--vu)*2.2);font-weight:700;margin-top:2px}
@@ -163,7 +163,7 @@ button:active{transform:scale(.98)}
 @media (orientation:portrait) and (max-height:1100px){.trow:not(.done){display:none}.trow .en{display:none}}
 @media (orientation:portrait) and (min-width:600px){.pair{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:minmax(0,1fr)}}
 @media (max-width:600px){.who small{display:none}.who{font-size:calc(var(--vu)*2.1);padding:calc(var(--vu)*.3) calc(var(--vu)*1.4)}.ocard .lg.inline{--u:calc(var(--vu)*2.4)}}
-@media (max-width:600px){.top{flex-wrap:wrap;row-gap:calc(var(--vu)*.6)}.lamps{margin-right:auto}.status{order:3;flex:1 0 100%;display:flex;align-items:baseline;flex-wrap:wrap;gap:0 calc(var(--vu)*1.5)}.status .cnt{font-size:calc(var(--vu)*2.4)}.status .cnt b{font-size:calc(var(--vu)*3.6)}}
+@media (max-width:900px) and (orientation:portrait),(max-width:600px){.top{flex-wrap:wrap;row-gap:calc(var(--vu)*.6)}.lamps{margin-right:auto}.status{order:3;flex:1 0 100%;display:flex;align-items:baseline;flex-wrap:wrap;gap:0 calc(var(--vu)*1.5)}.status .cnt{font-size:calc(var(--vu)*2.4)}.status .cnt b{font-size:calc(var(--vu)*3.6)}}
 @media (max-width:600px){.tbtn .tx{display:none}.tbtn{padding:0 calc(var(--vu)*2.2)}}
 /* can't-fix reasons */
 .reasons{flex:1;min-height:0;display:grid;gap:var(--g);grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
@@ -198,6 +198,25 @@ textarea{flex:none;width:100%;height:calc(var(--vu)*13);border-radius:calc(var(-
 
 .toast{position:fixed;left:50%;bottom:3vh;transform:translateX(-50%);background:#fff;color:#10131a;padding:calc(var(--vu)*1.8) calc(var(--vu)*3);border-radius:99px;font-size:calc(var(--vu)*2.8);font-weight:800;z-index:60;box-shadow:0 8px 30px rgba(0,0,0,.6);max-width:92vw;text-align:center}
 .ver{position:fixed;right:10px;bottom:4px;color:#4a5468;font-size:12px;pointer-events:none}
+.lamp.cop.r.on{animation:copR .6s steps(1) infinite}
+.lamp.cop.b.on{animation:copB .6s steps(1) infinite}
+@keyframes copR{0%{opacity:1}50%{opacity:.12}}
+@keyframes copB{0%{opacity:.12}50%{opacity:1}}
+.top.cop{animation:copTop .6s steps(1) infinite}
+@keyframes copTop{0%{border-color:var(--red);box-shadow:0 0 30px 4px rgba(255,59,59,.7)}50%{border-color:var(--blue);box-shadow:0 0 30px 4px rgba(61,139,255,.8)}}
+.banner.cop{color:#fff;animation:copBg .6s steps(1) infinite}
+@keyframes copBg{0%{background:var(--red)}50%{background:var(--blue)}}
+.ocard.cop{animation:copCard .6s steps(1) infinite}
+@keyframes copCard{0%{border-color:var(--red);background:#3a1218}50%{border-color:var(--blue);background:#10244a}}
+.bar.cop{background:linear-gradient(var(--red) 50%,var(--blue) 50%)}
+.who.qa{background:linear-gradient(90deg,var(--red),var(--blue));color:#fff}
+.banner.nope{background:#b03030;color:#fff}
+.linkbtn.wide{width:100%;flex:none}
+.bigact.esc{background:var(--orange);color:#1c0e00}
+.bigact.no{background:var(--red);color:#fff}
+.trow .why.qa-ok{color:var(--green)} .trow .why.qa-no{color:var(--red)}
+@media (orientation:portrait){.banner .cfb{display:none}.who{font-size:calc(var(--vu)*2.2);flex-wrap:nowrap;white-space:nowrap}.who small{display:none}}
+.linkbtn.wide{min-height:calc(var(--vu)*6.5)}
 </style>
 </head>
 <body>
@@ -205,7 +224,7 @@ textarea{flex:none;width:100%;height:calc(var(--vu)*13);border-radius:calc(var(-
 <div id="overlay"></div>
 
 <script>
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.6.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -243,6 +262,19 @@ const T = {
   cant:["CAN'T FIX",'NO SE PUEDE ARREGLAR','ပြင်၍ မရပါ'],
   why:["Why can't it be fixed?",'¿Por qué no se puede arreglar?','ဘာကြောင့် ပြင်မရတာလဲ'],
   pconfirm:['CONFIRM FIXED','CONFIRMAR RESUELTO','ပြင်ပြီးကြောင်း အတည်ပြုသည်'],
+  escal:["CAN'T FIX, ESCALATE",'NO SE PUEDE, ESCALAR','ပြင်မရ၊ တင်ပြမည်'],
+  retry:['Operator tries again','El operador reintenta','အော်ပရေတာ ထပ်ကြိုးစားမည်'],
+  approved:['APPROVED','APROBADO','ခွင့်ပြုသည်'],
+  notapproved:['NOT APPROVED','NO APROBADO','ခွင့်မပြုပါ'],
+  turncf:["Packers: confirm it can't be fixed, then escalate",'Empacadores: confirmen y escalen','ထုပ်ပိုးသူများ – ပြင်မရကြောင်း အတည်ပြုပြီး တင်ပြပါ'],
+  turnqa:['QA / Manager: choose Approved or Not Approved','QA / Gerente: elija Aprobado o No aprobado','QA / မန်နေဂျာ – ခွင့်ပြု/မပြု ရွေးပါ'],
+  escq:['Escalate to QA / Manager?','¿Escalar a QA / Gerente?','QA / မန်နေဂျာထံ တင်ပြမလား'],
+  yesesc:['YES, ESCALATE','SÍ, ESCALAR','ဟုတ်ကဲ့ တင်ပြမည်'],
+  appq:['Approve this job?','¿Aprobar este trabajo?','ဤအလုပ်ကို ခွင့်ပြုမလား'],
+  nappq:['Do NOT approve this job?','¿NO aprobar este trabajo?','ဤအလုပ်ကို ခွင့်မပြုဘူးလား'],
+  yesapp:['YES, APPROVED','SÍ, APROBADO','ဟုတ်ကဲ့ ခွင့်ပြုသည်'],
+  yesnapp:['YES, NOT APPROVED','SÍ, NO APROBADO','ဟုတ်ကဲ့ ခွင့်မပြုပါ'],
+  escwait:['ESCALATED – QA / MANAGER NEEDED','ESCALADO – SE NECESITA QA / GERENTE','တင်ပြပြီး – QA / မန်နေဂျာ လိုအပ်သည်'],
   turn0:['Operator: tap CONFIRM','Operador: toque CONFIRMAR','အော်ပရေတာ – အတည်ပြုရန် နှိပ်ပါ'],
   turn1:['Operator: choose one','Operador: elija una opción','အော်ပရေတာ – တစ်ခု ရွေးပါ'],
   turn2:['Packers: check the boxes, then confirm','Empacadores: revisen las cajas y confirmen','ထုပ်ပိုးသူများ – စစ်ဆေးပြီး အတည်ပြုပါ'],
@@ -257,7 +289,7 @@ const T = {
   nokeep:['NO, KEEP','NO, MANTENER','မဟုတ်ပါ ဆက်ထားမည်'],
   typeit:['Type the reason…','Escriba el motivo…','အကြောင်းရင်း ရေးပါ…']
 };
-const TS = {sent:['Sent','Enviado','ပို့ပြီး'], ack:['Operator in','Operador listo','အော်ပရေတာ လက်ခံ'], cantfixed:["Can't fix",'No se puede','ပြင်မရ'], opfixed:['Op. fixed','Arreglado','ပြင်ပြီး'], resolved:['Packers OK','Empacadores OK','ထုပ်ပိုးသူ OK']};
+const TS = {escalated:['Escalated','Escalado','တင်ပြပြီး'], qa:['QA / Manager','QA / Gerente','QA / မန်နေဂျာ'], sent:['Sent','Enviado','ပို့ပြီး'], ack:['Operator in','Operador listo','အော်ပရေတာ လက်ခံ'], cantfixed:["Can't fix",'No se puede','ပြင်မရ'], opfixed:['Op. fixed','Arreglado','ပြင်ပြီး'], resolved:['Packers OK','Empacadores OK','ထုပ်ပိုးသူ OK']};
 const lg = (a, cls='') => `<div class="lg ${cls}"><span class="es">${a[1]}</span><span class="my">${a[2]}</span><i class="en">${a[0]}</i></div>`;
 
 /* ---------- state ---------- */
@@ -266,7 +298,8 @@ try { issues = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch(e){ 
 const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(issues)); } catch(e){} };
 let view = {name:'home'};          // home | color | detail | cant | history
 const $ = s => document.querySelector(s);
-const isOpen = i => !i.resolvedAt && !i.cancelledAt;
+const isOpen = i => !i.resolvedAt && !i.cancelledAt && !i.qaAt;
+const isEsc = i => i.escalatedAt && !i.qaAt;
 const byId = id => issues.find(i => i.id === id);
 
 /* ---------- helpers ---------- */
@@ -279,15 +312,16 @@ const fmtDur = ms => {
 const cfText = i => i.cantFixReason ? (i.cantFixReason === 'other' && i.cantFixNote ? `Other: ${i.cantFixNote}` : REASONS[i.cantFixReason].t[0]) : '';
 const hasCF = i => i.cantFixAt && !i.opResolvedAt;
 
-/* light priority: unacknowledged red > unacknowledged yellow > blue (operator confirmed, not yet closed by packers) > green */
+/* light priority: escalated (police flash) > unacknowledged red > unacknowledged yellow > blue (operator confirmed, not yet closed by packers) > green */
 function overall(){
   const open = issues.filter(isOpen);
+  if (open.some(isEsc)) return 'cop';
   if (open.some(i => !i.ackAt && i.color === 'red')) return 'red';
   if (open.some(i => !i.ackAt)) return 'yellow';
   if (open.length) return 'blue';
   return 'green';
 }
-const cardColor = i => i.ackAt ? 'blue' : i.color;
+const cardColor = i => isEsc(i) ? 'cop' : i.ackAt ? 'blue' : i.color;
 
 function toast(msg){
   const d = document.createElement('div'); d.className = 'toast'; d.textContent = msg;
@@ -300,15 +334,16 @@ function topbar(){
   const needPack = open.some(i => i.opResolvedAt);
   const n = open.length;
   const sub = o === 'green' ? T.allgood
+    : o === 'cop' ? ['QA / MANAGER NEEDED','SE NECESITA QA / GERENTE','QA / မန်နေဂျာ လိုအပ်သည်']
     : o === 'red' ? ['URGENT','URGENTE','အရေးပေါ်']
     : o === 'yellow' ? ['ATTENTION','ATENCIÓN','အာရုံစိုက်ပါ']
     : needPack ? ['PACKERS: CONFIRM','EMPACADORES: CONFIRMEN','ထုပ်ပိုးသူများ – အတည်ပြုပါ']
     : ['OPERATOR WORKING','OPERADOR TRABAJANDO','အော်ပရေတာ လုပ်ဆောင်နေသည်'];
-  return `<div class="top">
+  return `<div class="top ${o==='cop'?'cop':''}">
     <div class="lamps">
-      <div class="lamp r ${o==='red'?'on pulse':''}"></div>
+      <div class="lamp r ${o==='red'?'on pulse':''} ${o==='cop'?'on cop':''}"></div>
       <div class="lamp y ${o==='yellow'?'on':''}"></div>
-      <div class="lamp b ${o==='blue'?'on':''} ${o==='blue'&&needPack?'pulse':''}"></div>
+      <div class="lamp b ${o==='blue'?'on':''} ${o==='blue'&&needPack?'pulse':''} ${o==='cop'?'on cop':''}"></div>
       <div class="lamp g ${o==='green'?'on':''}"></div>
     </div>
     <div class="status">${n?`<div class="cnt"><b>${n}</b> OPEN · <b>${n}</b> ABIERTO${n>1?'S':''}</div>`:''}${lg(sub,'inline xl2')}</div>
@@ -317,9 +352,9 @@ function topbar(){
   </div>`;
 }
 
-const WHO = {op:['OPERATOR','OPERADOR','အော်ပရေတာ'], pk:['PACKERS','EMPACADORES','ထုပ်ပိုးသူများ']};
-const whoTag = i => { const k = i.opResolvedAt ? 'pk' : 'op'; const w = WHO[k]; return `<span class="who ${k}">👉 ${w[1]} · ${w[2]}<small>${w[0]}</small></span>`; };
-const statusEmoji = i => i.opResolvedAt ? '👆' : i.ackAt ? '🔧' : '⏳';
+const WHO = {op:['OPERATOR','OPERADOR','အော်ပရေတာ'], pk:['PACKERS','EMPACADORES','ထုပ်ပိုးသူများ'], qa:['QA / MANAGER','QA / GERENTE','QA / မန်နေဂျာ']};
+const whoTag = i => { const k = isEsc(i) ? 'qa' : (i.opResolvedAt || i.cantFixAt) ? 'pk' : 'op'; const w = WHO[k]; return `<span class="who ${k}">👉 ${w[1]} · ${w[2]}<small>${w[0]}</small></span>`; };
+const statusEmoji = i => isEsc(i) ? '🚨' : (i.opResolvedAt || i.cantFixAt) ? '👆' : i.ackAt ? '🔧' : '⏳';
 function statusLine(i){
   if (i.opResolvedAt) return `👆 ${T.waitpack[1]}`;
   if (i.ackAt) return `🔧 ${T.acked[1]}`;
@@ -333,11 +368,11 @@ function renderHome(){
       <div class="ic">${TYPES[k].ic}</div>${lg(TYPES[k].t)}
     </button>`).join('');
   const cards = open.map(i => `
-    <button class="ocard ${cardColor(i)} ${i.color==='red'&&!i.ackAt?'flash':''} ${i.opResolvedAt?'flashb':''}" data-act="open" data-id="${i.id}">
+    <button class="ocard ${cardColor(i)} ${i.color==='red'&&!i.ackAt?'flash':''} ${(i.opResolvedAt||(i.cantFixAt&&!isEsc(i)))?'flashb':''}" data-act="open" data-id="${i.id}">
       <div class="bar ${cardColor(i)}"></div>
       <div class="body">${lg(TYPES[i.type].t,'inline')}
         ${whoTag(i)}
-        ${hasCF(i)?`<div class="cf">⚠ ${T.cant[0]} · ${cfText(i)}</div>`:''}</div>
+        ${i.cantFixAt&&!i.opResolvedAt?`<div class="cf">⚠ ${T.cant[0]} · ${cfText(i)}</div>`:''}</div>
       <div class="right"><div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>
         <div class="meta"><span class="u ${i.color}">${URG[i.color].en}</span><span class="st">${statusEmoji(i)}</span></div></div>
     </button>`).join('');
@@ -376,24 +411,30 @@ function renderCant(){
 function renderDetail(){
   const i = byId(view.id);
   if (!i) return renderHome();
-  const done = !!i.resolvedAt, cancelled = !!i.cancelledAt;
-  const cls = cancelled ? 'gray' : done ? 'green' : cardColor(i);
-  const tagText = cancelled ? 'Cancelled' : done ? 'Resolved · Resuelto · ဖြေရှင်းပြီး' : `${URG[i.color].en} · ${URG[i.color].tag.join(' · ')}`;
+  const done = !!(i.resolvedAt || i.qaAt), cancelled = !!i.cancelledAt, esc = isEsc(i);
+  const cls = cancelled ? 'gray' : i.qaAt ? (i.qaDecision === 'approved' ? 'green' : 'nope') : done ? 'green' : cardColor(i);
+  const tagText = cancelled ? 'Cancelled' : i.qaAt ? `QA: ${T[i.qaDecision === 'approved' ? 'approved' : 'notapproved'].join(' · ')}` : done ? 'Resolved · Resuelto · ဖြေရှင်းပြီး' : esc ? T.escwait[0] : `${URG[i.color].en} · ${URG[i.color].tag.join(' · ')}`;
   const row = (k, ts, extra='', cfRow=false) => `<div class="trow ${ts?'done':''} ${cfRow?'cf':''}"><div class="dot"></div>
       <div class="lbl">${lg(TS[k],'inline')}${extra}</div>
       <div class="tm ${ts?'':'none'}">${fmtTime(ts)}</div></div>`;
   let action = '';
   if (!cancelled && !done){
-    const stage = !i.ackAt ? 0 : !i.opResolvedAt ? 1 : 2;
-    const tk = stage === 1 && i.cantFixAt ? 'tapfix' : 'turn'+stage;
-    action = `<div class="turn">${lg(T[tk],'md')}</div>` + (stage === 0
+    const stage = esc ? 'qa' : !i.ackAt ? 0 : i.opResolvedAt ? 2 : i.cantFixAt ? 'cf' : 1;
+    const tk = stage === 'qa' ? 'turnqa' : stage === 'cf' ? 'turncf' : 'turn'+stage;
+    action = `<div class="turn">${lg(T[tk],'md')}</div>` + (stage === 'qa'
+      ? `<div class="pair"><button class="bigact res" data-act="askqa" data-d="approved" data-id="${i.id}">${lg(T.approved)}</button>
+         <button class="bigact no" data-act="askqa" data-d="rejected" data-id="${i.id}">${lg(T.notapproved)}</button></div>`
+      : stage === 'cf'
+      ? `<button class="bigact esc" data-act="askesc" data-id="${i.id}">${lg(T.escal)}</button>
+         <button class="linkbtn wide" data-act="retry" data-id="${i.id}">↩ ${T.retry[1]} · ${T.retry[2]}</button>`
+      : stage === 0
       ? `<button class="bigact ack" data-act="ack" data-id="${i.id}">${lg(T.confirm)}</button>`
       : stage === 1
       ? `<div class="pair"><button class="bigact res" data-act="askop" data-id="${i.id}">${lg(T.fixed)}</button>
          <button class="bigact cant" data-act="cantfix" data-id="${i.id}">${lg(T.cant)}</button></div>`
       : `<button class="bigact res" data-act="askres" data-id="${i.id}">${lg(T.pconfirm)}</button>`);
   }
-  const cfBadge = hasCF(i) && !done ? `<div class="cfb">⚠ ${T.cant[0]} · ${cfText(i)}</div>` : '';
+  const cfBadge = i.cantFixAt && !i.opResolvedAt && !done ? `<div class="cfb">⚠ ${T.cant[0]} · ${cfText(i)}</div>` : '';
   const cfRow = i.cantFixAt ? row('cantfixed', i.cantFixAt, `<div class="why">${cfText(i)}</div>`, true) : '';
   return `<div class="head">${backBtn()}
       <div style="flex:1"></div>${!cancelled&&!done?`<button class="linkbtn" data-act="askcancel" data-id="${i.id}">✕ Cancel</button>`:''}${!cancelled&&!done?`<div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>`:''}</div>
@@ -401,7 +442,7 @@ function renderDetail(){
       <div class="banner ${cls} ${(!cancelled&&!done&&i.color==='red'&&!i.ackAt)?'flash':''}">
         ${lg(TYPES[i.type].t,'xl')}<div class="badges"><span class="tag">${tagText}</span>${cfBadge}</div></div>
       <div class="dr">${action}</div>
-      <div class="tl">${row('sent', i.submittedAt)}${row('ack', i.ackAt)}${cfRow}${row('opfixed', i.opResolvedAt)}${row('resolved', i.resolvedAt)}</div>
+      <div class="tl">${row('sent', i.submittedAt)}${row('ack', i.ackAt)}${cfRow}${i.escalatedAt||i.qaAt?row('escalated', i.escalatedAt)+row('qa', i.qaAt, i.qaAt?`<div class="why ${i.qaDecision==='approved'?'qa-ok':'qa-no'}">${T[i.qaDecision==='approved'?'approved':'notapproved'][0]}</div>`:''):row('opfixed', i.opResolvedAt)+row('resolved', i.resolvedAt)}</div>
     </div>`;
 }
 
@@ -409,10 +450,12 @@ function renderHistory(){
   const list = [...issues].sort((a,b) => b.submittedAt - a.submittedAt);
   const cards = list.map(i => {
     const resp = i.ackAt ? fmtDur(i.ackAt - i.submittedAt) : '—';
-    const fix = i.resolvedAt ? fmtDur(i.resolvedAt - i.submittedAt) : '—';
-    const st = i.cancelledAt ? 'Cancelled' : i.resolvedAt ? 'Resolved' : 'Open';
+    const closeAt = i.resolvedAt || i.qaAt;
+    const fix = closeAt ? fmtDur(closeAt - i.submittedAt) : '—';
+    const st = i.cancelledAt ? 'Cancelled' : i.qaAt ? 'QA ' + (i.qaDecision === 'approved' ? 'Approved' : 'Not approved') : i.resolvedAt ? 'Resolved' : i.escalatedAt ? 'ESCALATED' : 'Open';
     return `<div class="hcard ${i.color}"><div class="t">${TYPES[i.type].t[0]}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)}</span></div>
       ${i.cantFixAt?`<div class="cfl">⚠ Can't fix (${fmtTime(i.cantFixAt)}): ${cfText(i)}</div>`:''}
+      ${i.escalatedAt?`<div class="cfl">🚨 Escalated ${fmtTime(i.escalatedAt)}${i.qaAt?` → QA ${i.qaDecision==='approved'?'APPROVED':'NOT APPROVED'} ${fmtTime(i.qaAt)}`:' – waiting for QA / Manager'}</div>`:''}
       <div class="g"><div>Sent<b>${fmtTime(i.submittedAt)}</b></div>
       <div>Op. confirmed<b>${fmtTime(i.ackAt)}</b><i>response ${resp}</i></div>
       <div>Op. fixed<b>${fmtTime(i.opResolvedAt)}</b><i>repair ${i.opResolvedAt&&i.ackAt?fmtDur(i.opResolvedAt-i.ackAt):'—'}</i></div>
@@ -439,13 +482,13 @@ const askModal = (q, noLbl, yesLbl, yesCls, yesAct, id, sub) => modal(`${lg(q,'x
 function exportCsv(){
   const q = v => `"${String(v).replace(/"/g,'""')}"`;
   const iso = ts => ts ? new Date(ts).toLocaleString() : '';
-  const rows = [['Issue','Urgency','Status','Sent','Operator confirmed',"Can't fix time","Can't fix reason","Can't fix note",'Operator fixed','Packers confirmed resolved','Response (min)','Total (min)']];
+  const rows = [['Issue','Urgency','Status','Sent','Operator confirmed',"Can't fix time","Can't fix reason","Can't fix note",'Operator fixed','Packers confirmed resolved','Escalated time','QA decision','QA decision time','Response (min)','Total (min)']];
   [...issues].sort((a,b)=>a.submittedAt-b.submittedAt).forEach(i => rows.push([
-    TYPES[i.type].t[0], i.color, i.cancelledAt?'cancelled':i.resolvedAt?'resolved':'open',
+    TYPES[i.type].t[0], i.color, i.cancelledAt?'cancelled':i.qaAt?'qa-'+i.qaDecision:i.resolvedAt?'resolved':i.escalatedAt?'escalated':'open',
     iso(i.submittedAt), iso(i.ackAt), iso(i.cantFixAt), i.cantFixReason ? REASONS[i.cantFixReason].t[0] : '', i.cantFixNote || '',
-    iso(i.opResolvedAt), iso(i.resolvedAt),
+    iso(i.opResolvedAt), iso(i.resolvedAt), iso(i.escalatedAt), i.qaDecision || '', iso(i.qaAt),
     i.ackAt ? ((i.ackAt-i.submittedAt)/60000).toFixed(1) : '',
-    i.resolvedAt ? ((i.resolvedAt-i.submittedAt)/60000).toFixed(1) : '']));
+    (i.resolvedAt||i.qaAt) ? (((i.resolvedAt||i.qaAt)-i.submittedAt)/60000).toFixed(1) : '']));
   const blob = new Blob([rows.map(r=>r.map(q).join(',')).join('\r\n')], {type:'text/csv'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'gluer-issue-log.csv'; document.body.appendChild(a); a.click(); a.remove();
@@ -483,6 +526,11 @@ document.addEventListener('click', e => {
     case 'ack': { const i = byId(id); if (i && !i.ackAt){ i.ackAt = Date.now(); save(); render(); } break; }
     case 'askop': askModal(T.isfixed, T.notyet, T.yesfixed, 'yes', 'opres', id, 'Operator'); break;
     case 'opres': { const i = byId(id); if (i && i.ackAt && !i.opResolvedAt){ i.opResolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('🔵 Packers: please confirm · confirmen · အတည်ပြုပါ'); break; }
+    case 'askesc': askModal(T.escq, T.notyet, T.yesesc, 'yes', 'esc', id, 'Packers'); break;
+    case 'esc': { const i = byId(id); if (i && i.cantFixAt && !i.escalatedAt){ i.escalatedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('🚨 Escalated · Escalado · တင်ပြပြီး'); break; }
+    case 'retry': { const i = byId(id); if (i && i.cantFixAt && !i.escalatedAt){ (i.cfHistory = i.cfHistory || []).push({at:i.cantFixAt, reason:i.cantFixReason, note:i.cantFixNote}); i.cantFixAt = null; i.cantFixReason = null; i.cantFixNote = ''; save(); render(); } break; }
+    case 'askqa': { const ap = b.dataset.d === 'approved'; askModal(ap ? T.appq : T.nappq, T.notyet, ap ? T.yesapp : T.yesnapp, ap ? 'yes' : 'danger', ap ? 'qaok' : 'qano', id, 'QA / Manager'); break; }
+    case 'qaok': case 'qano': { const i = byId(id); if (i && isEsc(i)){ i.qaAt = Date.now(); i.qaDecision = act === 'qaok' ? 'approved' : 'rejected'; save(); } closeModal(); view = {name:'home'}; render(); toast(act === 'qaok' ? '🟢 Approved · Aprobado · ခွင့်ပြုသည်' : '⛔ Not approved · No aprobado · ခွင့်မပြုပါ'); break; }
     case 'cantfix': view = {name:'cant', id, reason:null, note:''}; render(); break;
     case 'reason': view.reason = b.dataset.r; render(); { const n = $('#note'); if (n) n.focus(); } break;
     case 'sendcant': {
