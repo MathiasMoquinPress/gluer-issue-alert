@@ -486,6 +486,28 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
 .rbtn .ico{width:min(20cqh,18cqw);height:min(20cqh,18cqw)}
 .send .lg{--u:min(9cqw,23cqh)}
 .bigact .lg{--u:min(8.6cqw,16cqh)}
+/* ===== v2.0.1: readable on every button, airier lines, buttons never collapse ===== */
+.lg{gap:calc(var(--u)*.14);line-height:1.22}
+.lg .my{line-height:1.55}
+.lg .en{margin-top:calc(var(--u)*.1);line-height:1.25}
+.lg.inline{gap:0 calc(var(--vu)*1.2)}
+/* English line takes the button's own text colour on bright faces (white on green/orange was unreadable) */
+.bigact .en,.send .en,.cbtn .en,.banner .en,.yes .en,.danger .en,.rbtn.sel .en{color:currentColor;opacity:.92}
+/* action buttons always keep a usable size; the timeline gives way (and scrolls inside itself) instead */
+.dr{min-height:calc(var(--vu)*30)}
+.bigact{min-height:calc(var(--vu)*11)}
+.pair{min-height:calc(var(--vu)*24)}
+.pair{grid-template-rows:repeat(2,minmax(calc(var(--vu)*11),1fr))}
+@media (orientation:portrait) and (min-width:600px){.pair{grid-template-rows:minmax(calc(var(--vu)*11),1fr)}}
+.tl{flex:0 1 auto;min-height:calc(var(--vu)*9);overflow-y:auto;scrollbar-width:thin}
+@media (orientation:landscape) and (max-width:1099px){
+  .banner .cfb{display:none}
+  .trow{padding:calc(var(--vu)*.6) 0}
+  .trow .lg.inline{--u:calc(var(--vu)*1.9)}
+  .trow .tm{font-size:calc(var(--vu)*2.3)}
+  .trow .lbl .why{font-size:calc(var(--vu)*1.7)}
+}
+@media (orientation:landscape) and (min-width:800px){.dgrid .tl{max-height:100%}}
 </style>
 </head>
 <body>
@@ -497,7 +519,7 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '2.0.0';
+const APP_VERSION = '2.0.1';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
