@@ -595,6 +595,11 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
   .rbtn .lg{--u:min(10.5cqw,16cqh)}
   .rbtn .ico{width:min(26cqh,20cqw);height:min(26cqh,20cqw)}
 }
+.cbtn .lg{--u:min(7.4cqw,17cqh)}
+.cbtn{padding:calc(var(--vu)*1.6)}
+.cbtn .chk{position:absolute;right:calc(var(--vu)*1.8);bottom:calc(var(--vu)*1.4);height:auto;display:block;line-height:0}
+.cbtn .chk .ico{width:calc(var(--vu)*3.8);height:calc(var(--vu)*3.8)}
+.cbtn .lg{--u:min(7.2cqw,20cqh)}
 </style>
 </head>
 <body>
@@ -606,7 +611,7 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '2.1.0';
+const APP_VERSION = '2.1.1';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -624,8 +629,8 @@ const REASONS = {
   other: {ic:'pen', t:['Other','Otro','အခြား']}
 };
 const URG = {
-  red:    {en:'RED',    d:['Need help NOW','¡Necesito ayuda YA!','ချက်ချင်း အကူအညီလိုသည်'], tag:['Urgent','Urgente','အရေးပေါ်']},
-  yellow: {en:'YELLOW', d:['Not critical – operator please look','No crítico – operador, por favor revise','အရေးမကြီးပါ – အော်ပရေတာ ကြည့်ပေးပါ'], tag:['Not critical','No crítico','အရေးမကြီး']}
+  red:    {en:'RED',    d:['NEED HELP NOW','¡NECESITO AYUDA YA!','ချက်ချင်း အကူအညီလိုသည်'], tag:['Urgent','Urgente','အရေးပေါ်']},
+  yellow: {en:'YELLOW', d:['NOT CRITICAL','NO CRÍTICO','အရေးမကြီးပါ'], tag:['Not critical','No crítico','အရေးမကြီး']}
 };
 const T = {
   allgood:['ALL GOOD','TODO BIEN','အားလုံး ကောင်းသည်'],
