@@ -508,6 +508,93 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
   .trow .lbl .why{font-size:calc(var(--vu)*1.7)}
 }
 @media (orientation:landscape) and (min-width:800px){.dgrid .tl{max-height:100%}}
+
+/* ===== v2.1: ONE button language. dark tinted face, coloured rim + ledge, light text (same as the issue buttons) ===== */
+.bigact,.send,.cbtn,.yes,.danger,.rbtn.sel,.tbtn.upd{color:var(--text)}
+.banner,.u{--esc:currentColor;--myc:currentColor}
+.bigact,.send,.cbtn,.yes,.danger,.rbtn,.sheet .no,.tlh{--esc:#ffd6a0;--myc:#9fe6ff}
+.bigact .en,.send .en,.cbtn .en,.yes .en,.danger .en,.rbtn .en{color:#fff;opacity:1}
+.banner .en{color:currentColor;opacity:.92}
+
+.bigact.ack,.send,.tbtn.upd{--k:#3d8bff;--kb:rgba(61,139,255,.85);--depth:#18409a;background:linear-gradient(180deg,#2a55a0,#173565)}
+.bigact.res,.yes{--k:#2ee66b;--kb:rgba(46,230,107,.85);--depth:#0b5a2b;background:linear-gradient(180deg,#217a4d,#134b32)}
+.bigact.cant,.bigact.esc,.send.orange,.rbtn.sel{--k:#ff8a2a;--kb:rgba(255,138,42,.9);--depth:#7a3a06;background:linear-gradient(180deg,#8a4d1b,#552f10)}
+.bigact.no,.danger{--k:#ff3b3b;--kb:rgba(255,59,59,.9);--depth:#7a1414;background:linear-gradient(180deg,#8a2a35,#521920)}
+.cbtn.red{--k:#ff3b3b;--kb:rgba(255,59,59,.9);--depth:#7a1414;background:linear-gradient(180deg,#8a2a35,#521920)}
+.cbtn.yellow{--k:#ffc21a;--kb:rgba(255,194,26,.9);--depth:#7a5a00;background:linear-gradient(180deg,#7a6219,#4a3b0e)}
+.bigact,.send,.cbtn,.yes,.danger{border:2px solid var(--kb)}
+.send[disabled]{--kb:#2f394d;border:2px solid #2f394d;background:linear-gradient(180deg,#222a3b,#181e2b);color:#6f7b93}
+.send[disabled] .lg *{opacity:.55}
+.cbtn.sel{border-color:#fff;box-shadow:inset 0 calc(var(--vu)*.35) 0 rgba(255,255,255,.26),0 0 0 calc(var(--vu)*.5) rgba(255,255,255,.4),0 var(--lift) 0 var(--depth),var(--drop)}
+.rbtn.sel{border-color:#ffd2a8}
+.rbtn.sel .ico,.rbtn.sel .ico [stroke]{stroke:var(--k)}
+.rbtn.sel .ico circle{fill:#fff}
+.sheet .no{--depth:#070a11}
+.tbtn.upd{--depth:#16316b;border-color:#4f86ff}
+
+/* bigger text on the big buttons */
+.cbtn .lg{--u:min(10cqw,11.5cqh)}
+.bigact .lg{--u:min(9.6cqw,18cqh)}
+.send .lg{--u:min(9.6cqw,25cqh)}
+.rbtn .lg{--u:min(14cqw,17.5cqh)}
+
+/* room below the buttons: tablets often have a taskbar over the bottom edge */
+:root{--pb:calc(var(--vu)*2)}
+@media (pointer:coarse){:root{--pb:calc(var(--vu)*7 + env(safe-area-inset-bottom,0px))}}
+#app{padding-bottom:var(--pb)}
+
+/* collapsible history (timeline on the issue screen, cards in the Log) */
+.tl{padding:0;overflow:hidden;flex:none}
+.tlh{width:100%;display:flex;align-items:center;gap:calc(var(--vu)*1.6);background:transparent;border:0;border-radius:0;box-shadow:none;padding:calc(var(--vu)*1.5) calc(var(--vu)*2.4);color:var(--text);text-align:left;min-height:calc(var(--vu)*8)}
+.tlh:active{transform:none;background:rgba(255,255,255,.05)}
+.tlh .ico{width:calc(var(--vu)*3.2);height:calc(var(--vu)*3.2);vertical-align:0}
+.tlh .tlt{flex:1;min-width:0}
+.tlb{display:none;padding:0 calc(var(--vu)*2.4) calc(var(--vu)*.6);border-top:1px solid var(--line);max-height:calc(var(--vu)*38);overflow-y:auto}
+.tl.open .tlb{display:block}
+.dgrid{overflow-y:auto;scrollbar-width:thin}
+.dr{flex:1 0 auto;min-height:0}
+.dr > .bigact,.dr > .pair{flex:1 1 0;min-height:calc(var(--vu)*18)}
+.pair{min-height:calc(var(--vu)*18)}
+@media (orientation:landscape) and (min-width:800px){.dgrid .tl{max-height:none}}
+.hh{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--vu)*1.6);width:100%;background:none;border:0;padding:0;text-align:left;color:inherit;box-shadow:none;border-radius:0;min-height:calc(var(--vu)*6)}
+.hh:active{transform:none}
+.hh .ico{width:calc(var(--vu)*3.4);height:calc(var(--vu)*3.4);flex:none;vertical-align:0}
+.hd{display:none;margin-top:calc(var(--vu)*1)}
+.hcard.open .hd{display:block}
+@container (min-aspect-ratio:7/4){
+  .rbtn .ibi .lg{--u:min(6.8cqw,20cqh);align-items:flex-start;text-align:left}
+  .rbtn .ibi .ico{width:min(46cqh,13cqw);height:min(46cqh,13cqw)}
+}
+/* turn tag: one flowing line that wraps only when it must */
+.who{display:inline-flex;flex-wrap:wrap;align-items:center;column-gap:.55em;row-gap:0}
+.who .wt{display:contents}
+.who .ico{grid-row:auto;width:1.15em;height:1.15em}
+.who small{display:inline;font-size:.8em;opacity:.9}
+/* portrait: slimmer top bar so the issue buttons keep their size */
+@media (orientation:portrait){
+  .lamp{width:calc(var(--vu)*3.4);height:calc(var(--vu)*3.4)}
+  .lamps{gap:calc(var(--vu)*.9)}
+  .tbtn{padding:0 calc(var(--vu)*1.8);font-size:calc(var(--vu)*2.2);min-height:calc(var(--vu)*6.4)}
+  .tbtn .ico{width:calc(var(--vu)*3);height:calc(var(--vu)*3)}
+  .status .lg.inline{--u:calc(var(--vu)*2.2)}
+  .status .cnt{font-size:calc(var(--vu)*2)}
+  .status .cnt b{font-size:calc(var(--vu)*3)}
+}
+.dr > .bigact,.dr > .pair{min-height:calc(var(--vu)*15)}
+.pair{min-height:calc(var(--vu)*15)}
+/* sizing pass: text as large as each button can hold, buttons never below a tappable size */
+.cbtn .lg{--u:min(8.6cqw,9.8cqh)}
+.bigact .lg{--u:min(8.2cqw,15.5cqh)}
+.send{height:max(calc(var(--vu)*15),88px)}
+.dr > .bigact,.dr > .pair{min-height:max(calc(var(--vu)*15),96px)}
+.pair{min-height:max(calc(var(--vu)*15),96px);grid-template-rows:repeat(2,minmax(96px,1fr))}
+@media (orientation:portrait) and (min-width:600px){.pair{grid-template-rows:minmax(96px,1fr)}}
+@media (max-width:599px){.dr > .pair{min-height:calc(192px + var(--g))}}
+@media (orientation:landscape){
+  .reasons{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:minmax(0,1fr)}
+  .rbtn .lg{--u:min(10.5cqw,16cqh)}
+  .rbtn .ico{width:min(26cqh,20cqw);height:min(26cqh,20cqw)}
+}
 </style>
 </head>
 <body>
@@ -519,7 +606,7 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '2.0.1';
+const APP_VERSION = '2.1.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -606,6 +693,8 @@ const IC = {
   warn:'<path d="M24 6L44 40H4z"/><path d="M24 19v11"/><path d="M24 35v.5"/>',
   arrow:'<path d="M9 24h28M27 13l11 11-11 11"/>',
   chev:'<path d="M30 10L16 24l14 14"/>',
+  chevd:'<path d="M10 17l14 14 14-14"/>',
+  chevu:'<path d="M10 31l14-14 14 14"/>',
   log:'<path d="M17 12h25M17 24h25M17 36h25"/><path d="M7 12h.5M7 24h.5M7 36h.5"/>',
   refresh:'<path d="M41 22A17 17 0 0 0 11 14M7 7v9h9"/><path d="M7 26a17 17 0 0 0 30 8M41 41v-9h-9"/>',
   x:'<path d="M12 12l24 24M36 12L12 36"/>',
@@ -728,13 +817,13 @@ function renderColor(){
 function renderCant(){
   const i = byId(view.id); if (!i) return renderHome();
   const r = view.reason;
-  const rb = k => `<button class="rbtn ${r===k?'sel':''} ${r&&r!==k?'dim':''}" data-act="reason" data-r="${k}">${ico(REASONS[k].ic)}${lg(REASONS[k].t)}</button>`;
+  const rb = k => `<button class="rbtn ${r===k?'sel':''} ${r&&r!==k?'dim':''}" data-act="reason" data-r="${k}"><div class="ibi">${ico(REASONS[k].ic)}${lg(REASONS[k].t)}</div></button>`;
   const note = r === 'other' ? `<textarea id="note" placeholder="${T.typeit[0]} / ${T.typeit[1]} / ${T.typeit[2]}">${view.note||''}</textarea>` : '';
   return `<div class="head"><button class="back" data-act="open" data-id="${i.id}">${ico('chev','cc')}${lg(T.back,'sm')}</button></div>
     <div class="titlebox"><div>${lg(T.why,'md')}<div class="sub">${TYPES[i.type].t[0]}</div></div></div>
     <div class="reasons">${rb('die')}${rb('paper')}${rb('cad')}${rb('other')}</div>
     ${note}
-    <button class="send" data-act="sendcant" ${r?'':'disabled'} style="${r?'--depth:#a24d0a;background:linear-gradient(180deg,#ffa857,#f07410);color:#1c0e00':''}">${lg(T.confirm)}</button>`;
+    <button class="send ${r?'orange':''}" data-act="sendcant" ${r?'':'disabled'}>${lg(T.confirm)}</button>`;
 }
 
 function renderDetail(){
@@ -772,7 +861,7 @@ function renderDetail(){
       <div class="banner ${cls} ${(!cancelled&&!done&&i.color==='red'&&!i.ackAt)?'flash':''}">
         ${lg(TYPES[i.type].t,'xl')}<div class="badges"><span class="tag">${tagText}</span>${cfBadge}</div></div>
       <div class="dr">${action}</div>
-      <div class="tl">${row('sent', i.submittedAt)}${row('ack', i.ackAt)}${(i.attempts&&i.attempts.length)?row('rejected', i.attempts[i.attempts.length-1].at, `<div class="why">×${i.attempts.length}</div>`, true):''}${cfRow}${i.escalatedAt||i.qaAt?row('escalated', i.escalatedAt)+row('qa', i.qaAt, i.qaAt?`<div class="why ${i.qaDecision==='approved'?'qa-ok':'qa-no'}">${T[i.qaDecision==='approved'?'approved':'notapproved'][0]}</div>`:''):row('opfixed', i.opResolvedAt)+row('resolved', i.resolvedAt)}</div>
+      <div class="tl ${view.tl?'open':''}"><button class="tlh" data-act="tl" aria-expanded="${!!view.tl}">${ico('log','cc')}<span class="tlt">${lg(['History','Historial','မှတ်တမ်း'],'inline')}</span>${ico(view.tl?'chevu':'chevd','cc')}</button><div class="tlb">${row('sent', i.submittedAt)}${row('ack', i.ackAt)}${(i.attempts&&i.attempts.length)?row('rejected', i.attempts[i.attempts.length-1].at, `<div class="why">×${i.attempts.length}</div>`, true):''}${cfRow}${i.escalatedAt||i.qaAt?row('escalated', i.escalatedAt)+row('qa', i.qaAt, i.qaAt?`<div class="why ${i.qaDecision==='approved'?'qa-ok':'qa-no'}">${T[i.qaDecision==='approved'?'approved':'notapproved'][0]}</div>`:''):row('opfixed', i.opResolvedAt)+row('resolved', i.resolvedAt)}</div></div>
     </div>`;
 }
 
@@ -783,14 +872,15 @@ function renderHistory(){
     const closeAt = i.resolvedAt || i.qaAt;
     const fix = closeAt ? fmtDur(closeAt - i.submittedAt) : '—';
     const st = i.cancelledAt ? 'Cancelled' : i.qaAt ? 'QA ' + (i.qaDecision === 'approved' ? 'Approved' : 'Not approved') : i.resolvedAt ? 'Resolved' : i.escalatedAt ? 'ESCALATED' : 'Open';
-    return `<div class="hcard ${i.color}"><div class="t">${TYPES[i.type].t[0]}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)}</span></div>
+    const open = !!(view.exp && view.exp[i.id]);
+    return `<div class="hcard ${i.color} ${open?'open':''}"><button class="hh" data-act="hexp" data-id="${i.id}"><div class="t">${TYPES[i.type].t[0]}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)} · ${fmtHM(i.submittedAt)}</span></div>${ico(open?'chevu':'chevd','cc')}</button><div class="hd">
       ${i.cantFixAt?`<div class="cfl">Can't fix (${fmtTime(i.cantFixAt)}): ${cfText(i)}</div>`:''}
       ${(i.attempts&&i.attempts.length)?`<div class="cfl">Packers said not fixed ×${i.attempts.length} (last ${fmtTime(i.attempts[i.attempts.length-1].at)})</div>`:''}
       ${i.escalatedAt?`<div class="cfl">Escalated ${fmtTime(i.escalatedAt)}${i.qaAt?` → QA ${i.qaDecision==='approved'?'APPROVED':'NOT APPROVED'} ${fmtTime(i.qaAt)}`:' – waiting for QA / Manager'}</div>`:''}
       <div class="g"><div>Sent<b>${fmtTime(i.submittedAt)}</b></div>
       <div>Op. confirmed<b>${fmtTime(i.ackAt)}</b><i>response ${resp}</i></div>
       <div>Op. fixed<b>${fmtTime(i.opResolvedAt)}</b><i>repair ${i.opResolvedAt&&i.ackAt?fmtDur(i.opResolvedAt-i.ackAt):'—'}</i></div>
-      <div>Packers OK<b>${fmtTime(i.resolvedAt)}</b><i>total ${fix}</i></div></div></div>`;
+      <div>Packers OK<b>${fmtTime(i.resolvedAt)}</b><i>total ${fix}</i></div></div></div></div>`;
   }).join('') || '<div class="empty">No issues logged yet</div>';
   return `<div class="head">${backBtn()}<div class="title">Issue Log <span class="vtag">v${APP_VERSION}</span></div></div>
     <div class="hbar"><button class="tbtn" data-act="csv">${ico('dl','cc')}Download CSV</button><button class="tbtn" data-act="clearlog" style="color:#ff9a9a">${ico('trash','cc')}Clear log</button></div>
@@ -845,7 +935,9 @@ document.addEventListener('click', e => {
   const act = b.dataset.act, id = b.dataset.id;
   switch (act){
     case 'home': view = {name:'home'}; render(); break;
-    case 'history': view = {name:'history'}; render(); break;
+    case 'tl': view.tl = !view.tl; render(); break;
+    case 'hexp': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.exp = view.exp || {}; view.exp[id] = !view.exp[id]; render(); const sc2 = document.querySelector('.hist'); if (sc2) sc2.scrollTop = top; break; }
+    case 'history': view = {name:'history', exp:{}}; render(); break;
     case 'update': updateApp(); break;
     case 'pick': view = {name:'color', type:b.dataset.type, color:null}; render(); break;
     case 'color': view.color = b.dataset.color; render(); break;
