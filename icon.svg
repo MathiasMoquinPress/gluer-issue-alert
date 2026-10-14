@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b2540"/>
+      <stop offset="1" stop-color="#090c14"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="42%" r="55%">
+      <stop offset="0" stop-color="#5f8bff" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#5f8bff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3a4560"/>
+      <stop offset=".5" stop-color="#8794b5"/>
+      <stop offset="1" stop-color="#3a4560"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7a7a"/><stop offset="1" stop-color="#e5202a"/></linearGradient>
+    <linearGradient id="yel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#f2a900"/></linearGradient>
+    <linearGradient id="blu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7db4ff"/><stop offset="1" stop-color="#2a63ff"/></linearGradient>
+    <linearGradient id="grn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7dffa8"/><stop offset="1" stop-color="#11c155"/></linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
+    <clipPath id="tile"><rect width="512" height="512" rx="116"/></clipPath>
+  </defs>
+
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <g clip-path="url(#tile)">
+    <rect width="512" height="512" fill="url(#halo)"/>
+    <rect x="3" y="3" width="506" height="506" rx="113" fill="none" stroke="#9db8ff" stroke-opacity=".22" stroke-width="3"/>
+  </g>
+
+  <!-- signal waves from the top lamp -->
+  <g fill="none" stroke="#ff5a5a" stroke-linecap="round" stroke-width="12" opacity=".85">
+    <path d="M150 108q-34 26 0 58"/>
+    <path d="M118 90q-56 44 0 94" opacity=".55"/>
+    <path d="M362 108q34 26 0 58"/>
+    <path d="M394 90q56 44 0 94" opacity=".55"/>
+  </g>
+
+  <!-- glow under each lamp -->
+  <g filter="url(#glow)" opacity=".75">
+    <rect x="181" y="104" width="150" height="60" rx="24" fill="#ff3b3b"/>
+    <rect x="181" y="174" width="150" height="60" rx="24" fill="#ffc21a"/>
+    <rect x="181" y="244" width="150" height="60" rx="24" fill="#3d8bff"/>
+    <rect x="181" y="314" width="150" height="60" rx="24" fill="#2ee66b"/>
+  </g>
+
+  <!-- tower: cap, four lamps, neck, base -->
+  <rect x="216" y="80" width="80" height="26" rx="13" fill="url(#metal)"/>
+  <rect x="181" y="104" width="150" height="60" rx="24" fill="url(#red)"/>
+  <rect x="181" y="174" width="150" height="60" rx="24" fill="url(#yel)"/>
+  <rect x="181" y="244" width="150" height="60" rx="24" fill="url(#blu)"/>
+  <rect x="181" y="314" width="150" height="60" rx="24" fill="url(#grn)"/>
+  <g fill="#fff" opacity=".38">
+    <rect x="198" y="112" width="116" height="12" rx="6"/>
+    <rect x="198" y="182" width="116" height="12" rx="6"/>
+    <rect x="198" y="252" width="116" height="12" rx="6"/>
+    <rect x="198" y="322" width="116" height="12" rx="6"/>
+  </g>
+  <rect x="226" y="372" width="60" height="26" rx="8" fill="url(#metal)"/>
+  <rect x="161" y="394" width="190" height="34" rx="17" fill="url(#metal)"/>
+</svg>
