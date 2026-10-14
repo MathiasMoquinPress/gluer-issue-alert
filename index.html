@@ -170,7 +170,7 @@ button:active{transform:scale(.98)}
 @media (orientation:portrait) and (min-width:600px){.pair{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:minmax(0,1fr)}}
 @media (max-width:600px){.who small{display:none}.who{font-size:calc(var(--vu)*2.1);padding:calc(var(--vu)*.3) calc(var(--vu)*1.4)}.ocard .lg.inline{--u:calc(var(--vu)*2.4)}}
 @media (max-width:900px) and (orientation:portrait),(max-width:600px){.top{flex-wrap:wrap;row-gap:calc(var(--vu)*.6)}.lamps{margin-right:auto}.status{order:3;flex:1 0 100%;display:flex;align-items:baseline;flex-wrap:wrap;gap:0 calc(var(--vu)*1.5)}.status .cnt{font-size:calc(var(--vu)*2.4)}.status .cnt b{font-size:calc(var(--vu)*3.6)}}
-@media (max-width:600px){.tbtn .tx{display:none}.tbtn{padding:0 calc(var(--vu)*2.2)}}
+@media (max-width:600px){.tbtn .tx,.linkbtn .tx{display:none}.tbtn{padding:0 calc(var(--vu)*2.2)}}
 /* can't-fix reasons */
 .reasons{flex:1;min-height:0;display:grid;gap:var(--g);grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
 .rbtn{background:var(--card);border:4px solid var(--line);border-radius:calc(var(--vu)*3);padding:0 3%;display:flex;align-items:center;justify-content:center}
@@ -371,11 +371,13 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
   .ibtn .ibi .lg{--u:min(5.8cqw,23cqh);align-items:flex-start;text-align:left}
 }
 /* wide open-issue cards: one compact row */
+@media (orientation:landscape){
 @container (min-width:600px){
   .ocard .oi{grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"n m t" "w c c";column-gap:calc(var(--vu)*2);align-items:center}
   .ocard .r3{justify-self:end}
   .ocard .oi > .cf{justify-self:start}
   .ocard .who{padding-top:calc(var(--vu)*.5);padding-bottom:calc(var(--vu)*.5)}
+}
 }
 @media (orientation:landscape) and (min-width:800px) and (max-width:1099px) and (min-height:700px){.openwrap{max-height:47dvh}}
 /* accent edge: a flush band clipped by the card's own curve (outer edge matches the card, inner edge is straight) */
@@ -387,6 +389,103 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
 .hcard{position:relative;overflow:hidden;border-left-width:2px;border-left-color:var(--line);--ac:var(--line);padding-left:calc(var(--vu)*4.2)}
 .hcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:calc(var(--vu)*1.8);background:var(--ac)}
 .hcard.red{--ac:var(--red);border-left-color:var(--line)} .hcard.yellow{--ac:var(--yellow);border-left-color:var(--line)}
+
+/* ===== v2.0: colour per issue, 3D buttons, bigger text ===== */
+.t-fold{--k:#a56bff;--kb:rgba(165,107,255,.65);--kd:#43238a;--f1:#33275f;--f2:#211a42}
+.t-glue{--k:#ff5fb0;--kb:rgba(255,95,176,.65);--kd:#7a1c52;--f1:#552044;--f2:#391530}
+.t-crack{--k:#22d3c5;--kb:rgba(34,211,197,.65);--kd:#0b645d;--f1:#164a48;--f2:#0e3432}
+.t-burst{--k:#d6975f;--kb:rgba(214,151,95,.65);--kd:#6a4222;--f1:#4e3823;--f2:#35261a}
+.t-other{--k:#9aa8c4;--kb:rgba(154,168,196,.6);--kd:#3c465c;--f1:#323b50;--f2:#212838}
+:root{--lift:calc(var(--vu)*.9);--drop:0 calc(var(--vu)*1.6) calc(var(--vu)*2.6) rgba(0,0,0,.5)}
+
+/* shared 3D feel: bright top edge, darker lower rim, a solid ledge underneath, soft drop shadow; presses down when tapped */
+.ibtn,.cbtn,.rbtn,.bigact,.send,.back,.tbtn,.linkbtn,.sheet .row button{
+  transition:transform .07s ease,box-shadow .07s ease;
+  box-shadow:inset 0 calc(var(--vu)*.35) 0 rgba(255,255,255,.26),inset 0 calc(var(--vu)*-.6) calc(var(--vu)*1.2) rgba(0,0,0,.28),0 var(--lift) 0 var(--depth,#0a0e16),var(--drop);
+}
+.ibtn:active,.cbtn:active,.rbtn:active,.bigact:active,.send:active,.back:active,.tbtn:active,.linkbtn:active,.sheet .row button:active{
+  transform:translateY(calc(var(--lift)*.8));
+  box-shadow:inset 0 calc(var(--vu)*.35) 0 rgba(255,255,255,.2),inset 0 calc(var(--vu)*-.6) calc(var(--vu)*1.2) rgba(0,0,0,.3),0 calc(var(--lift)*.2) 0 var(--depth,#0a0e16),0 calc(var(--vu)*.5) calc(var(--vu)*1) rgba(0,0,0,.45);
+}
+.ibtn{--depth:var(--kd);background:linear-gradient(180deg,var(--f1),var(--f2));border:2px solid var(--kb)}
+.ibtn:active{border-color:var(--k)}
+.ibtn .ic{border-color:var(--kb);background:linear-gradient(150deg,rgba(255,255,255,.16),rgba(255,255,255,.04));box-shadow:inset 0 0 18px rgba(255,255,255,.06),0 0 22px rgba(0,0,0,.25)}
+.ibtn .ico{filter:drop-shadow(0 0 6px var(--kb))}
+.ibtn .ico,.ibtn .ico [stroke]{stroke:var(--k)}
+.ibtn .ico [stroke*="ia"]{stroke:#fff}
+.ibtn .ico circle{fill:#fff}
+.titlebox.t-fold,.titlebox.t-glue,.titlebox.t-crack,.titlebox.t-burst,.titlebox.t-other{border-color:var(--kb)}
+.titlebox .ic{border-color:var(--kb)}
+.titlebox .ico,.titlebox .ico [stroke]{stroke:var(--k)}
+.titlebox .ico [stroke*="ia"]{stroke:#fff}
+.titlebox .ico circle{fill:#fff}
+
+.rbtn{--depth:#080b12;background:linear-gradient(180deg,#27324a,#18202f);border:2px solid #3b4866}
+.rbtn.sel{--depth:#a24d0a;background:linear-gradient(180deg,#ffa14d,#f07410);border-color:#ffd2a8}
+.rbtn:not(.sel).dim{opacity:.5}
+.cbtn.red{--depth:#8e1414;background:linear-gradient(180deg,#ff6e6e,#e32b2b)}
+.cbtn.yellow{--depth:#9a6b00;background:linear-gradient(180deg,#ffd94f,#f0a800)}
+.bigact.ack,.send{--depth:#1b449b;background:linear-gradient(180deg,#5ea3ff,#2f6fe0)}
+.bigact.res,.yes{--depth:#0b7a36;background:linear-gradient(180deg,#52f292,#17b955)}
+.bigact.cant,.bigact.esc{--depth:#a24d0a;background:linear-gradient(180deg,#ffa857,#f07410)}
+.bigact.no,.danger{--depth:#8e1414;background:linear-gradient(180deg,#ff7070,#e02a2a)}
+.send[disabled]{--depth:#0d1118;background:linear-gradient(180deg,#2a3346,#1d2433);color:#6f7b93;box-shadow:inset 0 calc(var(--vu)*.3) 0 rgba(255,255,255,.08),0 calc(var(--vu)*.5) 0 #0d1118}
+.send[disabled]:active{transform:none}
+.back,.tbtn,.linkbtn,.sheet .no{--depth:#070a11;background:linear-gradient(180deg,#2b3650,#1b2336);border:2px solid #3b4866}
+.tbtn.upd{--depth:#16316b;border-color:#4f86ff}
+.linkbtn{--depth:#070a11;--lift:calc(var(--vu)*.6);color:#c3cde0}
+.back,.tbtn{--lift:calc(var(--vu)*.7)}
+.yes,.danger,.sheet .no{border:0}
+.sheet .no{border:2px solid #3b4866!important}
+
+/* bigger button text */
+.rbtn .lg{--u:min(11.5cqw,13.5cqh)}
+.rbtn .ico{width:min(24cqh,20cqw);height:min(24cqh,20cqw)}
+.ibtn .lg{--u:min(10.8cqw,10.8cqh)}
+@container (min-aspect-ratio:7/4){
+  .ibtn .ibi .lg{--u:min(6.6cqw,19cqh)}
+}
+.cbtn .lg{--u:min(7.4cqw,8.6cqh)}
+
+/* sent-time stamp replaces the old running timer */
+.el{text-align:right;white-space:nowrap}
+.el small{display:block;font-size:.34em;font-weight:800;color:var(--dim);letter-spacing:.02em;margin-bottom:.15em}
+.ocard .r1 .el{font-size:calc(var(--vu)*3.6);line-height:1.05}
+.head .el{font-size:calc(var(--vu)*5.2);line-height:1.05}
+.u.retry{display:inline-flex;align-items:center;gap:.3em;background:var(--orange);color:#1c0e00}
+.u.retry .ico{width:1.1em;height:1.1em}
+/* detail screen: compact in portrait so the big buttons keep their room */
+@media (orientation:portrait){
+  .banner .lg.xl,.turn .lg{flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:0 calc(var(--vu)*1.4)}
+  .head .el small{display:none}
+  .head .el{font-size:calc(var(--vu)*3.8)}
+}
+@media (max-height:720px) and (orientation:portrait){
+  .trow{padding:calc(var(--vu)*.55) 0}
+  .trow .dot{display:none}
+  .trow .tm{font-size:calc(var(--vu)*2.3)}
+}
+@media (orientation:landscape) and (min-width:800px){
+  .dgrid{grid-template-rows:auto minmax(0,1fr)}
+  .dgrid .tl{align-self:start}
+}
+.el small{font-size:.42em;color:#b4bfd4}
+/* timeline rows: label and note share a line */
+.trow .lbl{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 calc(var(--vu)*1.2)}
+.trow .lbl .why{margin-top:0}
+@media (orientation:portrait){
+  .turn .lg{--u:calc(var(--vu)*2.5)}
+  .ocard .r1 .el small{display:none}
+  .ocard .r1 .el{font-size:calc(var(--vu)*3.2)}
+}
+.turn .lg{--u:calc(var(--vu)*2.5)}
+.trow .lg.inline{--u:calc(var(--vu)*2.15)}
+.trow .tm{font-size:calc(var(--vu)*2.7)}
+.trow{padding:calc(var(--vu)*.9) 0}
+.rbtn .lg{--u:min(13.5cqw,17cqh)}
+.rbtn .ico{width:min(20cqh,18cqw);height:min(20cqh,18cqw)}
+.send .lg{--u:min(9cqw,23cqh)}
+.bigact .lg{--u:min(8.6cqw,16cqh)}
 </style>
 </head>
 <body>
@@ -398,7 +497,7 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '1.9.0';
+const APP_VERSION = '2.0.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -435,6 +534,9 @@ const T = {
   fixed:['ISSUE RESOLVED','PROBLEMA RESUELTO','ပြဿနာ ဖြေရှင်းပြီး'],
   cant:["CAN'T FIX",'NO SE PUEDE ARREGLAR','ပြင်၍ မရပါ'],
   why:["Why can't it be fixed?",'¿Por qué no se puede arreglar?','ဘာကြောင့် ပြင်မရတာလဲ'],
+  notfixed:['NOT FIXED','NO ARREGLADO','မပြင်ရသေးပါ'],
+  notfixq:['Still not fixed?','¿Todavía no está arreglado?','မပြင်ရသေးဘူးလား'],
+  yesnotfix:['YES, NOT FIXED','SÍ, NO ARREGLADO','ဟုတ်ကဲ့ မပြင်ရသေးပါ'],
   pconfirm:['CONFIRM FIXED','CONFIRMAR RESUELTO','ပြင်ပြီးကြောင်း အတည်ပြုသည်'],
   escal:["CAN'T FIX, ESCALATE",'NO SE PUEDE, ESCALAR','ပြင်မရ၊ တင်ပြမည်'],
   retry:['Operator tries again','El operador reintenta','အော်ပရေတာ ထပ်ကြိုးစားမည်'],
@@ -451,7 +553,7 @@ const T = {
   escwait:['ESCALATED – QA / MANAGER NEEDED','ESCALADO – SE NECESITA QA / GERENTE','တင်ပြပြီး – QA / မန်နေဂျာ လိုအပ်သည်'],
   turn0:['Operator: tap CONFIRM','Operador: toque CONFIRMAR','အော်ပရေတာ – အတည်ပြုရန် နှိပ်ပါ'],
   turn1:['Operator: choose one','Operador: elija una opción','အော်ပရေတာ – တစ်ခု ရွေးပါ'],
-  turn2:['Packers: check the boxes, then confirm','Empacadores: revisen las cajas y confirmen','ထုပ်ပိုးသူများ – စစ်ဆေးပြီး အတည်ပြုပါ'],
+  turn2:['Packers: check the boxes, then choose one','Empacadores: revisen las cajas y elijan','ထုပ်ပိုးသူများ – စစ်ဆေးပြီး တစ်ခု ရွေးပါ'],
   tapfix:['Operator: tap ISSUE RESOLVED once fixed','Operador: toque cuando esté arreglado','အော်ပရေတာ – ပြင်ပြီးလျှင် နှိပ်ပါ'],
   notyet:['NOT YET','TODAVÍA NO','မပြီးသေးပါ'],
   yesfixed:['YES, FIXED','SÍ, ARREGLADO','ဟုတ်ကဲ့ ပြင်ပြီး'],
@@ -463,7 +565,7 @@ const T = {
   nokeep:['NO, KEEP','NO, MANTENER','မဟုတ်ပါ ဆက်ထားမည်'],
   typeit:['Type the reason…','Escriba el motivo…','အကြောင်းရင်း ရေးပါ…']
 };
-const TS = {escalated:['Escalated','Escalado','တင်ပြပြီး'], qa:['QA / Manager','QA / Gerente','QA / မန်နေဂျာ'], sent:['Sent','Enviado','ပို့ပြီး'], ack:['Operator in','Operador listo','အော်ပရေတာ လက်ခံ'], cantfixed:["Can't fix",'No se puede','ပြင်မရ'], opfixed:['Op. fixed','Arreglado','ပြင်ပြီး'], resolved:['Packers OK','Empacadores OK','ထုပ်ပိုးသူ OK']};
+const TS = {rejected:['Not fixed','No arreglado','မပြင်ရသေး'], escalated:['Escalated','Escalado','တင်ပြပြီး'], qa:['QA / Manager','QA / Gerente','QA / မန်နေဂျာ'], sent:['Sent','Enviado','ပို့ပြီး'], ack:['Operator in','Operador listo','အော်ပရေတာ လက်ခံ'], cantfixed:["Can't fix",'No se puede','ပြင်မရ'], opfixed:['Op. fixed','Arreglado','ပြင်ပြီး'], resolved:['Packers OK','Empacadores OK','ထုပ်ပိုးသူ OK']};
 const IC = {
   fold:'<path d="M8 12h16v26H8z"/><path d="M24 12l16 5v26l-16-5"/><path d="M24 6v37" stroke="url(#ia)"/>',
   glue:'<path d="M12 25h18v13a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4z"/><path d="M16 25v-5h10v5"/><path d="M19 20l2-10 2 10"/><path d="M38 24c-3 4.5-4.5 7-4.5 9a4.5 4.5 0 0 0 9 0c0-2-1.5-4.5-4.5-9z" stroke="url(#ia)"/>',
@@ -508,6 +610,7 @@ const byId = id => issues.find(i => i.id === id);
 
 /* ---------- helpers ---------- */
 const fmtTime = ts => ts ? new Date(ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'}) : '—';
+const fmtHM = ts => new Date(ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
 const fmtDate = ts => new Date(ts).toLocaleDateString([], {month:'short',day:'numeric'});
 const fmtDur = ms => {
   const s = Math.max(0, Math.floor(ms/1000)), h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60;
@@ -568,15 +671,15 @@ function statusLine(i){
 function renderHome(){
   const open = issues.filter(isOpen).sort((a,b) => (a.color===b.color ? a.submittedAt-b.submittedAt : a.color==='red'?-1:1));
   const btns = Object.keys(TYPES).map(k => `
-    <button class="ibtn ${k==='other'?'other':''}" data-act="pick" data-type="${k}">
+    <button class="ibtn t-${k} ${k==='other'?'other':''}" data-act="pick" data-type="${k}">
       <div class="ibi"><div class="ic">${ico(TYPES[k].ic)}</div>${lg(TYPES[k].t)}</div>
     </button>`).join('');
   const cards = open.map(i => `
     <button class="ocard ${cardColor(i)} ${i.color==='red'&&!i.ackAt?'flash':''} ${(i.opResolvedAt||(i.cantFixAt&&!isEsc(i)))?'flashb':''}" data-act="open" data-id="${i.id}">
       <div class="oi">
-        <div class="r1">${lg(TYPES[i.type].t,'inline')}<div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div></div>
+        <div class="r1">${lg(TYPES[i.type].t,'inline')}<div class="el"><small>${T.sent[1]} · ${T.sent[0]}</small>${fmtHM(i.submittedAt)}</div></div>
         <div class="r2">${whoTag(i)}</div>
-        <div class="r3"><span class="u ${i.color}">${URG[i.color].en}</span><span class="st">${statusEmoji(i)}</span></div>
+        <div class="r3"><span class="u ${i.color}">${URG[i.color].en}</span><span class="st">${statusEmoji(i)}</span>${(i.attempts&&i.attempts.length)?`<span class="u retry">${ico('undo','cc')}${i.attempts.length+1}</span>`:''}</div>
         ${i.cantFixAt&&!i.opResolvedAt?`<div class="cf">${ico('warn','cc')} ${T.cant[0]} · ${cfText(i)}</div>`:''}
       </div>
     </button>`).join('');
@@ -595,7 +698,7 @@ function renderColor(){
       <span class="chk">${sel===c?ico('check','cc'):''}</span>${lg(URG[c].d)}
     </button>`;
   return `<div class="head">${backBtn()}</div>
-    <div class="titlebox"><div class="ic">${ico(TYPES[t].ic)}</div>${lg(TYPES[t].t,'md')}</div>
+    <div class="titlebox t-${t}"><div class="ic">${ico(TYPES[t].ic)}</div>${lg(TYPES[t].t,'md')}</div>
     <div class="colors">${cb('red')}${cb('yellow')}</div>
     <button class="send" data-act="send" ${sel?'':'disabled'}>${lg(T.send)}</button>`;
 }
@@ -609,7 +712,7 @@ function renderCant(){
     <div class="titlebox"><div>${lg(T.why,'md')}<div class="sub">${TYPES[i.type].t[0]}</div></div></div>
     <div class="reasons">${rb('die')}${rb('paper')}${rb('cad')}${rb('other')}</div>
     ${note}
-    <button class="send" data-act="sendcant" ${r?'':'disabled'} style="${r?'background:var(--orange);color:#1c0e00':''}">${lg(T.confirm)}</button>`;
+    <button class="send" data-act="sendcant" ${r?'':'disabled'} style="${r?'--depth:#a24d0a;background:linear-gradient(180deg,#ffa857,#f07410);color:#1c0e00':''}">${lg(T.confirm)}</button>`;
 }
 
 function renderDetail(){
@@ -636,17 +739,18 @@ function renderDetail(){
       : stage === 1
       ? `<div class="pair"><button class="bigact res" data-act="askop" data-id="${i.id}">${lg(T.fixed)}</button>
          <button class="bigact cant" data-act="cantfix" data-id="${i.id}">${lg(T.cant)}</button></div>`
-      : `<button class="bigact res" data-act="askres" data-id="${i.id}">${lg(T.pconfirm)}</button>`);
+      : `<div class="pair"><button class="bigact res" data-act="askres" data-id="${i.id}">${lg(T.pconfirm)}</button>
+         <button class="bigact no" data-act="asknot" data-id="${i.id}">${lg(T.notfixed)}</button></div>`);
   }
   const cfBadge = i.cantFixAt && !i.opResolvedAt && !done ? `<div class="cfb">${ico('warn','cc')} ${T.cant[0]} · ${cfText(i)}</div>` : '';
   const cfRow = i.cantFixAt ? row('cantfixed', i.cantFixAt, `<div class="why">${cfText(i)}</div>`, true) : '';
   return `<div class="head">${backBtn()}
-      <div style="flex:1"></div>${!cancelled&&!done?`<button class="linkbtn" data-act="askcancel" data-id="${i.id}">${ico('x','cc')}Cancel</button>`:''}${!cancelled&&!done?`<div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>`:''}</div>
+      <div style="flex:1"></div>${!cancelled&&!done?`<button class="linkbtn" data-act="askcancel" data-id="${i.id}">${ico('x','cc')}<span class="tx">Cancel</span></button>`:''}${!cancelled&&!done?`<div class="el"><small>${T.sent[1]} · ${T.sent[0]}</small>${fmtHM(i.submittedAt)}</div>`:''}</div>
     <div class="dgrid">
       <div class="banner ${cls} ${(!cancelled&&!done&&i.color==='red'&&!i.ackAt)?'flash':''}">
         ${lg(TYPES[i.type].t,'xl')}<div class="badges"><span class="tag">${tagText}</span>${cfBadge}</div></div>
       <div class="dr">${action}</div>
-      <div class="tl">${row('sent', i.submittedAt)}${row('ack', i.ackAt)}${cfRow}${i.escalatedAt||i.qaAt?row('escalated', i.escalatedAt)+row('qa', i.qaAt, i.qaAt?`<div class="why ${i.qaDecision==='approved'?'qa-ok':'qa-no'}">${T[i.qaDecision==='approved'?'approved':'notapproved'][0]}</div>`:''):row('opfixed', i.opResolvedAt)+row('resolved', i.resolvedAt)}</div>
+      <div class="tl">${row('sent', i.submittedAt)}${row('ack', i.ackAt)}${(i.attempts&&i.attempts.length)?row('rejected', i.attempts[i.attempts.length-1].at, `<div class="why">×${i.attempts.length}</div>`, true):''}${cfRow}${i.escalatedAt||i.qaAt?row('escalated', i.escalatedAt)+row('qa', i.qaAt, i.qaAt?`<div class="why ${i.qaDecision==='approved'?'qa-ok':'qa-no'}">${T[i.qaDecision==='approved'?'approved':'notapproved'][0]}</div>`:''):row('opfixed', i.opResolvedAt)+row('resolved', i.resolvedAt)}</div>
     </div>`;
 }
 
@@ -659,6 +763,7 @@ function renderHistory(){
     const st = i.cancelledAt ? 'Cancelled' : i.qaAt ? 'QA ' + (i.qaDecision === 'approved' ? 'Approved' : 'Not approved') : i.resolvedAt ? 'Resolved' : i.escalatedAt ? 'ESCALATED' : 'Open';
     return `<div class="hcard ${i.color}"><div class="t">${TYPES[i.type].t[0]}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)}</span></div>
       ${i.cantFixAt?`<div class="cfl">Can't fix (${fmtTime(i.cantFixAt)}): ${cfText(i)}</div>`:''}
+      ${(i.attempts&&i.attempts.length)?`<div class="cfl">Packers said not fixed ×${i.attempts.length} (last ${fmtTime(i.attempts[i.attempts.length-1].at)})</div>`:''}
       ${i.escalatedAt?`<div class="cfl">Escalated ${fmtTime(i.escalatedAt)}${i.qaAt?` → QA ${i.qaDecision==='approved'?'APPROVED':'NOT APPROVED'} ${fmtTime(i.qaAt)}`:' – waiting for QA / Manager'}</div>`:''}
       <div class="g"><div>Sent<b>${fmtTime(i.submittedAt)}</b></div>
       <div>Op. confirmed<b>${fmtTime(i.ackAt)}</b><i>response ${resp}</i></div>
@@ -686,11 +791,11 @@ const askModal = (q, noLbl, yesLbl, yesCls, yesAct, id, sub) => modal(`${lg(q,'x
 function exportCsv(){
   const q = v => `"${String(v).replace(/"/g,'""')}"`;
   const iso = ts => ts ? new Date(ts).toLocaleString() : '';
-  const rows = [['Issue','Urgency','Status','Sent','Operator confirmed',"Can't fix time","Can't fix reason","Can't fix note",'Operator fixed','Packers confirmed resolved','Escalated time','QA decision','QA decision time','Response (min)','Total (min)']];
+  const rows = [['Issue','Urgency','Status','Sent','Operator confirmed',"Can't fix time","Can't fix reason","Can't fix note",'Operator fixed','Packers confirmed resolved','Escalated time','QA decision','QA decision time','Not-fixed count','Last not-fixed time','Response (min)','Total (min)']];
   [...issues].sort((a,b)=>a.submittedAt-b.submittedAt).forEach(i => rows.push([
     TYPES[i.type].t[0], i.color, i.cancelledAt?'cancelled':i.qaAt?'qa-'+i.qaDecision:i.resolvedAt?'resolved':i.escalatedAt?'escalated':'open',
     iso(i.submittedAt), iso(i.ackAt), iso(i.cantFixAt), i.cantFixReason ? REASONS[i.cantFixReason].t[0] : '', i.cantFixNote || '',
-    iso(i.opResolvedAt), iso(i.resolvedAt), iso(i.escalatedAt), i.qaDecision || '', iso(i.qaAt),
+    iso(i.opResolvedAt), iso(i.resolvedAt), iso(i.escalatedAt), i.qaDecision || '', iso(i.qaAt), (i.attempts||[]).length, (i.attempts&&i.attempts.length)?iso(i.attempts[i.attempts.length-1].at):'',
     i.ackAt ? ((i.ackAt-i.submittedAt)/60000).toFixed(1) : '',
     (i.resolvedAt||i.qaAt) ? (((i.resolvedAt||i.qaAt)-i.submittedAt)/60000).toFixed(1) : '']));
   const blob = new Blob([rows.map(r=>r.map(q).join(',')).join('\r\n')], {type:'text/csv'});
@@ -741,6 +846,8 @@ document.addEventListener('click', e => {
       const i = byId(view.id);
       if (i && view.reason){ i.cantFixAt = Date.now(); i.cantFixReason = view.reason; i.cantFixNote = view.reason === 'other' ? (view.note || '').trim() : ''; save(); }
       view = {name:'home'}; render(); toast("Can't fix recorded · No se puede arreglar · ပြင်၍ မရ"); break; }
+    case 'asknot': askModal(T.notfixq, T.notyet, T.yesnotfix, 'danger', 'notfix', id, 'Packers'); break;
+    case 'notfix': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ (i.attempts = i.attempts || []).push({opAt:i.opResolvedAt, at:Date.now()}); i.opResolvedAt = null; save(); } closeModal(); view = {name:'home'}; render(); toast('Back to operator · Vuelve al operador · အော်ပရေတာထံ ပြန်ပို့ပြီး'); break; }
     case 'askres': askModal(T.boxesgood, T.notyet, T.yesgood, 'yes', 'res', id, 'Packers'); break;
     case 'res': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ i.resolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('Resolved · Resuelto · ဖြေရှင်းပြီး'); break; }
     case 'askcancel': askModal(T.cancelq, T.nokeep, T.yescancel, 'danger', 'cancel', id, 'Sent by mistake'); break;
@@ -754,10 +861,6 @@ document.addEventListener('click', e => {
   }
 });
 
-/* live elapsed timers without re-rendering */
-setInterval(() => {
-  document.querySelectorAll('[data-since]').forEach(el => el.textContent = fmtDur(Date.now() - Number(el.dataset.since)));
-}, 1000);
 
 /* keep the tablet screen awake */
 let wl = null;
