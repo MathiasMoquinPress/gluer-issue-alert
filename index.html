@@ -253,6 +253,125 @@ body{background:radial-gradient(120% 80% at 50% -10%,#121b2e 0%,var(--bg) 62%) f
 .who .ico{grid-row:1 / span 2;width:1.25em;height:1.25em}
 .who small{grid-column:2;white-space:nowrap}
 .titlebox > div:not(.ic){text-align:center;display:flex;flex-direction:column;align-items:center}
+
+/* ===== v1.8: breathing room, consistent round corners, no overlap ===== */
+:root{--rl:calc(var(--vu)*3.4);--rm:calc(var(--vu)*2.6);--g:calc(var(--vu)*1.8)}
+#app{padding:calc(var(--vu)*2)}
+.ver{display:none}
+.vtag{font-size:calc(var(--vu)*2);font-weight:700;color:var(--dim);margin-left:calc(var(--vu)*1);letter-spacing:.02em}
+
+/* one corner language: big tiles = --rl, panels & small buttons = --rm, chips = pill */
+.ibtn,.cbtn,.rbtn,.bigact,.send,.banner,.sheet{border-radius:var(--rl)}
+.top,.ocard,.titlebox,.tl,.back,.turn,.linkbtn,.tbtn,textarea,.who,.hcard,.empty,.sheet .row button,.cfb{border-radius:var(--rm)}
+.ocard{border-left-width:calc(var(--vu)*2.2)}
+.hcard{border-left-width:calc(var(--vu)*2.2)}
+
+/* more air inside everything */
+.top{padding:calc(var(--vu)*1.6) calc(var(--vu)*2.4);gap:calc(var(--vu)*2)}
+.tbtn{padding:0 calc(var(--vu)*2.6);min-height:calc(var(--vu)*8)}
+.back{padding:0 calc(var(--vu)*2.6);min-height:calc(var(--vu)*9)}
+.linkbtn{padding:0 calc(var(--vu)*2.4)}
+.ibtn{padding:calc(var(--vu)*1.6)}
+.ibtn .lg{--u:min(9cqw,9cqh)}
+.cbtn,.rbtn,.bigact,.send{padding:calc(var(--vu)*2)}
+.cbtn{gap:calc(var(--vu)*.4)}
+.cbtn .lg{--u:min(6.8cqw,8cqh)}
+.cbtn .chk{position:static;display:block;height:calc(var(--vu)*4.2);line-height:0}
+.cbtn .chk .ico{width:calc(var(--vu)*4.2);height:calc(var(--vu)*4.2)}
+.bigact .lg{--u:min(7.6cqw,14cqh)}
+.send .lg{--u:min(6.8cqw,15cqh)}
+.rbtn .lg{--u:min(8.6cqw,9cqh)}
+.banner{padding:calc(var(--vu)*2);gap:calc(var(--vu)*1.2)}
+.titlebox{padding:calc(var(--vu)*1.8) calc(var(--vu)*2.4)}
+.turn{padding:calc(var(--vu)*1.4) calc(var(--vu)*2.2)}
+.tl{padding:calc(var(--vu)*.6) calc(var(--vu)*2.4)}
+.trow{padding:calc(var(--vu)*1.1) 0;gap:calc(var(--vu)*1.8)}
+.sheet{padding:calc(var(--vu)*3);gap:calc(var(--vu)*2)}
+.sheet .row button{padding:calc(var(--vu)*1)}
+textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
+.hcard{padding:calc(var(--vu)*1.6) calc(var(--vu)*2.2)}
+
+/* open-issue card: text block + fixed timer column, never overlapping */
+.ocard{align-items:stretch;margin-bottom:var(--g)}
+.ocard .body{flex:1 1 0;min-width:0;padding:calc(var(--vu)*1.6) calc(var(--vu)*1.6) calc(var(--vu)*1.6) calc(var(--vu)*2);gap:calc(var(--vu)*1.1)}
+.ocard .right{flex:none;align-items:flex-end;padding:calc(var(--vu)*1.6) calc(var(--vu)*2.2) calc(var(--vu)*1.6) 0;gap:calc(var(--vu)*1)}
+.ocard .el{font-size:calc(var(--vu)*4.6);white-space:nowrap}
+.ocard .meta{flex-wrap:nowrap;gap:calc(var(--vu)*1.2)}
+.u{padding:calc(var(--vu)*.3) calc(var(--vu)*1.4)}
+.who{max-width:100%;padding:calc(var(--vu)*.9) calc(var(--vu)*2.2);column-gap:calc(var(--vu)*1.1)}
+.who .wt{display:flex;flex-wrap:wrap;gap:0 .5em;min-width:0}
+.who small{display:block}
+.ocard .lg.inline{gap:0 calc(var(--vu)*1.2)}
+.openwrap{padding-right:2px}
+.who{white-space:normal}
+@media (max-width:600px){.who small{display:none}}
+/* open-issue card v2: three stacked rows, nothing side-by-side that can collide */
+.ocard{display:block;text-align:left}
+.ocard .oi{display:flex;flex-direction:column;gap:calc(var(--vu)*1.2);padding:calc(var(--vu)*1.8) calc(var(--vu)*2.2) calc(var(--vu)*1.8) calc(var(--vu)*2)}
+.ocard .r1{display:flex;align-items:flex-start;justify-content:space-between;gap:calc(var(--vu)*1.6)}
+.ocard .r1 .lg{flex:1 1 0;min-width:0}
+.ocard .r1 .el{flex:none;font-size:calc(var(--vu)*4.2);line-height:1;color:var(--hot);font-weight:900;white-space:nowrap;padding-top:calc(var(--vu)*.2)}
+.ocard .r2{display:flex}
+.ocard .r3{display:flex;align-items:center;flex-wrap:wrap;gap:calc(var(--vu)*1.2)}
+.ocard .r3 .cf{display:inline-flex;align-items:center;gap:calc(var(--vu)*.7);font-size:calc(var(--vu)*2.2);font-weight:900;color:var(--orange)}
+.who{font-size:calc(var(--vu)*2.4);max-width:100%}
+.banner .lg.xl{--u:calc(var(--vu)*3.4)}
+.ocard{container-type:inline-size}
+.ocard .oi{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n t" "w w" "m m";align-items:start;row-gap:calc(var(--vu)*1.2);column-gap:calc(var(--vu)*1.6)}
+.ocard .r1,.ocard .r2,.ocard .r3{display:contents}
+.ocard .r1 .lg{grid-area:n;min-width:0}
+.ocard .r1 .el{grid-area:t}
+.ocard .who{grid-area:w;justify-self:start}
+.ocard .r3 > *{}
+.ocard .r3{display:flex;grid-area:m;align-items:center;flex-wrap:wrap;gap:calc(var(--vu)*1.2)}
+@container (min-width:520px){
+  .ocard .oi{grid-template-areas:"n t" "w m";align-items:center}
+  .ocard .r3{justify-self:end}
+}
+@media (orientation:landscape) and (min-width:800px) and (max-width:1099px) and (min-height:700px){.home.has-open{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}.openwrap{order:-1;max-height:48dvh}}
+.ocard:last-child{margin-bottom:0}
+/* final card grid: name | timer / turn pill | tag+icon / can't-fix note */
+.ocard .oi{grid-template-areas:"n t" "w m" "c c";align-items:center}
+.ocard .r3{justify-self:end;flex-wrap:nowrap}
+.ocard .oi > .cf{grid-area:c;display:flex;align-items:center;gap:calc(var(--vu)*.8);font-size:calc(var(--vu)*2.2);font-weight:900;color:var(--orange)}
+@media (max-height:720px) and (orientation:portrait){
+  .ocard .oi{padding:calc(var(--vu)*1.2) calc(var(--vu)*1.6) calc(var(--vu)*1.2) calc(var(--vu)*1.8);row-gap:calc(var(--vu)*.8)}
+  .ocard .oi > .cf{display:none}
+  .openwrap{max-height:41dvh}
+}
+/* portrait tablets/phones: width is the scarce resource, so tighten type a notch */
+@media (orientation:portrait) and (min-height:721px){.openwrap{max-height:47dvh}}
+@media (orientation:portrait){
+  .top{padding:calc(var(--vu)*1.2) calc(var(--vu)*2);row-gap:calc(var(--vu)*.6)}
+  .lamp{width:calc(var(--vu)*4.2);height:calc(var(--vu)*4.2)}
+  .tbtn{min-height:calc(var(--vu)*7)}
+  .status .lg.inline{--u:calc(var(--vu)*2.6)}
+  .status .cnt{font-size:calc(var(--vu)*2.3)}
+  .status .cnt b{font-size:calc(var(--vu)*3.6)}
+  .ocard .lg.inline{--u:calc(var(--vu)*2.4)}
+  .ocard .r1 .el{font-size:calc(var(--vu)*3.8)}
+  .ocard .oi{padding:calc(var(--vu)*1.4) calc(var(--vu)*1.8) calc(var(--vu)*1.4) calc(var(--vu)*1.8);row-gap:calc(var(--vu)*.9)}
+  .who{font-size:calc(var(--vu)*2);padding:calc(var(--vu)*.7) calc(var(--vu)*1.8)}
+  .banner .lg.xl{--u:calc(var(--vu)*3)}
+  .banner{padding:calc(var(--vu)*1.6)}
+  .turn{padding:calc(var(--vu)*1.1) calc(var(--vu)*2)}
+}
+/* issue buttons: icon above text normally, icon beside text when the button is wide and short */
+.ibtn{display:flex;align-items:center;justify-content:center}
+.ibi{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--vu)*.9);max-width:100%;max-height:100%}
+@container (min-aspect-ratio:7/4){
+  .ibi{flex-direction:row;gap:4cqw}
+  .ibtn .ic{width:min(60cqh,17cqw);height:min(60cqh,17cqw);flex:none}
+  .ibtn .ibi .lg{--u:min(5.8cqw,23cqh);align-items:flex-start;text-align:left}
+}
+/* wide open-issue cards: one compact row */
+@container (min-width:600px){
+  .ocard .oi{grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"n m t" "w c c";column-gap:calc(var(--vu)*2);align-items:center}
+  .ocard .r3{justify-self:end}
+  .ocard .oi > .cf{justify-self:start}
+  .ocard .who{padding-top:calc(var(--vu)*.5);padding-bottom:calc(var(--vu)*.5)}
+}
+@media (orientation:landscape) and (min-width:800px) and (max-width:1099px) and (min-height:700px){.openwrap{max-height:42dvh}}
 </style>
 </head>
 <body>
@@ -264,7 +383,7 @@ body{background:radial-gradient(120% 80% at 50% -10%,#121b2e 0%,var(--bg) 62%) f
 </defs></svg>
 
 <script>
-const APP_VERSION = '1.7.0';
+const APP_VERSION = '1.8.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -423,7 +542,7 @@ function topbar(){
 }
 
 const WHO = {op:['OPERATOR','OPERADOR','အော်ပရေတာ'], pk:['PACKERS','EMPACADORES','ထုပ်ပိုးသူများ'], qa:['QA / MANAGER','QA / GERENTE','QA / မန်နေဂျာ']};
-const whoTag = i => { const k = isEsc(i) ? 'qa' : (i.opResolvedAt || i.cantFixAt) ? 'pk' : 'op'; const w = WHO[k]; return `<span class="who ${k}">${ico('arrow','cc')}<span>${w[1]} · ${w[2]}</span><small>${w[0]}</small></span>`; };
+const whoTag = i => { const k = isEsc(i) ? 'qa' : (i.opResolvedAt || i.cantFixAt) ? 'pk' : 'op'; const w = WHO[k]; return `<span class="who ${k}">${ico('arrow','cc')}<span class="wt"><span>${w[1]}</span><span>${w[2]}</span></span><small>${w[0]}</small></span>`; };
 const statusEmoji = i => { const k = isEsc(i) ? ['siren','siren'] : (i.opResolvedAt || i.cantFixAt) ? ['checkc','check'] : i.ackAt ? ['wrench','wrench'] : ['clock','clock']; return ico(k[0],'cc s-'+k[1]); };
 function statusLine(i){
   if (i.opResolvedAt) return T.waitpack[1];
@@ -435,22 +554,22 @@ function renderHome(){
   const open = issues.filter(isOpen).sort((a,b) => (a.color===b.color ? a.submittedAt-b.submittedAt : a.color==='red'?-1:1));
   const btns = Object.keys(TYPES).map(k => `
     <button class="ibtn ${k==='other'?'other':''}" data-act="pick" data-type="${k}">
-      <div class="ic">${ico(TYPES[k].ic)}</div>${lg(TYPES[k].t)}
+      <div class="ibi"><div class="ic">${ico(TYPES[k].ic)}</div>${lg(TYPES[k].t)}</div>
     </button>`).join('');
   const cards = open.map(i => `
     <button class="ocard ${cardColor(i)} ${i.color==='red'&&!i.ackAt?'flash':''} ${(i.opResolvedAt||(i.cantFixAt&&!isEsc(i)))?'flashb':''}" data-act="open" data-id="${i.id}">
-      <div class="bar ${cardColor(i)}"></div>
-      <div class="body">${lg(TYPES[i.type].t,'inline')}
-        ${whoTag(i)}
-        ${i.cantFixAt&&!i.opResolvedAt?`<div class="cf">${ico('warn','cc')} ${T.cant[0]} · ${cfText(i)}</div>`:''}</div>
-      <div class="right"><div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div>
-        <div class="meta"><span class="u ${i.color}">${URG[i.color].en}</span><span class="st">${statusEmoji(i)}</span></div></div>
+      <div class="oi">
+        <div class="r1">${lg(TYPES[i.type].t,'inline')}<div class="el" data-since="${i.submittedAt}">${fmtDur(Date.now()-i.submittedAt)}</div></div>
+        <div class="r2">${whoTag(i)}</div>
+        <div class="r3"><span class="u ${i.color}">${URG[i.color].en}</span><span class="st">${statusEmoji(i)}</span></div>
+        ${i.cantFixAt&&!i.opResolvedAt?`<div class="cf">${ico('warn','cc')} ${T.cant[0]} · ${cfText(i)}</div>`:''}
+      </div>
     </button>`).join('');
   const side = open.length ? `<div class="openwrap"><h2>Open · Abiertos · ဖွင့်ထားသည်</h2>${cards}</div>` : '';
   return `${topbar()}
     <div class="home ${open.length?'has-open':''}">
       <div class="issues">${btns}</div>${side}
-    </div><div class="ver">v${APP_VERSION}</div>`;
+    </div>`;
 }
 
 const backBtn = () => `<button class="back" data-act="home">${ico('chev','cc')}${lg(T.back,'sm')}</button>`;
@@ -458,7 +577,7 @@ const backBtn = () => `<button class="back" data-act="home">${ico('chev','cc')}$
 function renderColor(){
   const t = view.type, sel = view.color;
   const cb = c => `<button class="cbtn ${c} ${sel&&sel!==c?'dim':''} ${sel===c?'sel':''}" data-act="color" data-color="${c}">
-      ${sel===c?'<span class="chk">'+ico('check','cc')+'</span>':''}${lg(URG[c].d)}
+      <span class="chk">${sel===c?ico('check','cc'):''}</span>${lg(URG[c].d)}
     </button>`;
   return `<div class="head">${backBtn()}</div>
     <div class="titlebox"><div class="ic">${ico(TYPES[t].ic)}</div>${lg(TYPES[t].t,'md')}</div>
@@ -531,9 +650,9 @@ function renderHistory(){
       <div>Op. fixed<b>${fmtTime(i.opResolvedAt)}</b><i>repair ${i.opResolvedAt&&i.ackAt?fmtDur(i.opResolvedAt-i.ackAt):'—'}</i></div>
       <div>Packers OK<b>${fmtTime(i.resolvedAt)}</b><i>total ${fix}</i></div></div></div>`;
   }).join('') || '<div class="empty">No issues logged yet</div>';
-  return `<div class="head">${backBtn()}<div class="title">Issue Log</div></div>
+  return `<div class="head">${backBtn()}<div class="title">Issue Log <span class="vtag">v${APP_VERSION}</span></div></div>
     <div class="hbar"><button class="tbtn" data-act="csv">${ico('dl','cc')}Download CSV</button><button class="tbtn" data-act="clearlog" style="color:#ff9a9a">${ico('trash','cc')}Clear log</button></div>
-    <div class="hist">${cards}</div><div class="ver">v${APP_VERSION}</div>`;
+    <div class="hist">${cards}</div>`;
 }
 
 function render(){
@@ -572,7 +691,7 @@ async function updateApp(){
     const latest = m ? m[1] : APP_VERSION;
     try { if ('caches' in window) (await caches.keys()).forEach(k => caches.delete(k)); } catch(e){}
     try { if (navigator.serviceWorker) (await navigator.serviceWorker.getRegistrations()).forEach(x => x.unregister()); } catch(e){}
-    toast(latest !== APP_VERSION ? `Updating to v${latest}…` : 'Already latest ✔ Reloading');
+    toast(latest !== APP_VERSION ? `Updating to v${latest}…` : `Already latest (v${APP_VERSION}) – reloading`);
     setTimeout(() => { location.href = location.pathname + '?v=' + Date.now(); }, 900);
   } catch(e){ toast('No internet – try again'); }
 }
