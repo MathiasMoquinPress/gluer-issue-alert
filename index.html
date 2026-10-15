@@ -681,6 +681,22 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
 }
 .bigact.ack{--ku:.1}
 .bigact.esc{--ku:.066}
+/* issue buttons are rounded squares (the other tap buttons stay round) */
+.ibtn.circ{border-radius:var(--rl)!important}
+.ibtn .ic{width:calc(var(--d)*.22)!important;height:calc(var(--d)*.22)!important}
+.ibtn.circ .lg{max-width:88%!important}
+.ibtn{--ku:.086}
+/* narrow open-issue cards (list beside the buttons on landscape tablets) */
+@container (max-width:460px){
+  .ocard .lg.inline{--u:calc(var(--vu)*1.9)}
+  .ocard .r1 .el{font-size:calc(var(--vu)*2.6)}
+  .ocard .oi{padding:calc(var(--vu)*1.1) calc(var(--vu)*1.4) calc(var(--vu)*1.1) calc(var(--vu)*4);row-gap:calc(var(--vu)*.5)}
+  .who{font-size:calc(var(--vu)*1.6)}
+  .u{font-size:calc(var(--vu)*1.4)}
+  .ocard .st .ico{width:calc(var(--vu)*2.8);height:calc(var(--vu)*2.8)}
+  .ocard .oi > .cf{font-size:calc(var(--vu)*1.8)}
+}
+.circ .ibi .lg{align-items:center!important;text-align:center!important}
 </style>
 </head>
 <body>
@@ -692,7 +708,7 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '3.0.0';
+const APP_VERSION = '3.1.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
