@@ -424,6 +424,16 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .mbtn .lg{--u:min(9cqw,19cqh)}
 @media (orientation:portrait){.has-open .sec{display:none}}
 
+/* log: pick entries to delete */
+.cb{flex:none;width:calc(var(--vu)*4);height:calc(var(--vu)*4);border-radius:calc(var(--vu)*1.1);border:2px solid rgba(255,255,255,.55);display:grid;place-items:center;color:#06302f}
+.cb.on{background:#3cc8c0;border-color:#9af0ea}
+.cb .ico{width:70%;height:70%}
+.hcard.picked{border-color:#9af0ea;background:linear-gradient(180deg,rgba(60,200,192,.28),rgba(60,200,192,.10))}
+.pill.danger{background:linear-gradient(150deg,#ff7478,#c4333a);border-color:rgba(255,255,255,.34)}
+.pill[disabled]{opacity:.45;cursor:default;box-shadow:none}
+.pill[disabled]:active{transform:none}
+.selhint{flex:none;text-align:center;font-size:calc(var(--vu)*2);font-weight:700;color:var(--ink2);margin-top:calc(var(--vu)*-.4)}
+
 </style>
 </head>
 <body>
@@ -435,7 +445,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.1.0';
+const APP_VERSION = '5.2.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -706,14 +716,16 @@ function renderDetail(){
 }
 
 function renderHistory(){
+  const selN = Object.keys(view.sel || {}).filter(k => view.sel[k] && issues.some(i => i.id === k)).length;
   const list = [...issues].sort((a,b) => b.submittedAt - a.submittedAt);
   const cards = list.map(i => {
     const resp = i.ackAt ? fmtDur(i.ackAt - i.submittedAt) : '—';
     const closeAt = i.resolvedAt || i.qaAt;
     const fix = closeAt ? fmtDur(closeAt - i.submittedAt) : '—';
     const st = i.cancelledAt ? 'Cancelled' : i.qaAt ? 'QA ' + (i.qaDecision === 'approved' ? 'Approved' : 'Not approved') : i.resolvedAt ? 'Resolved' : i.escalatedAt ? 'ESCALATED' : 'Open';
-    const open = !!(view.exp && view.exp[i.id]);
-    return `<div class="card hcard ${i.color} ${open?'open':''}"><button class="hh" data-act="hexp" data-id="${i.id}"><div class="t">${TYPES[i.type].t[0]}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)} · ${fmtHM(i.submittedAt)}</span></div>${ico(open?'chevu':'chevd','cc')}</button><div class="hd">
+    const open = !!(view.exp && view.exp[i.id]) && !view.selMode;
+    const picked = !!(view.sel && view.sel[i.id]);
+    return `<div class="card hcard ${i.color} ${open?'open':''} ${view.selMode&&picked?'picked':''}"><button class="hh" data-act="${view.selMode?'lpick':'hexp'}" data-id="${i.id}">${view.selMode?`<span class="cb ${picked?'on':''}">${picked?ico('check','cc'):''}</span>`:''}<div class="t">${TYPES[i.type].t[0]}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)} · ${fmtHM(i.submittedAt)}</span></div>${view.selMode?'':ico(open?'chevu':'chevd','cc')}</button><div class="hd">
       ${i.cantFixAt?`<div class="cfl">Can't fix (${fmtTime(i.cantFixAt)}): ${cfText(i)}</div>`:''}
       ${(i.attempts&&i.attempts.length)?`<div class="cfl">Packers said not fixed ×${i.attempts.length} (last ${fmtTime(i.attempts[i.attempts.length-1].at)})</div>`:''}
       ${i.escalatedAt?`<div class="cfl">Escalated ${fmtTime(i.escalatedAt)}${i.qaAt?` → QA ${i.qaDecision==='approved'?'APPROVED':'NOT APPROVED'} ${fmtTime(i.qaAt)}`:' – waiting for QA / Manager'}</div>`:''}
@@ -723,7 +735,8 @@ function renderHistory(){
       <div>Packers OK<b>${fmtTime(i.resolvedAt)}</b><i>total ${fix}</i></div></div></div></div>`;
   }).join('') || '<div class="card empty">No issues logged yet</div>';
   return `<div class="head">${backBtn()}<div class="title">Issue Log <span class="vtag">v${APP_VERSION}</span></div></div>
-    <div class="hbar"><button class="pill" data-act="csv">${ico('dl','cc')}Download CSV</button><button class="pill" data-act="clearlog" style="color:#ffb3b5">${ico('trash','cc')}Clear log</button></div>
+    ${view.selMode ? `<div class="hbar"><button class="pill" data-act="lall">${ico('checkc','cc')}${(issues.length && issues.every(i=>view.sel&&view.sel[i.id]))?'Select none':'Select all'}</button><button class="pill danger" data-act="ldel" ${selN?'':'disabled'}>${ico('trash','cc')}Delete${selN?` (${selN})`:''}</button><button class="pill" data-act="lsel">${ico('check','cc')}Done</button></div><div class="selhint">Tap the entries you want to delete</div>`
+    : `<div class="hbar"><button class="pill" data-act="csv">${ico('dl','cc')}Download CSV</button><button class="pill" data-act="lsel">${ico('checkc','cc')}Select to delete</button><button class="pill" data-act="clearlog" style="color:#ffb3b5">${ico('trash','cc')}Clear all</button></div>`}
     <div class="hist">${cards}</div>`;
 }
 
@@ -778,6 +791,12 @@ document.addEventListener('click', e => {
     case 'tl': view.tl = !view.tl; render(); break;
     case 'hexp': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.exp = view.exp || {}; view.exp[id] = !view.exp[id]; render(); const sc2 = document.querySelector('.hist'); if (sc2) sc2.scrollTop = top; break; }
     case 'history': view = {name:'history', exp:{}}; render(); break;
+    case 'lsel': view.selMode = !view.selMode; view.sel = {}; render(); break;
+    case 'lpick': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.sel = view.sel || {}; view.sel[id] = !view.sel[id]; render(); const sc2 = document.querySelector('.hist'); if (sc2) sc2.scrollTop = top; break; }
+    case 'lall': { const all = issues.length && issues.every(i => view.sel && view.sel[i.id]); view.sel = {}; if (!all) issues.forEach(i => { view.sel[i.id] = true; }); render(); break; }
+    case 'ldel': { const picked = issues.filter(i => view.sel && view.sel[i.id]); if (!picked.length) break; const n = picked.length; const openN = picked.filter(isOpen).length;
+      askModal([`Delete ${n} log entr${n>1?'ies':'y'}?`, `¿Borrar ${n} registro${n>1?'s':''}?`, `မှတ်တမ်း ${n} ခု ဖျက်မလား`], T.nokeep, ['YES, DELETE','SÍ, BORRAR','ဟုတ်ကဲ့ ဖျက်မည်'], 'danger', 'dodel', '', openN ? `${openN} of them ${openN>1?'are':'is'} still open and will disappear from the screen too.` : 'This cannot be undone. Download the CSV first if you need it.'); break; }
+    case 'dodel': { const gone = Object.keys(view.sel || {}).filter(k => view.sel[k]); issues = issues.filter(i => !gone.includes(i.id)); save(); closeModal(); view = {name:'history', exp:{}}; render(); toast(`${gone.length} deleted`); break; }
     case 'update': updateApp(); break;
     case 'pick': view = {name:'color', type:b.dataset.type, color:null}; render(); break;
     case 'color': view.color = b.dataset.color; render(); break;
