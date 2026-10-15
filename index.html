@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#0b0e14">
+<meta name="theme-color" content="#06161a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Gluer Alert">
@@ -697,18 +697,131 @@ textarea{padding:calc(var(--vu)*1.6) calc(var(--vu)*2)}
   .ocard .oi > .cf{font-size:calc(var(--vu)*1.8)}
 }
 .circ .ibi .lg{align-items:center!important;text-align:center!important}
+
+/* ===================================================================
+   v4.0 SKIN: teal glass "smart-home" look.
+   One continuous teal screen, glass cards, glossy jewel-tone tiles,
+   soft shadows. No hard black ledges, no stray lines.
+   =================================================================== */
+:root{
+  --bg:#06161a; --card:rgba(255,255,255,.08); --card2:rgba(255,255,255,.14); --line:rgba(255,255,255,.16);
+  --text:#ffffff; --dim:#a9d6d3; --esc:#fff0cf; --myc:#ffffff;
+  --glass:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.055));
+  --soft:0 calc(var(--vu)*.8) calc(var(--vu)*2) rgba(0,0,0,.30);
+  --shine:inset 0 1px 0 rgba(255,255,255,.38);
+  --shade:inset 0 calc(var(--vu)*-.9) calc(var(--vu)*1.6) rgba(0,0,0,.16);
+  --lift:calc(var(--vu)*.5);
+  --drop:0 calc(var(--vu)*.8) calc(var(--vu)*2) rgba(0,0,0,.30);
+}
+html,body{background:#06161a}
+#app{margin:var(--vu);height:calc(100vh - var(--vu)*2);height:calc(100dvh - var(--vu)*2);border-radius:calc(var(--vu)*4.4);
+  background:
+    radial-gradient(90% 50% at 14% 0%,rgba(63,190,186,.55),transparent 62%),
+    radial-gradient(70% 55% at 100% 100%,rgba(33,128,134,.5),transparent 65%),
+    linear-gradient(180deg,#14454b 0%,#0d2f35 52%,#081d22 100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.10),0 calc(var(--vu)*1.5) calc(var(--vu)*4) rgba(0,0,0,.55)}
+.ver{display:none}
+
+/* glass surfaces */
+.top,.titlebox,.tl,.hcard,.empty,.ocard{background:var(--glass);border:1px solid var(--line);box-shadow:var(--soft),var(--shine)}
+.turn{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.20);box-shadow:var(--shine)}
+.lamp{background:rgba(255,255,255,.10);border:2px solid rgba(255,255,255,.22)}
+.status .cnt{text-shadow:none}
+.lg .en{color:#d6f5f2}
+.openwrap h2,.sheet .sub,.titlebox .sub,.hcard .t span,.trow .tm.none{color:var(--dim)}
+.ocard.red{background:linear-gradient(180deg,rgba(255,96,96,.30),rgba(255,96,96,.10));border-color:rgba(255,130,130,.65)}
+.ocard.yellow{background:linear-gradient(180deg,rgba(255,206,64,.28),rgba(255,206,64,.09));border-color:rgba(255,214,96,.65)}
+.ocard.blue{background:linear-gradient(180deg,rgba(90,168,255,.30),rgba(90,168,255,.10));border-color:rgba(130,190,255,.65)}
+.ocard{border-width:1px}
+.trow{border-bottom:0}
+.tlb{border-top:0}
+.tl.open .tlb{padding-top:calc(var(--vu)*.4)}
+.hh .t{color:#fff}
+textarea{background:rgba(255,255,255,.10);border:2px solid rgba(255,255,255,.35);color:#fff}
+textarea::placeholder{color:rgba(255,255,255,.55)}
+.modal{background:rgba(3,22,26,.74)}
+.sheet{background:linear-gradient(180deg,#217178,#0f3d44);border:1px solid rgba(255,255,255,.22);box-shadow:0 calc(var(--vu)*2) calc(var(--vu)*5) rgba(0,0,0,.5),var(--shine)}
+
+/* detail banner */
+.banner{box-shadow:var(--soft),var(--shine)}
+.banner.red{background:linear-gradient(160deg,#ff7a7a,#cf2f2f)}
+.banner.yellow{background:linear-gradient(160deg,#ffe27a,#e0a800)}
+.banner.blue{background:linear-gradient(160deg,#6db6ff,#2766d8)}
+.banner.green{background:linear-gradient(160deg,#58e49b,#169a52)}
+.banner.gray{background:linear-gradient(160deg,#6f9a9c,#3d6a6e)}
+.banner.nope{background:linear-gradient(160deg,#d65858,#8f2a2a)}
+
+/* small pill buttons: frosted glass */
+.back,.tbtn,.linkbtn{background:rgba(255,255,255,.13)!important;border:1px solid rgba(255,255,255,.26)!important;color:#fff;box-shadow:var(--soft),var(--shine)!important}
+.tbtn.upd{background:linear-gradient(150deg,#4ccbc6,#1d8288)!important;border-color:rgba(255,255,255,.34)!important}
+.linkbtn{color:#e6fbf9}
+.tlh{background:transparent!important;border:0!important;box-shadow:none!important}
+
+/* big tiles: glossy jewel tones with a soft drop shadow */
+.ibtn,.cbtn,.bigact,.send,.rbtn,.yes,.danger,.sheet .no{
+  border:1px solid rgba(255,255,255,.30)!important;
+  box-shadow:var(--soft),var(--shine),var(--shade)!important;
+  color:#fff}
+.ibtn:active,.cbtn:active,.bigact:active,.send:active,.rbtn:active,.sheet .row button:active{
+  transform:translateY(calc(var(--vu)*.45));
+  box-shadow:0 calc(var(--vu)*.3) calc(var(--vu)*.8) rgba(0,0,0,.35),var(--shine),var(--shade)!important}
+.t-fold{--c1:#9b7ff6;--c2:#4d37ae}
+.t-glue{--c1:#f372ae;--c2:#a02f6b}
+.t-crack{--c1:#35d0c1;--c2:#167b79}
+.t-burst{--c1:#e5a56e;--c2:#8a5a2e}
+.t-other{--c1:#94a9c7;--c2:#4a5c7a}
+.ibtn{background:linear-gradient(150deg,var(--c1),var(--c2))!important}
+.ibtn .ico,.ibtn .ico [stroke],.rbtn .ico,.rbtn .ico [stroke]{stroke:#fff!important;filter:none}
+.ibtn .ico [stroke*="ia"],.rbtn .ico [stroke*="ia"]{stroke:#ffeaa8!important}
+.ibtn .ico circle,.rbtn .ico circle{fill:#ffeaa8!important}
+.titlebox.t-fold,.titlebox.t-glue,.titlebox.t-crack,.titlebox.t-burst,.titlebox.t-other{border-color:rgba(255,255,255,.28);background:linear-gradient(150deg,var(--c1),var(--c2))}
+.titlebox .ic{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);box-shadow:none}
+.titlebox .ico,.titlebox .ico [stroke]{stroke:#fff!important}
+.titlebox .ico [stroke*="ia"]{stroke:#ffeaa8!important}
+.titlebox .ico circle{fill:#ffeaa8!important}
+
+.bigact.ack,.send{background:linear-gradient(150deg,#69b6ff,#2764d6)!important}
+.bigact.res,.yes{background:linear-gradient(150deg,#52e398,#169a52)!important}
+.bigact.cant,.bigact.esc,.send.orange{background:linear-gradient(150deg,#ffb665,#d36a10)!important}
+.bigact.no,.danger,.cbtn.red{background:linear-gradient(150deg,#ff7d7d,#c42a2a)!important}
+.rbtn,.sheet .no{background:linear-gradient(150deg,#3bb0b1,#1a6a70)!important}
+.cbtn.yellow,.rbtn.sel{background:linear-gradient(150deg,#ffe46c,#e3aa00)!important;color:#3b2a00;--esc:currentColor;--myc:currentColor}
+.cbtn.yellow .en,.rbtn.sel .en{color:currentColor;opacity:.85}
+.rbtn.sel .ico,.rbtn.sel .ico [stroke]{stroke:#3b2a00!important}
+.rbtn.sel .ico circle{fill:#3b2a00!important}
+.cbtn.dim,.rbtn.dim{opacity:.55}
+.cbtn.sel{border-color:#fff!important;box-shadow:0 0 0 calc(var(--vu)*.55) rgba(255,255,255,.55),var(--soft),var(--shine)!important}
+.send[disabled]{background:rgba(255,255,255,.10)!important;border-color:rgba(255,255,255,.14)!important;color:rgba(255,255,255,.5);box-shadow:none!important}
+.send[disabled] .lg *{opacity:.6}
+.circ .chk .ico,.circ .chk .ico [stroke]{stroke:#fff}
+.cbtn.yellow .chk .ico,.cbtn.yellow .chk .ico [stroke]{stroke:#3b2a00}
+/* text on coloured tiles: all white, with a hair of shadow for legibility */
+.ibtn,.cbtn,.bigact,.send,.rbtn,.yes,.danger,.sheet .no{--esc:#ffffff;--myc:#ffffff}
+.ibtn .lg *,.cbtn .lg *,.bigact .lg *,.send .lg *,.rbtn .lg *,.yes .lg *,.danger .lg *,.sheet .no .lg *{text-shadow:0 1px 2px rgba(0,0,0,.28)}
+.ibtn .en,.cbtn .en,.bigact .en,.send .en,.rbtn .en,.yes .en,.danger .en,.sheet .no .en{color:#fff;opacity:.92}
+.cbtn.yellow .lg *,.rbtn.sel .lg *{text-shadow:none}
+.cbtn.yellow,.rbtn.sel{--esc:#3b2a00;--myc:#3b2a00}
+.cbtn.yellow .en,.rbtn.sel .en{color:#3b2a00}
+.ocard.red{background:linear-gradient(160deg,rgba(238,86,86,.46),rgba(150,40,60,.32));border-color:rgba(255,135,135,.7)}
+.ocard.yellow{background:linear-gradient(160deg,rgba(255,206,64,.40),rgba(160,120,10,.28));border-color:rgba(255,218,110,.7)}
+.ocard.blue{background:linear-gradient(160deg,rgba(84,156,255,.46),rgba(30,90,200,.32));border-color:rgba(140,196,255,.7)}
+.rbtn.dim{opacity:.82}
+.who{line-height:1.45;row-gap:calc(var(--vu)*.25);padding-top:calc(var(--vu)*.9);padding-bottom:calc(var(--vu)*.9)}
+.who .wt span{line-height:1.55}
+.who small{line-height:1.4}
+@container (max-width:460px){.who .ico{display:none}}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <div id="overlay"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <linearGradient id="ig" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#6df3ff"/><stop offset="1" stop-color="#8a7bff"/></linearGradient>
-  <linearGradient id="ia" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#ff6b6b"/></linearGradient>
+  <linearGradient id="ig" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#f2fffd"/><stop offset="1" stop-color="#8fe6e0"/></linearGradient>
+  <linearGradient id="ia" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#fff1b8"/><stop offset="1" stop-color="#ffc15a"/></linearGradient>
 </defs></svg>
 
 <script>
-const APP_VERSION = '3.1.0';
+const APP_VERSION = '4.0.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
