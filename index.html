@@ -434,6 +434,31 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .pill[disabled]:active{transform:none}
 .selhint{flex:none;text-align:center;font-size:calc(var(--vu)*2);font-weight:700;color:var(--ink2);margin-top:calc(var(--vu)*-.4)}
 
+/* log: year / month groups and filters */
+.fbar{flex:none;padding:calc(var(--vu)*1.4) calc(var(--vu)*1.8)}
+.frow{display:flex;flex-wrap:wrap;align-items:center;gap:calc(var(--vu)*1.2)}
+.seg{display:inline-flex;border-radius:99px;background:rgba(255,255,255,.10);border:1px solid var(--hair);padding:calc(var(--vu)*.4);gap:calc(var(--vu)*.4)}
+.seg button{border-radius:99px;padding:calc(var(--vu)*1) calc(var(--vu)*2.4);font-weight:800;font-size:calc(var(--vu)*2.2);color:var(--ink2);min-height:calc(var(--vu)*5.4)}
+.seg button.on{background:#fff;color:#10222a}
+.seg button.on.red{background:var(--red);color:#fff}
+.seg button.on.yellow{background:var(--amber);color:#2a1d00}
+.fsel,.fdate{min-height:calc(var(--vu)*6.6);border-radius:99px;border:1px solid var(--hair);background:rgba(255,255,255,.10);color:#fff;font:inherit;font-weight:700;font-size:calc(var(--vu)*2.2);padding:0 calc(var(--vu)*2);outline:none;color-scheme:dark}
+.fsel option{color:#10222a;background:#fff}
+.hist{gap:calc(var(--vu)*1.2)}
+.grp{display:flex;flex-direction:column;gap:calc(var(--vu)*1.2);flex:none}
+.gh{width:100%;display:flex;align-items:center;gap:calc(var(--vu)*1.4);text-align:left;color:#fff;border-radius:var(--r2);border:1px solid var(--hair);background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.05));box-shadow:var(--shadow),var(--hi)}
+.gh.yr{padding:calc(var(--vu)*1.6) calc(var(--vu)*2.4)}
+.gh.mo{padding:calc(var(--vu)*1.2) calc(var(--vu)*2.2);background:rgba(255,255,255,.07);box-shadow:none}
+.gh .gl{font-weight:900;font-size:calc(var(--vu)*3.4)}
+.gh.mo .gl{font-size:calc(var(--vu)*2.8)}
+.gh small{flex:1;font-size:calc(var(--vu)*1.9);font-weight:700;color:var(--ink2)}
+.gh small b.cr{color:#ff8a8e}
+.gh small b.cy{color:#ffd166}
+.gh .ico{width:calc(var(--vu)*3.2);height:calc(var(--vu)*3.2);flex:none}
+.gmonths{display:flex;flex-direction:column;gap:calc(var(--vu)*1.2);padding-left:calc(var(--vu)*1.6);border-left:2px solid rgba(255,255,255,.12);margin-left:calc(var(--vu)*1)}
+.gcards{display:flex;flex-direction:column;gap:calc(var(--vu)*1.2)}
+.resh{flex:none;font-size:calc(var(--vu)*2.2);font-weight:800;color:var(--ink2);padding:0 calc(var(--vu)*.8)}
+
 </style>
 </head>
 <body>
@@ -445,7 +470,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.2.0';
+const APP_VERSION = '5.3.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -716,28 +741,59 @@ function renderDetail(){
 }
 
 function renderHistory(){
-  const selN = Object.keys(view.sel || {}).filter(k => view.sel[k] && issues.some(i => i.id === k)).length;
-  const list = [...issues].sort((a,b) => b.submittedAt - a.submittedAt);
-  const cards = list.map(i => {
+  const f = view.f || {u:'all', t:'all', d:''};
+  const dayKey = ts => { const d = new Date(ts); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); };
+  const match = i => (f.u === 'all' || i.color === f.u) && (f.t === 'all' || i.type === f.t) && (!f.d || dayKey(i.submittedAt) === f.d);
+  const filtering = f.u !== 'all' || f.t !== 'all' || !!f.d;
+  const all = [...issues].sort((a,b) => b.submittedAt - a.submittedAt);
+  const list = all.filter(match);
+  const card = i => {
     const resp = i.ackAt ? fmtDur(i.ackAt - i.submittedAt) : '—';
     const closeAt = i.resolvedAt || i.qaAt;
     const fix = closeAt ? fmtDur(closeAt - i.submittedAt) : '—';
     const st = i.cancelledAt ? 'Cancelled' : i.qaAt ? 'QA ' + (i.qaDecision === 'approved' ? 'Approved' : 'Not approved') : i.resolvedAt ? 'Resolved' : i.escalatedAt ? 'ESCALATED' : 'Open';
-    const open = !!(view.exp && view.exp[i.id]) && !view.selMode;
-    const picked = !!(view.sel && view.sel[i.id]);
-    return `<div class="card hcard ${i.color} ${open?'open':''} ${view.selMode&&picked?'picked':''}"><button class="hh" data-act="${view.selMode?'lpick':'hexp'}" data-id="${i.id}">${view.selMode?`<span class="cb ${picked?'on':''}">${picked?ico('check','cc'):''}</span>`:''}<div class="t">${TYPES[i.type].t[0]}<span>${i.color.toUpperCase()} · ${st} · ${fmtDate(i.submittedAt)} · ${fmtHM(i.submittedAt)}</span></div>${view.selMode?'':ico(open?'chevu':'chevd','cc')}</button><div class="hd">
-      ${i.cantFixAt?`<div class="cfl">Can't fix (${fmtTime(i.cantFixAt)}): ${cfText(i)}</div>`:''}
-      ${(i.attempts&&i.attempts.length)?`<div class="cfl">Packers said not fixed ×${i.attempts.length} (last ${fmtTime(i.attempts[i.attempts.length-1].at)})</div>`:''}
-      ${i.escalatedAt?`<div class="cfl">Escalated ${fmtTime(i.escalatedAt)}${i.qaAt?` → QA ${i.qaDecision==='approved'?'APPROVED':'NOT APPROVED'} ${fmtTime(i.qaAt)}`:' – waiting for QA / Manager'}</div>`:''}
-      <div class="g"><div>Sent<b>${fmtTime(i.submittedAt)}</b></div>
-      <div>Op. confirmed<b>${fmtTime(i.ackAt)}</b><i>response ${resp}</i></div>
-      <div>Op. fixed<b>${fmtTime(i.opResolvedAt)}</b><i>repair ${i.opResolvedAt&&i.ackAt?fmtDur(i.opResolvedAt-i.ackAt):'—'}</i></div>
-      <div>Packers OK<b>${fmtTime(i.resolvedAt)}</b><i>total ${fix}</i></div></div></div></div>`;
-  }).join('') || '<div class="card empty">No issues logged yet</div>';
-  return `<div class="head">${backBtn()}<div class="title">Issue Log <span class="vtag">v${APP_VERSION}</span></div></div>
-    ${view.selMode ? `<div class="hbar"><button class="pill" data-act="lall">${ico('checkc','cc')}${(issues.length && issues.every(i=>view.sel&&view.sel[i.id]))?'Select none':'Select all'}</button><button class="pill danger" data-act="ldel" ${selN?'':'disabled'}>${ico('trash','cc')}Delete${selN?` (${selN})`:''}</button><button class="pill" data-act="lsel">${ico('check','cc')}Done</button></div><div class="selhint">Tap the entries you want to delete</div>`
-    : `<div class="hbar"><button class="pill" data-act="csv">${ico('dl','cc')}Download CSV</button><button class="pill" data-act="lsel">${ico('checkc','cc')}Select to delete</button><button class="pill" data-act="clearlog" style="color:#ffb3b5">${ico('trash','cc')}Clear all</button></div>`}
-    <div class="hist">${cards}</div>`;
+    const open = !!(view.exp && view.exp[i.id]);
+    return '<div class="card hcard ' + i.color + ' ' + (open?'open':'') + '"><button class="hh" data-act="hexp" data-id="' + i.id + '"><div class="t">' + TYPES[i.type].t[0] + '<span>' + i.color.toUpperCase() + ' · ' + st + ' · ' + fmtDate(i.submittedAt) + ' · ' + fmtHM(i.submittedAt) + '</span></div>' + ico(open?'chevu':'chevd','cc') + '</button><div class="hd">'
+      + (i.cantFixAt ? '<div class="cfl">Can\'t fix (' + fmtTime(i.cantFixAt) + '): ' + cfText(i) + '</div>' : '')
+      + ((i.attempts&&i.attempts.length) ? '<div class="cfl">Packers said not fixed ×' + i.attempts.length + ' (last ' + fmtTime(i.attempts[i.attempts.length-1].at) + ')</div>' : '')
+      + (i.escalatedAt ? '<div class="cfl">Escalated ' + fmtTime(i.escalatedAt) + (i.qaAt ? ' → QA ' + (i.qaDecision==='approved'?'APPROVED':'NOT APPROVED') + ' ' + fmtTime(i.qaAt) : ' – waiting for QA / Manager') + '</div>' : '')
+      + '<div class="g"><div>Sent<b>' + fmtTime(i.submittedAt) + '</b></div>'
+      + '<div>Op. confirmed<b>' + fmtTime(i.ackAt) + '</b><i>response ' + resp + '</i></div>'
+      + '<div>Op. fixed<b>' + fmtTime(i.opResolvedAt) + '</b><i>repair ' + (i.opResolvedAt&&i.ackAt?fmtDur(i.opResolvedAt-i.ackAt):'—') + '</i></div>'
+      + '<div>Packers OK<b>' + fmtTime(i.resolvedAt) + '</b><i>total ' + fix + '</i></div></div></div></div>';
+  };
+  const counts = arr => { const r = arr.filter(i => i.color==='red').length, y = arr.length - r; return '<small>' + arr.length + (arr.length===1?' issue':' issues') + (r?' · <b class="cr">' + r + ' red</b>':'') + (y?' · <b class="cy">' + y + ' yellow</b>':'') + '</small>'; };
+  const gh = (key, cls, label, arr, open) => '<button class="gh ' + cls + '" data-act="gtoggle" data-g="' + key + '" data-open="' + (open?1:0) + '"><span class="gl">' + label + '</span>' + counts(arr) + ico(open?'chevu':'chevd','cc') + '</button>';
+  let body;
+  if (!all.length) body = '<div class="card empty">No issues logged yet</div>';
+  else if (filtering) {
+    body = '<div class="resh">' + list.length + (list.length===1?' result':' results') + '</div>' + (list.length ? list.map(card).join('') : '<div class="card empty">Nothing matches these filters</div>');
+  } else {
+    const now = new Date(); const cy = now.getFullYear(), cm = now.getMonth();
+    const years = {};
+    all.forEach(i => { const d = new Date(i.submittedAt); const y = d.getFullYear(), m = d.getMonth(); ((years[y] = years[y] || {})[m] = years[y][m] || []).push(i); });
+    const g = view.g || {};
+    body = Object.keys(years).sort((a,b) => b - a).map(y => {
+      const yArr = [].concat(...Object.values(years[y]));
+      const yKey = 'y' + y; const yOpen = yKey in g ? g[yKey] : Number(y) === cy;
+      const months = !yOpen ? '' : Object.keys(years[y]).sort((a,b) => b - a).map(m => {
+        const mArr = years[y][m]; const mKey = 'm' + y + '-' + m;
+        const mOpen = mKey in g ? g[mKey] : (Number(y) === cy && Number(m) === cm);
+        const label = new Date(Number(y), Number(m), 1).toLocaleDateString([], {month:'long'});
+        return '<div class="grp">' + gh(mKey, 'mo', label, mArr, mOpen) + (mOpen ? '<div class="gcards">' + mArr.map(card).join('') + '</div>' : '') + '</div>';
+      }).join('');
+      return '<div class="grp yrg">' + gh(yKey, 'yr', y, yArr, yOpen) + (yOpen ? '<div class="gmonths">' + months + '</div>' : '') + '</div>';
+    }).join('');
+  }
+  const typeOpts = '<option value="all">All issues</option>' + Object.keys(TYPES).map(k => '<option value="' + k + '"' + (f.t===k?' selected':'') + '>' + TYPES[k].t[0] + '</option>').join('');
+  return '<div class="head">' + backBtn() + '<div class="title">Issue Log <span class="vtag">v' + APP_VERSION + '</span></div></div>'
+    + '<div class="card fbar"><div class="frow"><div class="seg">'
+    + ['all','red','yellow'].map(u => '<button class="' + (f.u===u?'on ':'') + u + '" data-act="fu" data-v="' + u + '">' + (u==='all'?'All':u==='red'?'Red':'Yellow') + '</button>').join('')
+    + '</div><select class="fsel" data-f="t" aria-label="Issue type">' + typeOpts + '</select>'
+    + '<input class="fdate" type="date" data-f="d" value="' + f.d + '" aria-label="Date">'
+    + (filtering ? '<button class="pill" data-act="fclear">' + ico('x','cc') + 'Clear filters</button>' : '') + '</div></div>'
+    + '<div class="hbar"><button class="pill" data-act="csv">' + ico('dl','cc') + 'Download CSV backup</button></div>'
+    + '<div class="hist">' + body + '</div>';
 }
 
 function render(){
@@ -782,6 +838,10 @@ async function updateApp(){
 }
 
 document.addEventListener('input', e => { if (e.target.id === 'note') view.note = e.target.value; });
+document.addEventListener('change', e => {
+  const k = e.target.dataset && e.target.dataset.f; if (!k || view.name !== 'history') return;
+  view.f = view.f || {u:'all', t:'all', d:''}; view.f[k] = e.target.value; render();
+});
 
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b) return;
@@ -790,13 +850,10 @@ document.addEventListener('click', e => {
     case 'home': view = {name:'home'}; render(); break;
     case 'tl': view.tl = !view.tl; render(); break;
     case 'hexp': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.exp = view.exp || {}; view.exp[id] = !view.exp[id]; render(); const sc2 = document.querySelector('.hist'); if (sc2) sc2.scrollTop = top; break; }
-    case 'history': view = {name:'history', exp:{}}; render(); break;
-    case 'lsel': view.selMode = !view.selMode; view.sel = {}; render(); break;
-    case 'lpick': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.sel = view.sel || {}; view.sel[id] = !view.sel[id]; render(); const sc2 = document.querySelector('.hist'); if (sc2) sc2.scrollTop = top; break; }
-    case 'lall': { const all = issues.length && issues.every(i => view.sel && view.sel[i.id]); view.sel = {}; if (!all) issues.forEach(i => { view.sel[i.id] = true; }); render(); break; }
-    case 'ldel': { const picked = issues.filter(i => view.sel && view.sel[i.id]); if (!picked.length) break; const n = picked.length; const openN = picked.filter(isOpen).length;
-      askModal([`Delete ${n} log entr${n>1?'ies':'y'}?`, `¿Borrar ${n} registro${n>1?'s':''}?`, `မှတ်တမ်း ${n} ခု ဖျက်မလား`], T.nokeep, ['YES, DELETE','SÍ, BORRAR','ဟုတ်ကဲ့ ဖျက်မည်'], 'danger', 'dodel', '', openN ? `${openN} of them ${openN>1?'are':'is'} still open and will disappear from the screen too.` : 'This cannot be undone. Download the CSV first if you need it.'); break; }
-    case 'dodel': { const gone = Object.keys(view.sel || {}).filter(k => view.sel[k]); issues = issues.filter(i => !gone.includes(i.id)); save(); closeModal(); view = {name:'history', exp:{}}; render(); toast(`${gone.length} deleted`); break; }
+    case 'history': view = {name:'history', exp:{}, f:{u:'all', t:'all', d:''}, g:{}}; render(); break;
+    case 'fu': { view.f = view.f || {u:'all', t:'all', d:''}; view.f.u = b.dataset.v; render(); break; }
+    case 'fclear': view.f = {u:'all', t:'all', d:''}; render(); break;
+    case 'gtoggle': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.g = view.g || {}; const cur = b.dataset.open === '1'; view.g[b.dataset.g] = !cur; render(); const sc2 = document.querySelector('.hist'); if (sc2) sc2.scrollTop = top; break; }
     case 'update': updateApp(); break;
     case 'pick': view = {name:'color', type:b.dataset.type, color:null}; render(); break;
     case 'color': view.color = b.dataset.color; render(); break;
@@ -827,8 +884,6 @@ document.addEventListener('click', e => {
     case 'cancel': { const i = byId(id); if (i && isOpen(i)){ i.cancelledAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); break; }
     case 'closemodal': closeModal(); break;
     case 'csv': exportCsv(); break;
-    case 'clearlog': askModal(['Clear the whole log?','¿Borrar todo el registro?','မှတ်တမ်းအားလုံး ဖျက်မလား'], T.nokeep, ['YES, CLEAR','SÍ, BORRAR','ဟုတ်ကဲ့ ဖျက်မည်'], 'danger', 'doclear', '', 'Deletes every saved issue on this tablet. Download the CSV first if you need it.'); break;
-    case 'doclear': issues = []; save(); closeModal(); render(); break;
   }
 });
 
