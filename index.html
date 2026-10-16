@@ -508,6 +508,8 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .hq i{font-style:normal;font-size:calc(var(--vu)*2);font-weight:700;color:#ffd166}
 .hq p{margin:0;font-size:calc(var(--vu)*2.1);font-weight:600;line-height:1.35}
 .hq p.es{color:var(--ink2)}
+.hq i.my{font-size:calc(var(--vu)*2.3)}
+.hq p.my{font-size:calc(var(--vu)*2.3);color:var(--ink2)}
 .khh{position:relative}
 .pill>.kh{top:calc(var(--vu)*-1.5);right:calc(var(--vu)*.6)}
 .tlh>.kh{top:50%;margin-top:calc(var(--vu)*-1.6);right:calc(var(--vu)*7)}
@@ -540,7 +542,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.7.1';
+const APP_VERSION = '5.7.2';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -637,7 +639,7 @@ const IC = {
   undo:'<path d="M17 11L6 22l11 11"/><path d="M6 22h24a11 11 0 0 1 0 22H20"/>',
   dl:'<path d="M24 6v26M14 23l10 10 10-10M8 42h32"/>',
   trash:'<path d="M9 14h30M18 14V8h12v6M13 14l2 28h18l2-28"/>',
-  gear:'<circle cx="24" cy="24" r="6"/><path d="M24 5v6M24 37v6M5 24h6M37 24h6M10.5 10.5l4.2 4.2M33.3 33.3l4.2 4.2M37.5 10.5l-4.2 4.2M14.7 33.3l-4.2 4.2"/>'
+  gear:'<path d="M20.7 9.9L21.3 4.7L26.7 4.7L27.3 9.9L31.7 11.7L35.7 8.4L39.6 12.3L36.3 16.3L38.1 20.7L43.3 21.3L43.3 26.7L38.1 27.3L36.3 31.7L39.6 35.7L35.7 39.6L31.7 36.3L27.3 38.1L26.7 43.3L21.3 43.3L20.7 38.1L16.3 36.3L12.3 39.6L8.4 35.7L11.7 31.7L9.9 27.3L4.7 26.7L4.7 21.3L9.9 20.7L11.7 16.3L8.4 12.3L12.3 8.4L16.3 11.7Z"/><circle cx="24" cy="24" r="6"/>'
 };
 const ico = (n, cls='') => {
   const cc = cls.includes('cc');
@@ -855,11 +857,19 @@ function kbHelp(){
     ['Do my keys show up on the other tablet?','¿Mis teclas aparecen en la otra tablet?','No. Keys are saved on each computer or tablet by itself.','No. Las teclas se guardan en cada computadora o tablet por separado.'],
     ['Which keys can I not use?','¿Qué teclas no puedo usar?','Tab, Esc, F5, F11 and F12 (so reloading and full screen keep working), and Ctrl / Alt / Cmd combos.','Tab, Esc, F5, F11 y F12 (para que recargar y pantalla completa sigan funcionando), y combinaciones con Ctrl / Alt / Cmd.']
   ];
+  const faqMy = [
+    ['ကီးကို နှိပ်သော်လည်း ဘာမှ မဖြစ်ပါ။','စစ်ကြည့်ပါ - Keyboard ကို ON ထားပါ · ခလုတ်သည် ယခု မျက်နှာပြင်ပေါ်တွင် ရှိနေရမည် · အကွက်ထဲတွင် စာရိုက်မနေပါနှင့် · Ctrl၊ Alt သို့မဟုတ် Cmd ကို ဖိမထားပါနှင့်။'],
+    ['ခလုတ်နှစ်ခုက ကီးတူ သုံးလို့ရလား။','ရပါသည်၊ မျက်နှာပြင်ပေါ်တွင် တစ်ပြိုင်နက် မပေါ်သည့် ခလုတ်များ ဖြစ်လျှင် ရပါသည်။ ဥပမာ - Enter ကို Send၊ Confirm နှင့် Yes အဖြစ် သုံးနိုင်သည်။ ကီးကို မျှဝေသုံးထားလျှင် Settings တွင် မှတ်ချက်အသေးလေး ပြပါမည်။'],
+    ['ဘယ်ကီးက ဘာလုပ်သလဲ ဘယ်လိုကြည့်ရမလဲ။','“Show keys on buttons” ကို ဖွင့်ပါ။ ခလုတ်တိုင်းပေါ်တွင် ကီးပါသော အဖြူရောင် အမှတ်အသားလေး ပေါ်လာပါမည်။'],
+    ['အားလုံးကို မြန်မြန် သတ်မှတ်နည်း ရှိလား။','“Use suggested keys” ကို နှိပ်ပါ။ ပြီးလျှင် မကြိုက်သည့် ကီးများကို ပြောင်းပါ။'],
+    ['ကျွန်ုပ်၏ ကီးများသည် အခြားတက်ဘလက်တွင်လည်း ပေါ်လာမလား။','မပေါ်ပါ။ ကီးများကို ကွန်ပျူတာ သို့မဟုတ် တက်ဘလက် တစ်လုံးချင်းစီတွင် သိမ်းထားသည်။'],
+    ['ဘယ်ကီးတွေ သုံးလို့မရလဲ။','Tab၊ Esc၊ F5၊ F11၊ F12 (စာမျက်နှာ ပြန်ဖွင့်ခြင်းနှင့် မျက်နှာပြင်အပြည့် သုံးခြင်း ဆက်လက် အလုပ်လုပ်စေရန်) နှင့် Ctrl / Alt / Cmd ပေါင်းနှိပ်ခြင်းများ။']
+  ];
   const body = open ? `<div class="hbody">
       <div class="hsub">Step by step · Paso a paso · အဆင့်ဆင့်</div>
       <ol class="hsteps">${steps.map(s => `<li><b>${s[0]}</b><span>${s[1]}</span><span class="my">${s[2]}</span></li>`).join('')}</ol>
       <div class="hsub">Questions · Preguntas</div>
-      ${faq.map(f => `<div class="hq"><b>${f[0]}</b><i>${f[1]}</i><p>${f[2]}</p><p class="es">${f[3]}</p></div>`).join('')}
+      ${faq.map((f, n) => `<div class="hq"><b>${f[0]}</b><i>${f[1]}</i><i class="my">${faqMy[n][0]}</i><p>${f[2]}</p><p class="es">${f[3]}</p><p class="my">${faqMy[n][1]}</p></div>`).join('')}
     </div>` : '';
   return `<div class="card khelp ${open?'open':''}"><button class="tlh" data-act="kbhelp" aria-expanded="${open}">${ico('log','cc')}<span class="grow">${lg(['Help · Keyboard shortcuts','Ayuda · Atajos de teclado','အကူအညီ · ကီးဘုတ် ဖြတ်လမ်းများ'],'inline')}</span>${ico(open?'chevu':'chevd','cc')}</button>${body}</div>`;
 }
