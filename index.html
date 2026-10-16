@@ -493,6 +493,21 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .kkey .none{color:var(--ink2)}
 .kgap{flex:none;width:calc(var(--vu)*7.4)}
 .krow .pill{flex:none}
+.khelp{flex:none;padding:0}
+.khelp .tlh{width:100%;display:flex;align-items:center;gap:calc(var(--vu)*1.4);padding:calc(var(--vu)*1.6) calc(var(--vu)*2.2);color:#fff;text-align:left}
+.khelp .tlh .ico{width:calc(var(--vu)*3.2);height:calc(var(--vu)*3.2);flex:none}
+.hbody{display:flex;flex-direction:column;gap:calc(var(--vu)*1.2);padding:0 calc(var(--vu)*2.2) calc(var(--vu)*2.2)}
+.hsub{font-weight:900;font-size:calc(var(--vu)*2);color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;padding-top:calc(var(--vu)*.6)}
+.hsteps{margin:0;padding-left:calc(var(--vu)*3.4);display:flex;flex-direction:column;gap:calc(var(--vu)*1.2)}
+.hsteps li{font-size:calc(var(--vu)*2.4)}
+.hsteps li b{display:block;font-weight:800}
+.hsteps li span{display:block;font-size:calc(var(--vu)*2.1);font-weight:600;color:var(--ink2)}
+.hsteps li span.my{font-size:calc(var(--vu)*2.3)}
+.hq{display:flex;flex-direction:column;gap:calc(var(--vu)*.4);padding:calc(var(--vu)*1.2) calc(var(--vu)*1.6);border-radius:var(--r2);background:rgba(255,255,255,.07)}
+.hq b{font-size:calc(var(--vu)*2.4);font-weight:800}
+.hq i{font-style:normal;font-size:calc(var(--vu)*2);font-weight:700;color:#ffd166}
+.hq p{margin:0;font-size:calc(var(--vu)*2.1);font-weight:600;line-height:1.35}
+.hq p.es{color:var(--ink2)}
 .khh{position:relative}
 .pill>.kh{top:calc(var(--vu)*-1.5);right:calc(var(--vu)*.6)}
 .tlh>.kh{top:50%;margin-top:calc(var(--vu)*-1.6);right:calc(var(--vu)*7)}
@@ -525,7 +540,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.7.0';
+const APP_VERSION = '5.7.1';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -821,7 +836,32 @@ function renderSettings(){
         <button class="pill ghost" data-act="kbclearask">Remove all keys</button>
       </div>
     </div>
-    <div class="hist">${groups}</div>`;
+    <div class="hist">${kbHelp()}${groups}</div>`;
+}
+
+function kbHelp(){
+  const open = !!view.help;
+  const steps = [
+    ['Open Settings (the gear button at the top).','Abra Configuración (el botón de engranaje arriba).','ဆက်တင် (အပေါ်ရှိ ဂီယာခလုတ်) ကို ဖွင့်ပါ။'],
+    ['Tap “Set key” next to the button you want.','Toque «Set key» junto al botón que quiera.','လိုချင်သော ခလုတ်ဘေးရှိ “Set key” ကို နှိပ်ပါ။'],
+    ['Press the key on your keyboard.','Presione la tecla en su teclado.','ကီးဘုတ်ပေါ်ရှိ ကီးကို နှိပ်ပါ။'],
+    ['Done! Pressing that key now does the same as tapping the button.','¡Listo! Ahora esa tecla hace lo mismo que tocar el botón.','ပြီးပါပြီ။ ယခု ထိုကီးကို နှိပ်လျှင် ခလုတ်ကို နှိပ်သကဲ့သို့ ဖြစ်သည်။']
+  ];
+  const faq = [
+    ['I press my key and nothing happens.','Presiono mi tecla y no pasa nada.','Check: Keyboard is ON · the button is on the screen right now · you are not typing in a box · Ctrl, Alt or Cmd is not held down.','Revise: el teclado está en ON · el botón está en la pantalla ahora · no está escribiendo en un cuadro · no tiene Ctrl, Alt o Cmd presionado.'],
+    ['Can two buttons use the same key?','¿Dos botones pueden usar la misma tecla?','Yes, if they are never on the screen at the same time. Example: Enter can be Send, Confirm and Yes. Settings shows a small note when a key is shared.','Sí, si nunca están en la pantalla al mismo tiempo. Ejemplo: Enter puede ser Enviar, Confirmar y Sí. Configuración muestra una nota cuando se comparte una tecla.'],
+    ['How do I see which key does what?','¿Cómo veo qué tecla hace qué?','Turn on “Show keys on buttons”. A small white badge with the key appears on each button.','Active «Show keys on buttons». Aparece una insignia blanca con la tecla en cada botón.'],
+    ['Is there a fast way to set everything?','¿Hay una forma rápida de configurar todo?','Tap “Use suggested keys”. Then change any you do not like.','Toque «Use suggested keys». Luego cambie las que no le gusten.'],
+    ['Do my keys show up on the other tablet?','¿Mis teclas aparecen en la otra tablet?','No. Keys are saved on each computer or tablet by itself.','No. Las teclas se guardan en cada computadora o tablet por separado.'],
+    ['Which keys can I not use?','¿Qué teclas no puedo usar?','Tab, Esc, F5, F11 and F12 (so reloading and full screen keep working), and Ctrl / Alt / Cmd combos.','Tab, Esc, F5, F11 y F12 (para que recargar y pantalla completa sigan funcionando), y combinaciones con Ctrl / Alt / Cmd.']
+  ];
+  const body = open ? `<div class="hbody">
+      <div class="hsub">Step by step · Paso a paso · အဆင့်ဆင့်</div>
+      <ol class="hsteps">${steps.map(s => `<li><b>${s[0]}</b><span>${s[1]}</span><span class="my">${s[2]}</span></li>`).join('')}</ol>
+      <div class="hsub">Questions · Preguntas</div>
+      ${faq.map(f => `<div class="hq"><b>${f[0]}</b><i>${f[1]}</i><p>${f[2]}</p><p class="es">${f[3]}</p></div>`).join('')}
+    </div>` : '';
+  return `<div class="card khelp ${open?'open':''}"><button class="tlh" data-act="kbhelp" aria-expanded="${open}">${ico('log','cc')}<span class="grow">${lg(['Help · Keyboard shortcuts','Ayuda · Atajos de teclado','အကူအညီ · ကီးဘုတ် ဖြတ်လမ်းများ'],'inline')}</span>${ico(open?'chevu':'chevd','cc')}</button>${body}</div>`;
 }
 
 function renderHistory(){
@@ -936,6 +976,7 @@ document.addEventListener('click', e => {
     case 'tl': view.tl = !view.tl; render(); break;
     case 'sync': Sync.open(); break;
     case 'settings': view = {name:'settings'}; render(); break;
+    case 'kbhelp': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.help = !view.help; render(); const s2 = document.querySelector('.hist'); if (s2) s2.scrollTop = top; break; }
     case 'kbset': case 'kbclear': case 'kbtoggle': case 'kbhints': case 'kbsuggest': case 'kbsuggestgo': case 'kbclearask': case 'kbclearall': KB.act(act, id); break;
     case 'lobbypick': Sync.lobbyPick(b.dataset.id); break;
     case 'lobbyjoin': Sync.lobbyJoin(); break;
