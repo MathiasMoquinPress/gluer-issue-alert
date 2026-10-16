@@ -501,7 +501,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.5.0';
+const APP_VERSION = '5.6.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -942,6 +942,15 @@ Sync = (() => {
   Date.now = () => realNow() + offset;                       // keep every tablet on the hub's clock so timestamps agree
   const strip = i => { const { v, vc, ...r } = i; return JSON.stringify(r); };
   const snap = {}; issues.forEach(i => { snap[i.id] = strip(i); });
+  /* only changes the hub has not confirmed are re-sent, and only changes since the last server number are fetched */
+  const pend = () => { try { return JSON.parse(get('gluer.pending') || 'null'); } catch (e) { return null; } };
+  const setPend = p => put('gluer.pending', JSON.stringify(p));
+  const markAll = () => { const p = {}; issues.forEach(i => { p[i.id] = i.v || 0; }); setPend(p); };
+  if (pend() === null) markAll();
+  const seqKey = () => 'gluer.seq.' + (get('gluer.room') || '');
+  const getSeq = () => Number(get(seqKey())) || 0;
+  const setSeq = n => { if (n != null && n > getSeq()) put(seqKey(), String(n)); };
+  const clearAcked = a => { if (!a) return; const p = pend() || {}; let ch = false; for (const id in a) if (id in p && p[id] <= a[id]) { delete p[id]; ch = true; } if (ch) setPend(p); };
   const newer = (a, b) => (a.v || 0) > (b.v || 0) || ((a.v || 0) === (b.v || 0) && String(a.vc || '') > String(b.vc || ''));
   const persist = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(issues)); } catch (e) {} };
   const sendRaw = s => { if (ws && ws.readyState === 1) { try { ws.send(s); return true; } catch (e) {} } return false; };
@@ -956,7 +965,7 @@ Sync = (() => {
   function afterSave() {
     const out = [];
     for (const i of issues) { const s = strip(i); if (snap[i.id] !== s) { i.v = (i.v || 0) + 1; i.vc = cid; snap[i.id] = s; out.push(i); } }
-    if (out.length) { persist(); send({ t: 'up', issues: out }); }
+    if (out.length) { persist(); const p = pend() || {}; out.forEach(i => { p[i.id] = i.v; }); setPend(p); send({ t: 'up', issues: out }); }
   }
   function soft() {
     if (document.querySelector('.modal .sheet') || !['home', 'detail', 'history'].includes(view.name)) { dirty = true; return; }
@@ -989,16 +998,19 @@ Sync = (() => {
     ws = sock;
     sock.onopen = () => {
       tries = 0; state = 'on'; ui(); helloAt = realNow();
-      send({ t: 'hello', c: cid, issues });
+      const p = pend() || {};
+      send({ t: 'hello', c: cid, since: getSeq(), issues: issues.filter(i => i.id in p) });
       clearInterval(pingT);
       pingT = setInterval(() => { if (sendRaw('ping')) { clearTimeout(pongT); pongT = setTimeout(() => { cleanup(); schedule(); }, 8000); } }, 20000);
     };
     sock.onmessage = ev => {
       if (ev.data === 'pong') { clearTimeout(pongT); return; }
       let m; try { m = JSON.parse(ev.data); } catch (e) { return; }
-      if (m.t === 'snap' && m.now) { const rtt = realNow() - helloAt; offset = (m.now + rtt / 2) - realNow(); }
+      if (m.t === 'snap' && m.done && m.now) { const rtt = realNow() - helloAt; offset = (m.now + rtt / 2) - realNow(); }
       if (m.n != null) { online = m.n; ui(); }
       if (m.t === 'snap' || m.t === 'up') merge(m.issues || []);
+      if (m.a) clearAcked(m.a);
+      if (m.seq != null) setSeq(m.seq);
     };
     sock.onclose = sock.onerror = () => { if (ws !== sock) return; cleanup(); schedule(); };
   }
@@ -1056,7 +1068,7 @@ Sync = (() => {
         setErr(m.e === 'code' ? 'Wrong code. Check the other tablet’s screen and try again.' : m.e === 'gone' ? 'That tablet left the lobby.' : 'Too many tries. Close this and open Connect again.');
       }
       else if (m.t === 'paired') {
-        put('gluer.room', m.room); put('gluer.peer', m.peer);
+        put('gluer.room', m.room); put('gluer.peer', m.peer); markAll();
         const peer = m.peer;
         closeModal(); cleanup(); tries = 0; connect(); toast('Connected to ' + peer);
       }

@@ -22,6 +22,10 @@ export default {
 
 const newer = (a, b) => (a.v || 0) > (b.v || 0) || ((a.v || 0) === (b.v || 0) && String(a.vc || '') > String(b.vc || ''));
 
+const pad = n => String(n).padStart(10, '0');
+const pub = r => { const { _s, ...x } = r; return x; };          // the server's change counter never leaves the server
+const CHUNK = 150;
+
 export class Hub extends DurableObject {
   constructor(ctx, env) {
     super(ctx, env);
@@ -34,16 +38,35 @@ export class Hub extends DurableObject {
     return new Response(null, { status: 101, webSocket: client });
   }
 
+  /* Every accepted change gets the next number (_s) and an index entry "q:<number>", so a tablet that
+     reconnects can ask "what changed since number N?" and the hub reads only those few rows. */
   async merge(list) {
-    const accepted = [], back = [];
+    const accepted = [], back = [], acks = {};
+    let seq = (await this.ctx.storage.get('seq')) || 0;
     for (const r of list) {
       if (!r || typeof r.id !== 'string' || r.id.length > 40) continue;
+      acks[r.id] = r.v || 0;
       const key = 'i:' + r.id;
       const cur = await this.ctx.storage.get(key);
-      if (!cur || newer(r, cur)) { await this.ctx.storage.put(key, r); accepted.push(r); }
-      else if (newer(cur, r)) back.push(cur);
+      if (!cur || newer(r, cur)) {
+        seq++;
+        const rec = { ...pub(r), _s: seq };
+        if (cur && cur._s) await this.ctx.storage.delete('q:' + pad(cur._s));
+        await this.ctx.storage.put({ [key]: rec, ['q:' + pad(seq)]: r.id });
+        accepted.push(pub(rec));
+      } else if (newer(cur, r)) back.push(pub(cur));
     }
-    return { accepted, back };
+    if (accepted.length) await this.ctx.storage.put('seq', seq);
+    return { accepted, back, acks, seq };
+  }
+
+  async changedSince(since) {
+    if (!since) return [...(await this.ctx.storage.list({ prefix: 'i:' })).values()].map(pub);
+    const idx = await this.ctx.storage.list({ prefix: 'q:', start: 'q:' + pad(since + 1) });
+    const keys = [...idx.values()].map(id => 'i:' + id);
+    const out = [];
+    for (let k = 0; k < keys.length; k += 100) for (const v of (await this.ctx.storage.get(keys.slice(k, k + 100))).values()) out.push(pub(v));
+    return out;
   }
 
   others(except) { return this.ctx.getWebSockets().filter(w => w !== except); }
@@ -58,15 +81,18 @@ export class Hub extends DurableObject {
     let m; try { m = JSON.parse(msg); } catch (e) { return; }
     const list = Array.isArray(m.issues) ? m.issues : [];
     if (m.t === 'hello') {
-      const { accepted } = await this.merge(list);
-      const all = [...(await this.ctx.storage.list({ prefix: 'i:' })).values()];
+      const { accepted, acks, seq } = await this.merge(list);
+      const all = await this.changedSince(Number(m.since) || 0);
       const n = this.ctx.getWebSockets().length;
-      this.send(ws, { t: 'snap', issues: all, n, now: Date.now() });
-      for (const w of this.others(ws)) this.send(w, { t: 'up', issues: accepted, n });
+      for (let k = 0; k < all.length; k += CHUNK) this.send(ws, { t: 'snap', issues: all.slice(k, k + CHUNK) });
+      this.send(ws, { t: 'snap', issues: [], done: 1, seq: (await this.ctx.storage.get('seq')) || seq, a: acks, n, now: Date.now() });
+      if (accepted.length) for (const w of this.others(ws)) this.send(w, { t: 'up', issues: accepted, seq, n });
+      else for (const w of this.others(ws)) this.send(w, { t: 'n', n });
     } else if (m.t === 'up') {
-      const { accepted, back } = await this.merge(list);
-      if (accepted.length) for (const w of this.others(ws)) this.send(w, { t: 'up', issues: accepted });
+      const { accepted, back, acks, seq } = await this.merge(list);
+      if (accepted.length) for (const w of this.others(ws)) this.send(w, { t: 'up', issues: accepted, seq });
       if (back.length) this.send(ws, { t: 'up', issues: back });
+      this.send(ws, { t: 'ack', a: acks, seq });
     }
   }
 
