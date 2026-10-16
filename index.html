@@ -459,6 +459,17 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .gcards{display:flex;flex-direction:column;gap:calc(var(--vu)*1.2)}
 .resh{flex:none;font-size:calc(var(--vu)*2.2);font-weight:800;color:var(--ink2);padding:0 calc(var(--vu)*.8)}
 
+/* sync indicator */
+.sync{gap:calc(var(--vu)*1);padding:0 calc(var(--vu)*1.9)}
+.sdot{width:calc(var(--vu)*2.2);height:calc(var(--vu)*2.2);border-radius:50%;background:#ff6a6e;box-shadow:0 0 8px rgba(255,106,110,.7);flex:none}
+.sync[data-s=on] .sdot{background:#3be28a;box-shadow:0 0 10px rgba(59,226,138,.85)}
+.sync[data-s=wait] .sdot{background:#ffbb33;box-shadow:0 0 10px rgba(255,187,51,.8);animation:pulse 1s infinite}
+.stx{font-size:calc(var(--vu)*2);font-weight:900;min-width:1.4em;text-align:left}
+.rlab{text-align:center;font-size:calc(var(--vu)*2);font-weight:700;color:var(--ink2)}
+.rin{width:100%;text-align:center;min-height:calc(var(--vu)*8);border-radius:var(--r2);border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.10);color:#fff;font:inherit;font-weight:800;font-size:calc(var(--vu)*3);outline:none}
+.rin:focus{border-color:#fff}
+@media (max-width:600px){.pill .stx{display:inline}}
+
 </style>
 </head>
 <body>
@@ -470,7 +481,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.3.0';
+const APP_VERSION = '5.4.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -578,7 +589,8 @@ const lg = (a, cls='') => `<div class="lg ${cls}"><span class="es">${a[1]}</span
 /* ---------- state ---------- */
 let issues = [];
 try { issues = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch(e){ issues = []; }
-const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(issues)); } catch(e){} };
+var Sync;
+const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(issues)); } catch(e){} if (typeof Sync !== 'undefined' && Sync) Sync.afterSave(); };
 let view = {name:'home'};          // home | color | detail | cant | history
 const $ = s => document.querySelector(s);
 const isOpen = i => !i.resolvedAt && !i.cancelledAt && !i.qaAt;
@@ -631,6 +643,7 @@ function topbar(){
       <div class="lamp g ${o==='green'?'on':''}"></div>
     </div>
     <div class="status">${n?`<div class="cnt"><b>${n}</b> OPEN · <b>${n}</b> ABIERTO${n>1?'S':''}</div>`:''}${lg(sub,'inline')}</div>
+    <button class="pill sync" data-act="sync" data-s="${Sync ? Sync.state() : 'off'}" aria-label="Sync"><span class="sdot"></span><span class="stx">${Sync ? Sync.label() : 'OFF'}</span></button>
     <button class="pill" data-act="history">${ico('log','cc')}<span class="tx">Log</span></button>
     <button class="pill teal" data-act="update">${ico('refresh','cc')}<span class="tx">Update</span></button>
   </div>`;
@@ -803,7 +816,7 @@ function render(){
 
 /* ---------- modal ---------- */
 function modal(html){ $('#overlay').innerHTML = `<div class="modal"><div class="sheet">${html}</div></div>`; }
-function closeModal(){ $('#overlay').innerHTML = ''; }
+function closeModal(){ $('#overlay').innerHTML = ''; if (typeof Sync !== 'undefined' && Sync) Sync.flush(); }
 const askModal = (q, noLbl, yesLbl, yesCls, yesAct, id, sub) => modal(`${lg(q,'xl c')}${sub?`<div class="sub">${sub}</div>`:''}
   <div class="mrow"><div class="cell"><button class="bb mbtn g-teal" data-act="closemodal"><span class="bi">${lg(noLbl,'c')}</span></button></div>
   <div class="cell"><button class="bb mbtn ${yesCls==='yes'?'f-green':'f-red'}" data-act="${yesAct}" data-id="${id}"><span class="bi">${lg(yesLbl,'c')}</span></button></div></div>`);
@@ -849,6 +862,12 @@ document.addEventListener('click', e => {
   switch (act){
     case 'home': view = {name:'home'}; render(); break;
     case 'tl': view.tl = !view.tl; render(); break;
+    case 'sync': { const c = Sync.cfg();
+      modal(`${lg(['Sync between tablets','Sincronizar tablets','တက်ဘလက်များ ချိတ်ဆက်ရန်'],'xl c')}<div class="sub" id="syncstat">${Sync.status()}</div>
+        <div class="rlab">Room code · same on every tablet</div><input id="roomin" class="rin" value="${c.room}" maxlength="40" autocapitalize="off" autocomplete="off" spellcheck="false">
+        <div class="mrow"><div class="cell"><button class="bb mbtn g-teal" data-act="closemodal"><span class="bi">${lg(['CLOSE','CERRAR','ပိတ်မည်'],'c')}</span></button></div>
+        <div class="cell"><button class="bb mbtn f-green" data-act="syncsave"><span class="bi">${lg(['SAVE & CONNECT','GUARDAR Y CONECTAR','သိမ်းပြီး ချိတ်ဆက်မည်'],'c')}</span></button></div></div>`); break; }
+    case 'syncsave': { const val = (document.getElementById('roomin').value || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, ''); if (val.length < 3) { toast('Room code needs at least 3 letters or numbers'); break; } Sync.setRoom(val); closeModal(); toast('Connecting…'); break; }
     case 'hexp': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.exp = view.exp || {}; view.exp[id] = !view.exp[id]; render(); const sc2 = document.querySelector('.hist'); if (sc2) sc2.scrollTop = top; break; }
     case 'history': view = {name:'history', exp:{}, f:{u:'all', t:'all', d:''}, g:{}}; render(); break;
     case 'fu': { view.f = view.f || {u:'all', t:'all', d:''}; view.f.u = b.dataset.v; render(); break; }
@@ -887,6 +906,94 @@ document.addEventListener('click', e => {
   }
 });
 
+
+/* ---------- realtime sync between tablets ---------- */
+/* Every change is sent to a small hub (Cloudflare Worker) the moment it happens; every other tablet in the same room
+   receives it within a fraction of a second. The app still works with no connection and catches up when it returns. */
+const DEFAULT_SYNC_URL = 'wss://gluer-issue-sync.anthony-mancino2.workers.dev/ws';
+Sync = (() => {
+  const get = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const put = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+  let cid = get('gluerIssueAlert.cid'); if (!cid) { cid = Math.random().toString(36).slice(2, 8); put('gluerIssueAlert.cid', cid); }
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('sync')) put('gluer.syncurl', qs.get('sync'));
+  if (qs.get('room')) put('gluer.room', qs.get('room'));
+  const cfg = () => ({ url: get('gluer.syncurl') || DEFAULT_SYNC_URL, room: get('gluer.room') || 'moquin-gluer' });
+  let ws = null, state = 'off', online = 0, tries = 0, timer = null, pingT = null, pongT = null, dirty = false, offset = 0, helloAt = 0;
+  const realNow = Date.now.bind(Date);
+  Date.now = () => realNow() + offset;                       // keep every tablet on the hub's clock so timestamps agree
+  const strip = i => { const { v, vc, ...r } = i; return JSON.stringify(r); };
+  const snap = {}; issues.forEach(i => { snap[i.id] = strip(i); });
+  const newer = (a, b) => (a.v || 0) > (b.v || 0) || ((a.v || 0) === (b.v || 0) && String(a.vc || '') > String(b.vc || ''));
+  const persist = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(issues)); } catch (e) {} };
+  const sendRaw = s => { if (ws && ws.readyState === 1) { try { ws.send(s); return true; } catch (e) {} } return false; };
+  const send = o => sendRaw(JSON.stringify(o));
+  const label = () => state === 'on' ? String(online) : state === 'wait' ? '…' : 'OFF';
+  const status = () => state === 'on' ? 'Connected · ' + online + (online === 1 ? ' tablet' : ' tablets') + ' online'
+    : state === 'wait' ? 'Connecting…' : 'Offline. Changes are saved here and will sync when the connection returns.';
+  function ui() {
+    document.querySelectorAll('.sync').forEach(b => { b.dataset.s = state; const t = b.querySelector('.stx'); if (t) t.textContent = label(); });
+    const st = document.getElementById('syncstat'); if (st) st.textContent = status();
+  }
+  function afterSave() {
+    const out = [];
+    for (const i of issues) { const s = strip(i); if (snap[i.id] !== s) { i.v = (i.v || 0) + 1; i.vc = cid; snap[i.id] = s; out.push(i); } }
+    if (out.length) { persist(); send({ t: 'up', issues: out }); }
+  }
+  function soft() {
+    if (document.querySelector('.modal .sheet') || !['home', 'detail', 'history'].includes(view.name)) { dirty = true; return; }
+    dirty = false;
+    const sc = document.querySelector('.hist'), top = sc ? sc.scrollTop : 0;
+    render();
+    const s2 = document.querySelector('.hist'); if (s2) s2.scrollTop = top;
+  }
+  function merge(list) {
+    let changed = false;
+    for (const r of list) {
+      if (!r || !r.id) continue;
+      const l = issues.find(x => x.id === r.id);
+      if (!l) { issues.push(r); snap[r.id] = strip(r); changed = true; }
+      else if (newer(r, l)) { Object.keys(l).forEach(k => delete l[k]); Object.assign(l, r); snap[r.id] = strip(r); changed = true; }
+    }
+    if (changed) { persist(); soft(); }
+  }
+  function cleanup() {
+    clearInterval(pingT); clearTimeout(pongT);
+    if (ws) { ws.onopen = ws.onmessage = ws.onclose = ws.onerror = null; try { ws.close(); } catch (e) {} ws = null; }
+    state = 'off'; online = 0; ui();
+  }
+  function schedule() { clearTimeout(timer); timer = setTimeout(connect, Math.min(1000 * Math.pow(2, tries++), 10000)); }
+  function connect() {
+    clearTimeout(timer); if (ws) return;
+    const c = cfg(); state = 'wait'; ui();
+    let sock;
+    try { sock = new WebSocket(c.url + '?room=' + encodeURIComponent(c.room) + '&c=' + cid); } catch (e) { state = 'off'; ui(); schedule(); return; }
+    ws = sock;
+    sock.onopen = () => {
+      tries = 0; state = 'on'; ui(); helloAt = realNow();
+      send({ t: 'hello', c: cid, issues });
+      clearInterval(pingT);
+      pingT = setInterval(() => { if (sendRaw('ping')) { clearTimeout(pongT); pongT = setTimeout(() => { cleanup(); schedule(); }, 8000); } }, 20000);
+    };
+    sock.onmessage = ev => {
+      if (ev.data === 'pong') { clearTimeout(pongT); return; }
+      let m; try { m = JSON.parse(ev.data); } catch (e) { return; }
+      if (m.t === 'snap' && m.now) { const rtt = realNow() - helloAt; offset = (m.now + rtt / 2) - realNow(); }
+      if (m.n != null) { online = m.n; ui(); }
+      if (m.t === 'snap' || m.t === 'up') merge(m.issues || []);
+    };
+    sock.onclose = sock.onerror = () => { if (ws !== sock) return; cleanup(); schedule(); };
+  }
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (!ws) { tries = 0; connect(); } else sendRaw('ping'); } });
+  window.addEventListener('online', () => { if (!ws) { tries = 0; connect(); } });
+  setTimeout(connect, 0);
+  return {
+    afterSave, cfg, status, label, ui,
+    state: () => state, online: () => online,
+    flush: () => { if (dirty) soft(); },
+    setRoom: v => { put('gluer.room', v); cleanup(); tries = 0; connect(); }
+  };
+})();
 
 /* keep the tablet screen awake */
 let wl = null;
