@@ -9,10 +9,11 @@ const ALLOWED_ORIGINS = ['https://anthonymancino222.github.io', 'http://localhos
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
-    if (url.pathname !== '/ws') return new Response('Gluer Issue Alert sync is running.', { status: 200 });
+    if (url.pathname !== '/ws' && url.pathname !== '/lobby') return new Response('Gluer Issue Alert sync is running.', { status: 200 });
     const origin = req.headers.get('Origin') || '';
     if (!ALLOWED_ORIGINS.some(o => origin === o || origin.startsWith(o + ':'))) return new Response('forbidden', { status: 403 });
     if (req.headers.get('Upgrade') !== 'websocket') return new Response('expected websocket', { status: 426 });
+    if (url.pathname === '/lobby') return env.LOBBY.get(env.LOBBY.idFromName('lobby')).fetch(req);
     const room = (url.searchParams.get('room') || '').toLowerCase();
     if (!/^[a-z0-9_-]{3,40}$/.test(room)) return new Response('bad room code', { status: 400 });
     return env.HUB.get(env.HUB.idFromName(room)).fetch(req);
@@ -74,4 +75,62 @@ export class Hub extends DurableObject {
     this.presence(ws);
   }
   async webSocketError(ws) { this.presence(ws); }
+}
+
+/* ---------- the lobby: tablets that want to be paired wait here ----------
+   Each waiting tablet gets a random 4-digit code (only that tablet and its owner see it).
+   Another tablet picks it from the list and types the code. If it matches, the hub invents a
+   private room name and hands it to both; they then sync through the normal Hub above.
+   Nothing is stored: the lobby lives only while tablets are connected. */
+const rnd = n => { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; };
+const code4 = () => String(rnd(10000)).padStart(4, '0');
+const rid = () => { const a = new Uint8Array(12); crypto.getRandomValues(a); return [...a].map(b => b.toString(16).padStart(2, '0')).join(''); };
+const clean = s => String(s || '').replace(/[^\p{L}\p{N} _.-]/gu, '').trim().slice(0, 20) || 'Tablet';
+
+export class Lobby extends DurableObject {
+  constructor(ctx, env) {
+    super(ctx, env);
+    ctx.setWebSocketAutoResponse(new WebSocketRequestResponsePair('ping', 'pong'));
+  }
+  async fetch() {
+    const [client, server] = Object.values(new WebSocketPair());
+    this.ctx.acceptWebSocket(server);
+    return new Response(null, { status: 101, webSocket: client });
+  }
+  send(ws, o) { try { ws.send(JSON.stringify(o)); } catch (e) {} }
+  who() { return this.ctx.getWebSockets().map(w => ({ w, a: w.deserializeAttachment() })).filter(x => x.a && x.a.id); }
+  list() { return this.who().map(x => ({ id: x.a.id, name: x.a.name })); }
+  broadcast() { const list = this.list(); for (const x of this.who()) this.send(x.w, { t: 'list', list }); }
+
+  async webSocketMessage(ws, msg) {
+    if (typeof msg !== 'string' || msg.length > 2000) return;
+    let m; try { m = JSON.parse(msg); } catch (e) { return; }
+    let a = ws.deserializeAttachment();
+    if (m.t === 'enter') {
+      a = { id: rid().slice(0, 10), name: clean(m.name), code: code4(), fails: 0, tries: 0 };
+      ws.serializeAttachment(a);
+      this.send(ws, { t: 'you', id: a.id, code: a.code });
+      this.broadcast();
+    } else if (!a) {
+      return;
+    } else if (m.t === 'name') {
+      a.name = clean(m.name); ws.serializeAttachment(a); this.broadcast();
+    } else if (m.t === 'join') {
+      if (++a.tries > 10) { this.send(ws, { t: 'err', e: 'locked' }); ws.serializeAttachment(a); return; }
+      ws.serializeAttachment(a);
+      const tgt = this.who().find(x => x.a.id === m.target && x.w !== ws);
+      if (!tgt) return this.send(ws, { t: 'err', e: 'gone' });
+      if (String(m.code) !== tgt.a.code) {
+        tgt.a.fails++;
+        if (tgt.a.fails >= 5) { tgt.a.fails = 0; tgt.a.code = code4(); this.send(tgt.w, { t: 'you', id: tgt.a.id, code: tgt.a.code }); }
+        tgt.w.serializeAttachment(tgt.a);
+        return this.send(ws, { t: 'err', e: 'code' });
+      }
+      const room = rid();
+      this.send(tgt.w, { t: 'paired', room, peer: a.name });
+      this.send(ws, { t: 'paired', room, peer: tgt.a.name });
+    }
+  }
+  async webSocketClose(ws, code) { try { ws.close(code, 'bye'); } catch (e) {} this.broadcast(); }
+  async webSocketError() { this.broadcast(); }
 }

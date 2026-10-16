@@ -468,6 +468,26 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .rlab{text-align:center;font-size:calc(var(--vu)*2);font-weight:700;color:var(--ink2)}
 .rin{width:100%;text-align:center;min-height:calc(var(--vu)*8);border-radius:var(--r2);border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.10);color:#fff;font:inherit;font-weight:800;font-size:calc(var(--vu)*3);outline:none}
 .rin:focus{border-color:#fff}
+.rin.sm{min-height:calc(var(--vu)*6);font-size:calc(var(--vu)*2.6)}
+.rin.code{font-size:calc(var(--vu)*4.6);letter-spacing:.3em;padding-left:.3em}
+.lbname{display:flex;align-items:center;gap:calc(var(--vu)*1.6)}
+.lbname .rlab{flex:1;text-align:left}
+.lbname .rin{width:52%}
+.mrow.sm{height:calc(var(--vu)*11)}
+.lbgo[disabled]{opacity:.38}
+.lbcode{text-align:center}
+.digits{font-weight:900;font-size:calc(var(--vu)*8);letter-spacing:.2em;padding-left:.2em;line-height:1.1}
+.lblist{display:flex;flex-direction:column;gap:calc(var(--vu)*1);max-height:calc(var(--vu)*26);overflow-y:auto}
+.lbitem{display:flex;align-items:center;gap:calc(var(--vu)*1.6);width:100%;min-height:calc(var(--vu)*7.6);padding:0 calc(var(--vu)*2.6);border-radius:var(--r2);border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.10);color:#fff;font:inherit;font-weight:800;font-size:calc(var(--vu)*2.8);text-align:left}
+.lbitem b{flex:1}
+.lbitem small{font-size:calc(var(--vu)*1.8);font-weight:900;color:#3be28a}
+.lbitem .sdot{background:#3be28a;box-shadow:0 0 10px rgba(59,226,138,.85)}
+.lbitem.on{background:#fff;color:#10222a;border-color:#fff}
+.lbitem.on small{color:#169a52}
+.lbempty,.lberr{text-align:center;font-size:calc(var(--vu)*2.2);font-weight:700;color:var(--ink2)}
+.lberr{color:#ffb4b6}
+.lbsel{display:flex;flex-direction:column;gap:calc(var(--vu)*1)}
+
 @media (max-width:600px){.pill .stx{display:inline}}
 
 </style>
@@ -481,7 +501,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.4.0';
+const APP_VERSION = '5.5.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -816,7 +836,7 @@ function render(){
 
 /* ---------- modal ---------- */
 function modal(html){ $('#overlay').innerHTML = `<div class="modal"><div class="sheet">${html}</div></div>`; }
-function closeModal(){ $('#overlay').innerHTML = ''; if (typeof Sync !== 'undefined' && Sync) Sync.flush(); }
+function closeModal(){ $('#overlay').innerHTML = ''; if (typeof Sync !== 'undefined' && Sync) { Sync.lobbyClose(); Sync.flush(); } }
 const askModal = (q, noLbl, yesLbl, yesCls, yesAct, id, sub) => modal(`${lg(q,'xl c')}${sub?`<div class="sub">${sub}</div>`:''}
   <div class="mrow"><div class="cell"><button class="bb mbtn g-teal" data-act="closemodal"><span class="bi">${lg(noLbl,'c')}</span></button></div>
   <div class="cell"><button class="bb mbtn ${yesCls==='yes'?'f-green':'f-red'}" data-act="${yesAct}" data-id="${id}"><span class="bi">${lg(yesLbl,'c')}</span></button></div></div>`);
@@ -862,12 +882,10 @@ document.addEventListener('click', e => {
   switch (act){
     case 'home': view = {name:'home'}; render(); break;
     case 'tl': view.tl = !view.tl; render(); break;
-    case 'sync': { const c = Sync.cfg();
-      modal(`${lg(['Sync between tablets','Sincronizar tablets','တက်ဘလက်များ ချိတ်ဆက်ရန်'],'xl c')}<div class="sub" id="syncstat">${Sync.status()}</div>
-        <div class="rlab">Room code · same on every tablet</div><input id="roomin" class="rin" value="${c.room}" maxlength="40" autocapitalize="off" autocomplete="off" spellcheck="false">
-        <div class="mrow"><div class="cell"><button class="bb mbtn g-teal" data-act="closemodal"><span class="bi">${lg(['CLOSE','CERRAR','ပိတ်မည်'],'c')}</span></button></div>
-        <div class="cell"><button class="bb mbtn f-green" data-act="syncsave"><span class="bi">${lg(['SAVE & CONNECT','GUARDAR Y CONECTAR','သိမ်းပြီး ချိတ်ဆက်မည်'],'c')}</span></button></div></div>`); break; }
-    case 'syncsave': { const val = (document.getElementById('roomin').value || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, ''); if (val.length < 3) { toast('Room code needs at least 3 letters or numbers'); break; } Sync.setRoom(val); closeModal(); toast('Connecting…'); break; }
+    case 'sync': Sync.open(); break;
+    case 'lobbypick': Sync.lobbyPick(b.dataset.id); break;
+    case 'lobbyjoin': Sync.lobbyJoin(); break;
+    case 'changetab': Sync.unpair(); break;
     case 'hexp': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.exp = view.exp || {}; view.exp[id] = !view.exp[id]; render(); const sc2 = document.querySelector('.hist'); if (sc2) sc2.scrollTop = top; break; }
     case 'history': view = {name:'history', exp:{}, f:{u:'all', t:'all', d:''}, g:{}}; render(); break;
     case 'fu': { view.f = view.f || {u:'all', t:'all', d:''}; view.f.u = b.dataset.v; render(); break; }
@@ -918,7 +936,7 @@ Sync = (() => {
   const qs = new URLSearchParams(location.search);
   if (qs.get('sync')) put('gluer.syncurl', qs.get('sync'));
   if (qs.get('room')) put('gluer.room', qs.get('room'));
-  const cfg = () => ({ url: get('gluer.syncurl') || DEFAULT_SYNC_URL, room: get('gluer.room') || 'moquin-gluer' });
+  const cfg = () => ({ url: get('gluer.syncurl') || DEFAULT_SYNC_URL, room: get('gluer.room') || '', peer: get('gluer.peer') || '' });
   let ws = null, state = 'off', online = 0, tries = 0, timer = null, pingT = null, pongT = null, dirty = false, offset = 0, helloAt = 0;
   const realNow = Date.now.bind(Date);
   Date.now = () => realNow() + offset;                       // keep every tablet on the hub's clock so timestamps agree
@@ -928,8 +946,8 @@ Sync = (() => {
   const persist = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(issues)); } catch (e) {} };
   const sendRaw = s => { if (ws && ws.readyState === 1) { try { ws.send(s); return true; } catch (e) {} } return false; };
   const send = o => sendRaw(JSON.stringify(o));
-  const label = () => state === 'on' ? String(online) : state === 'wait' ? '…' : 'OFF';
-  const status = () => state === 'on' ? 'Connected · ' + online + (online === 1 ? ' tablet' : ' tablets') + ' online'
+  const label = () => !cfg().room ? 'LINK' : state === 'on' ? String(online) : state === 'wait' ? '…' : 'OFF';
+  const status = () => !cfg().room ? 'Not linked to another tablet yet.' : state === 'on' ? 'Connected · ' + online + (online === 1 ? ' tablet' : ' tablets') + ' online'
     : state === 'wait' ? 'Connecting…' : 'Offline. Changes are saved here and will sync when the connection returns.';
   function ui() {
     document.querySelectorAll('.sync').forEach(b => { b.dataset.s = state; const t = b.querySelector('.stx'); if (t) t.textContent = label(); });
@@ -965,7 +983,7 @@ Sync = (() => {
   function schedule() { clearTimeout(timer); timer = setTimeout(connect, Math.min(1000 * Math.pow(2, tries++), 10000)); }
   function connect() {
     clearTimeout(timer); if (ws) return;
-    const c = cfg(); state = 'wait'; ui();
+    const c = cfg(); if (!c.room) { state = 'off'; ui(); return; } state = 'wait'; ui();
     let sock;
     try { sock = new WebSocket(c.url + '?room=' + encodeURIComponent(c.room) + '&c=' + cid); } catch (e) { state = 'off'; ui(); schedule(); return; }
     ws = sock;
@@ -987,11 +1005,117 @@ Sync = (() => {
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (!ws) { tries = 0; connect(); } else sendRaw('ping'); } });
   window.addEventListener('online', () => { if (!ws) { tries = 0; connect(); } });
   setTimeout(connect, 0);
+
+  /* ---- lobby: pick the tablet to link with, type its 4-digit code ---- */
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const L = { ws: null, open: false, you: null, list: [], sel: null, retry: null, ping: null };
+  const myName = () => get('gluer.name') || ('Tablet ' + cid.slice(0, 3).toUpperCase());
+  const $$ = id => document.getElementById(id);
+  const lsend = o => { if (L.ws && L.ws.readyState === 1) { try { L.ws.send(JSON.stringify(o)); } catch (e) {} } };
+  const setErr = t => { const e = $$('lberr'); if (e) e.textContent = t || ''; };
+  function rCode() {
+    const el = $$('lbcode'); if (!el) return;
+    el.innerHTML = L.you
+      ? '<div class="rlab">YOUR CODE · another tablet types this</div><div class="digits">' + L.you.code + '</div>'
+      : '<div class="rlab">Connecting to the lobby…</div>';
+  }
+  function rList() {
+    const el = $$('lblist'); if (!el) return;
+    el.innerHTML = '<div class="rlab">TABLETS WAITING · tap one</div>'
+      + (L.list.length
+        ? L.list.map(x => '<button class="lbitem' + (L.sel === x.id ? ' on' : '') + '" data-act="lobbypick" data-id="' + x.id + '"><span class="sdot"></span><b>' + esc(x.name) + '</b><small>LIVE</small></button>').join('')
+        : '<div class="lbempty">No other tablet yet. Open Connect on the other tablet, then pick this one there and type the code above.</div>');
+  }
+  function rSel() {
+    const el = $$('lbsel'); if (!el) return;
+    const t = L.list.find(x => x.id === L.sel);
+    const go0 = $$('lbgo'); if (go0) go0.disabled = !t;
+    if (!t) { el.innerHTML = ''; return; }
+    el.innerHTML = '<div class="rlab">Type the code shown on <b>' + esc(t.name) + '</b></div>'
+      + '<input id="codein" class="rin code" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="0000">';
+    const go = $$('lbgo'); if (go) go.disabled = false;
+    const i = $$('codein'); if (i) i.focus();
+  }
+  function lobbyConnect() {
+    clearTimeout(L.retry);
+    if (!L.open) return;
+    let w; try { w = new WebSocket(cfg().url.replace(/\/ws$/, '/lobby')); } catch (e) { L.retry = setTimeout(lobbyConnect, 2000); return; }
+    L.ws = w;
+    w.onopen = () => { lsend({ t: 'enter', name: myName() }); clearInterval(L.ping); L.ping = setInterval(() => { try { w.send('ping'); } catch (e) {} }, 20000); };
+    w.onmessage = ev => {
+      if (ev.data === 'pong') return;
+      let m; try { m = JSON.parse(ev.data); } catch (e) { return; }
+      if (m.t === 'you') { L.you = { id: m.id, code: m.code }; rCode(); }
+      else if (m.t === 'list') {
+        L.list = (m.list || []).filter(x => !L.you || x.id !== L.you.id);
+        if (L.sel && !L.list.some(x => x.id === L.sel)) { L.sel = null; setErr('That tablet left the lobby.'); rSel(); }
+        rList();
+      }
+      else if (m.t === 'err') {
+        const i = $$('codein'); if (i) { i.value = ''; i.focus(); }
+        setErr(m.e === 'code' ? 'Wrong code. Check the other tablet’s screen and try again.' : m.e === 'gone' ? 'That tablet left the lobby.' : 'Too many tries. Close this and open Connect again.');
+      }
+      else if (m.t === 'paired') {
+        put('gluer.room', m.room); put('gluer.peer', m.peer);
+        const peer = m.peer;
+        closeModal(); cleanup(); tries = 0; connect(); toast('Connected to ' + peer);
+      }
+    };
+    w.onclose = () => { if (L.ws !== w) return; L.ws = null; L.you = null; clearInterval(L.ping); rCode(); if (L.open) L.retry = setTimeout(lobbyConnect, 1500); };
+    w.onerror = () => {};
+  }
+  function lobbyClose() {
+    if (!L.open && !L.ws) return;
+    L.open = false; clearTimeout(L.retry); clearInterval(L.ping);
+    const w = L.ws; L.ws = null; L.you = null; L.list = []; L.sel = null;
+    if (w) { w.onclose = w.onmessage = w.onerror = null; try { w.close(); } catch (e) {} }
+  }
+  function lobbyPick(id) { L.sel = id; setErr(''); rList(); rSel(); }
+  function lobbyJoin() {
+    if (!L.sel) return;
+    const i = $$('codein'); const code = i ? i.value.replace(/\D/g, '') : '';
+    if (code.length !== 4) { setErr('Type the 4-digit code.'); return; }
+    setErr(''); lsend({ t: 'join', target: L.sel, code });
+  }
+  document.addEventListener('input', e => {
+    if (e.target.id !== 'codein') return;
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4); setErr('');
+    if (e.target.value.length === 4) lobbyJoin();
+  });
+  document.addEventListener('change', e => {
+    if (e.target.id !== 'tabname') return;
+    const v = e.target.value.replace(/[^\p{L}\p{N} _.-]/gu, '').trim().slice(0, 20) || ('Tablet ' + cid.slice(0, 3).toUpperCase());
+    e.target.value = v; put('gluer.name', v); lsend({ t: 'name', name: v });
+  });
+  function open() {
+    const c = cfg();
+    if (c.room) {
+      modal(lg(['Tablets are linked','Tablets conectadas','တက်ဘလက်များ ချိတ်ဆက်ပြီး'], 'xl c') + '<div class="sub" id="syncstat">' + status() + '</div>'
+        + (c.peer ? '<div class="rlab">Linked with <b>' + esc(c.peer) + '</b></div>' : '')
+        + '<div class="mrow"><div class="cell"><button class="bb mbtn g-teal" data-act="closemodal"><span class="bi">' + lg(['CLOSE','CERRAR','ပိတ်မည်'], 'c') + '</span></button></div>'
+        + '<div class="cell"><button class="bb mbtn f-orange" data-act="changetab"><span class="bi">' + lg(['CHANGE TABLET','CAMBIAR TABLET','တက်ဘလက် ပြောင်းမည်'], 'c') + '</span></button></div></div>');
+      return;
+    }
+    lobbyOpenUi();
+  }
+  function lobbyOpenUi() {
+    L.open = true; L.sel = null; L.list = []; L.you = null;
+    modal(lg(['Connect tablets','Conectar tablets','တက်ဘလက်များ ချိတ်ဆက်ရန်'], 'xl c')
+      + '<div class="lbname"><span class="rlab">This tablet is called</span><input id="tabname" class="rin sm" value="' + esc(myName()) + '" maxlength="20" autocomplete="off" spellcheck="false"></div>'
+      + '<div id="lbcode" class="lbcode"></div><div id="lblist" class="lblist"></div><div id="lbsel" class="lbsel"></div><div id="lberr" class="lberr"></div>'
+      + '<div class="mrow sm"><div class="cell"><button class="bb mbtn g-teal" data-act="closemodal"><span class="bi">' + lg(['CLOSE','CERRAR','ပိတ်မည်'], 'c') + '</span></button></div>'
+      + '<div class="cell"><button id="lbgo" class="bb mbtn f-green lbgo" data-act="lobbyjoin" disabled><span class="bi">' + lg(['CONNECT','CONECTAR','ချိတ်ဆက်မည်'], 'c') + '</span></button></div></div>');
+    rCode(); rList(); lobbyConnect();
+  }
+  function unpair() {
+    put('gluer.room', ''); put('gluer.peer', ''); clearTimeout(timer); cleanup(); lobbyOpenUi();
+  }
+
   return {
     afterSave, cfg, status, label, ui,
     state: () => state, online: () => online,
     flush: () => { if (dirty) soft(); },
-    setRoom: v => { put('gluer.room', v); cleanup(); tries = 0; connect(); }
+    open, lobbyClose, lobbyPick, lobbyJoin, unpair
   };
 })();
 
