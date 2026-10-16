@@ -475,6 +475,30 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .lbname .rin{width:52%}
 .mrow.sm{height:calc(var(--vu)*11)}
 .lbgo[disabled]{opacity:.38}
+/* settings: keyboard shortcuts */
+.kcard{flex:none;display:flex;flex-direction:column;gap:calc(var(--vu)*1.2);padding:calc(var(--vu)*1.8) calc(var(--vu)*2.2)}
+.khead{font-weight:900}
+.ktip{font-size:calc(var(--vu)*2);font-weight:600;color:var(--ink2);line-height:1.35}
+.ktip b{color:#fff}
+.kbar{display:flex;flex-wrap:wrap;gap:calc(var(--vu)*1.2)}
+.kgroup{flex:none;font-weight:900;font-size:calc(var(--vu)*2);color:var(--ink2);text-transform:uppercase;letter-spacing:.07em;padding:calc(var(--vu)*1.6) calc(var(--vu)*.8) calc(var(--vu)*.2)}
+.krow{flex:none;display:flex;align-items:center;gap:calc(var(--vu)*1.4);padding:calc(var(--vu)*1.1) calc(var(--vu)*1.8);border-radius:var(--r2);border:1px solid var(--hair);background:rgba(255,255,255,.07)}
+.krow.cap{border-color:#fff;background:rgba(255,255,255,.2);box-shadow:0 0 0 2px rgba(255,255,255,.5)}
+.kn{flex:1;min-width:0;font-weight:800;font-size:calc(var(--vu)*2.4)}
+.kn small{display:block;font-size:calc(var(--vu)*1.7);font-weight:600;color:#ffd166}
+.kkey{min-width:calc(var(--vu)*15);text-align:center;font-size:calc(var(--vu)*2.2)}
+.kkey kbd,.kh{font:inherit;font-weight:900;border-radius:calc(var(--vu)*.9);background:#fff;color:#10222a;box-shadow:0 calc(var(--vu)*.4) 0 rgba(0,0,0,.35)}
+.kkey kbd{display:inline-block;min-width:calc(var(--vu)*5);padding:calc(var(--vu)*.5) calc(var(--vu)*1.4)}
+.kkey .wait{color:#ffd166}
+.kkey .none{color:var(--ink2)}
+.kgap{flex:none;width:calc(var(--vu)*7.4)}
+.krow .pill{flex:none}
+.khh{position:relative}
+.pill>.kh{top:calc(var(--vu)*-1.5);right:calc(var(--vu)*.6)}
+.tlh>.kh{top:50%;margin-top:calc(var(--vu)*-1.6);right:calc(var(--vu)*7)}
+.ocard>.kh{top:auto;bottom:calc(var(--vu)*1.3);right:calc(var(--vu)*2)}
+.kh{position:absolute;top:calc(var(--vu)*.9);right:calc(var(--vu)*.9);z-index:5;min-width:calc(var(--vu)*3.4);padding:0 calc(var(--vu)*.9);text-align:center;font-size:calc(var(--vu)*2);line-height:calc(var(--vu)*3.2);pointer-events:none}
+@media (max-width:620px){.krow{flex-wrap:wrap}.kkey{min-width:0}}
 .lbcode{text-align:center}
 .digits{font-weight:900;font-size:calc(var(--vu)*8);letter-spacing:.2em;padding-left:.2em;line-height:1.1}
 .lblist{display:flex;flex-direction:column;gap:calc(var(--vu)*1);max-height:calc(var(--vu)*26);overflow-y:auto}
@@ -501,7 +525,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.6.0';
+const APP_VERSION = '5.7.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -597,7 +621,8 @@ const IC = {
   x:'<path d="M12 12l24 24M36 12L12 36"/>',
   undo:'<path d="M17 11L6 22l11 11"/><path d="M6 22h24a11 11 0 0 1 0 22H20"/>',
   dl:'<path d="M24 6v26M14 23l10 10 10-10M8 42h32"/>',
-  trash:'<path d="M9 14h30M18 14V8h12v6M13 14l2 28h18l2-28"/>'
+  trash:'<path d="M9 14h30M18 14V8h12v6M13 14l2 28h18l2-28"/>',
+  gear:'<circle cx="24" cy="24" r="6"/><path d="M24 5v6M24 37v6M5 24h6M37 24h6M10.5 10.5l4.2 4.2M33.3 33.3l4.2 4.2M37.5 10.5l-4.2 4.2M14.7 33.3l-4.2 4.2"/>'
 };
 const ico = (n, cls='') => {
   const cc = cls.includes('cc');
@@ -610,6 +635,7 @@ const lg = (a, cls='') => `<div class="lg ${cls}"><span class="es">${a[1]}</span
 let issues = [];
 try { issues = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch(e){ issues = []; }
 var Sync;
+var KB;
 const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(issues)); } catch(e){} if (typeof Sync !== 'undefined' && Sync) Sync.afterSave(); };
 let view = {name:'home'};          // home | color | detail | cant | history
 const $ = s => document.querySelector(s);
@@ -664,6 +690,7 @@ function topbar(){
     </div>
     <div class="status">${n?`<div class="cnt"><b>${n}</b> OPEN · <b>${n}</b> ABIERTO${n>1?'S':''}</div>`:''}${lg(sub,'inline')}</div>
     <button class="pill sync" data-act="sync" data-s="${Sync ? Sync.state() : 'off'}" aria-label="Sync"><span class="sdot"></span><span class="stx">${Sync ? Sync.label() : 'OFF'}</span></button>
+    <button class="pill" data-act="settings" aria-label="Settings">${ico('gear','cc')}</button>
     <button class="pill" data-act="history">${ico('log','cc')}<span class="tx">Log</span></button>
     <button class="pill teal" data-act="update">${ico('refresh','cc')}<span class="tx">Update</span></button>
   </div>`;
@@ -773,6 +800,30 @@ function renderDetail(){
     </div>`;
 }
 
+function renderSettings(){
+  const st = KB.state();
+  const row = c => {
+    const k = st.map[c.id], cap = st.cap === c.id, dup = KB.sharedWith(c.id);
+    return `<div class="krow ${cap?'cap':''}"><div class="kn">${c.n}${dup?`<small>Same key also used by: ${dup}</small>`:''}</div>
+      <div class="kkey">${cap?'<b class="wait">Press a key…</b>':k?`<kbd>${KB.label(k)}</kbd>`:'<span class="none">not set</span>'}</div>
+      <button class="pill ${cap?'teal':''}" data-act="kbset" data-id="${c.id}">${cap?'Cancel':k?'Change':'Set key'}</button>
+      ${k?`<button class="pill ghost" data-act="kbclear" data-id="${c.id}" aria-label="Remove key">${ico('x','cc')}</button>`:'<span class="kgap"></span>'}</div>`;
+  };
+  const groups = KB.groups().map(g => `<div class="kgroup">${g.g}</div>${g.items.map(row).join('')}`).join('');
+  return `<div class="head">${backBtn()}<div class="title">Settings</div></div>
+    <div class="card kcard">
+      <div class="khead">${lg(['Keyboard shortcuts','Atajos de teclado','ကီးဘုတ် ဖြတ်လမ်းများ'],'inline')}</div>
+      <div class="ktip">Using a computer? Press <b>Set key</b> next to a button, then press the key you want. Pressing that key later does the same as tapping the button. Keys are ignored while you are typing in a box, and are saved on this computer only.</div>
+      <div class="kbar">
+        <button class="pill ${st.on?'teal':''}" data-act="kbtoggle">Keyboard: ${st.on?'ON':'OFF'}</button>
+        <button class="pill ${st.hints?'teal':''}" data-act="kbhints">Show keys on buttons: ${st.hints?'ON':'OFF'}</button>
+        <button class="pill" data-act="kbsuggest">Use suggested keys</button>
+        <button class="pill ghost" data-act="kbclearask">Remove all keys</button>
+      </div>
+    </div>
+    <div class="hist">${groups}</div>`;
+}
+
 function renderHistory(){
   const f = view.f || {u:'all', t:'all', d:''};
   const dayKey = ts => { const d = new Date(ts); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); };
@@ -831,11 +882,12 @@ function renderHistory(){
 
 function render(){
   const v = view.name;
-  $('#app').innerHTML = v==='color' ? renderColor() : v==='detail' ? renderDetail() : v==='cant' ? renderCant() : v==='history' ? renderHistory() : renderHome();
+  $('#app').innerHTML = v==='color' ? renderColor() : v==='detail' ? renderDetail() : v==='cant' ? renderCant() : v==='history' ? renderHistory() : v==='settings' ? renderSettings() : renderHome();
+  if (typeof KB !== 'undefined' && KB) KB.hints();
 }
 
 /* ---------- modal ---------- */
-function modal(html){ $('#overlay').innerHTML = `<div class="modal"><div class="sheet">${html}</div></div>`; }
+function modal(html){ $('#overlay').innerHTML = `<div class="modal"><div class="sheet">${html}</div></div>`; if (typeof KB !== 'undefined' && KB) KB.hints(); }
 function closeModal(){ $('#overlay').innerHTML = ''; if (typeof Sync !== 'undefined' && Sync) { Sync.lobbyClose(); Sync.flush(); } }
 const askModal = (q, noLbl, yesLbl, yesCls, yesAct, id, sub) => modal(`${lg(q,'xl c')}${sub?`<div class="sub">${sub}</div>`:''}
   <div class="mrow"><div class="cell"><button class="bb mbtn g-teal" data-act="closemodal"><span class="bi">${lg(noLbl,'c')}</span></button></div>
@@ -883,6 +935,8 @@ document.addEventListener('click', e => {
     case 'home': view = {name:'home'}; render(); break;
     case 'tl': view.tl = !view.tl; render(); break;
     case 'sync': Sync.open(); break;
+    case 'settings': view = {name:'settings'}; render(); break;
+    case 'kbset': case 'kbclear': case 'kbtoggle': case 'kbhints': case 'kbsuggest': case 'kbsuggestgo': case 'kbclearask': case 'kbclearall': KB.act(act, id); break;
     case 'lobbypick': Sync.lobbyPick(b.dataset.id); break;
     case 'lobbyjoin': Sync.lobbyJoin(); break;
     case 'changetab': Sync.unpair(); break;
@@ -1128,6 +1182,143 @@ Sync = (() => {
     state: () => state, online: () => online,
     flush: () => { if (dirty) soft(); },
     open, lobbyClose, lobbyPick, lobbyJoin, unpair
+  };
+})();
+
+/* ---------- keyboard shortcuts (for using the app on a computer) ----------
+   Every button in the app is a "command". A command is found on screen by a selector, so a key press just
+   clicks whichever matching button is currently visible. Same key may be used for commands that are never on
+   screen together (e.g. Enter = Send, Confirm, Pop-up YES). Settings are saved in this browser only. */
+KB = (() => {
+  const KEY = 'gluer.kb';
+  let st = { on: true, hints: false, map: {} };
+  try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) st = { on: s.on !== false, hints: !!s.hints, map: s.map || {} }; } catch (e) {}
+  let cap = null;
+  const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+
+  const CMDS = [];
+  const add = (g, id, n, sel, nth) => CMDS.push({ g, id, n, sel, nth: nth || 0 });
+  const G1 = 'Report an issue', G2 = 'Open issues on the home screen', G3 = 'Inside an issue (operator, packers, QA)', G4 = "Can't-fix reasons", G5 = 'Pop-up questions', G6 = 'Move around', G7 = 'Log';
+  Object.keys(TYPES).forEach(k => add(G1, 'pick-' + k, TYPES[k].t[0], '[data-act=pick][data-type=' + k + ']'));
+  add(G1, 'color-red', 'Urgency: RED', '[data-act=color][data-color=red]');
+  add(G1, 'color-yellow', 'Urgency: YELLOW', '[data-act=color][data-color=yellow]');
+  add(G1, 'send', 'SEND the issue', '[data-act=send]');
+  [1, 2, 3, 4, 5].forEach(n => add(G2, 'open-' + n, 'Open issue #' + n + ' in the list', '[data-act=open]', n - 1));
+  add(G3, 'ack', 'Operator: CONFIRM', '[data-act=ack]');
+  add(G3, 'askop', 'Operator: ISSUE RESOLVED', '[data-act=askop]');
+  add(G3, 'cantfix', "Operator: CAN'T FIX", '[data-act=cantfix]');
+  add(G3, 'askres', 'Packers: CONFIRM FIXED', '[data-act=askres]');
+  add(G3, 'asknot', 'Packers: NOT FIXED', '[data-act=asknot]');
+  add(G3, 'askesc', "Packers: CAN'T FIX, ESCALATE", '[data-act=askesc]');
+  add(G3, 'retry', 'Packers: send back to operator (try again)', '[data-act=retry]');
+  add(G3, 'qa-ok', 'QA / Manager: APPROVED', '[data-act=askqa][data-d=approved]');
+  add(G3, 'qa-no', 'QA / Manager: NOT APPROVED', '[data-act=askqa][data-d=rejected]');
+  add(G3, 'askcancel', 'Cancel the issue (sent by mistake)', '[data-act=askcancel]');
+  add(G3, 'tl', 'Show / hide the issue history', '[data-act=tl]');
+  Object.keys(REASONS).forEach(k => add(G4, 'reason-' + k, 'Reason: ' + REASONS[k].t[0], '[data-act=reason][data-r=' + k + ']'));
+  add(G4, 'sendcant', "Send the can't-fix reason", '[data-act=sendcant]');
+  add(G5, 'pop-yes', 'Pop-up: YES / confirm', '.modal .mrow .cell:last-child .bb');
+  add(G5, 'pop-no', 'Pop-up: NO / close', '.modal [data-act=closemodal]');
+  add(G6, 'back', 'Back', '.head > .pill:first-child');
+  add(G6, 'history', 'Open the Log', '[data-act=history]');
+  add(G6, 'update', 'Update the app', '[data-act=update]');
+  add(G6, 'sync', 'Link tablets (Connect)', '[data-act=sync]');
+  add(G6, 'settings', 'Open Settings', '[data-act=settings]');
+  add(G7, 'fu-all', 'Log filter: All', '[data-act=fu][data-v=all]');
+  add(G7, 'fu-red', 'Log filter: Red', '[data-act=fu][data-v=red]');
+  add(G7, 'fu-yellow', 'Log filter: Yellow', '[data-act=fu][data-v=yellow]');
+  add(G7, 'fclear', 'Log: clear filters', '[data-act=fclear]');
+  add(G7, 'csv', 'Log: download CSV backup', '[data-act=csv]');
+
+  const SUGGEST = {
+    'pick-fold': '1', 'pick-glue': '2', 'pick-crack': '3', 'pick-burst': '4', 'pick-scuff': '5', 'pick-other': '6',
+    'color-red': 'r', 'color-yellow': 'y', send: 'Enter',
+    'open-1': 'F1', 'open-2': 'F2', 'open-3': 'F3', 'open-4': 'F4', 'open-5': 'F5x',
+    ack: 'Enter', askop: 'd', cantfix: 'c', askres: 'f', asknot: 'n', askesc: 'x', retry: 'r',
+    'qa-ok': 'a', 'qa-no': 'n', askcancel: 'Delete', tl: 't',
+    'reason-die': '1', 'reason-paper': '2', 'reason-cad': '3', 'reason-other': '4', sendcant: 'Enter',
+    'pop-yes': 'Enter', 'pop-no': 'Backspace',
+    back: 'Backspace', history: 'l', update: 'u', sync: 's', settings: ',',
+    'fu-all': '7', 'fu-red': '8', 'fu-yellow': '9'
+  };
+  delete SUGGEST['open-5'];
+
+  const BAD = new Set(['Shift', 'Control', 'Alt', 'Meta', 'AltGraph', 'Tab', 'Escape', 'CapsLock', 'NumLock', 'ScrollLock', 'Dead', 'Process', 'Unidentified', 'ContextMenu', 'OS', 'F5', 'F11', 'F12']);
+  const NUMPAD = { NumpadAdd: '+', NumpadSubtract: '-', NumpadMultiply: '*', NumpadDivide: '/', NumpadDecimal: '.', NumpadEnter: 'Enter' };
+  const token = e => (e.code && e.code.indexOf('Numpad') === 0) ? e.code : (e.key.length === 1 ? e.key.toLowerCase() : e.key);
+  const label = t => {
+    if (!t) return '';
+    if (t.indexOf('Numpad') === 0) return 'Num ' + (NUMPAD[t] || t.slice(6));
+    if (t === ' ') return 'Space';
+    if (t === 'ArrowUp') return '↑'; if (t === 'ArrowDown') return '↓'; if (t === 'ArrowLeft') return '←'; if (t === 'ArrowRight') return '→';
+    return t.length === 1 ? t.toUpperCase() : t;
+  };
+
+  const usable = el => !el.disabled && el.getClientRects().length > 0;
+  const find = c => {
+    const m = document.querySelector('.modal');
+    const els = [...document.querySelectorAll(c.sel)].filter(usable).filter(e => m ? m.contains(e) : !e.closest('.modal'));
+    return els[c.nth];
+  };
+  const rerender = () => { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; render(); const s2 = document.querySelector('.hist'); if (s2) s2.scrollTop = top; };
+
+  function hints() {
+    document.querySelectorAll('.kh').forEach(n => n.remove());
+    if (!st.on || !st.hints || view.name === 'settings') return;
+    const seen = new Set();
+    for (const c of CMDS) {
+      const t = st.map[c.id]; if (!t) continue;
+      const el = find(c); if (!el || seen.has(el)) continue;
+      seen.add(el); el.classList.add('khh');
+      const s = document.createElement('span'); s.className = 'kh'; s.textContent = label(t); el.appendChild(s);
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (cap) {
+      if (view.name !== 'settings') { cap = null; return; }
+      if (e.key === 'Shift' || e.key === 'Control' || e.key === 'Alt' || e.key === 'Meta' || e.key === 'AltGraph') return;
+      e.preventDefault(); e.stopPropagation();
+      if (e.key === 'Escape') { cap = null; rerender(); return; }
+      if (BAD.has(e.key)) { toast('That key can’t be used. Try another.'); return; }
+      const c = CMDS.find(x => x.id === cap), t = token(e);
+      st.map[cap] = t; cap = null; persist(); rerender(); toast((c ? c.n : 'Button') + ' → ' + label(t));
+      return;
+    }
+    if (!st.on || e.ctrlKey || e.altKey || e.metaKey || e.repeat || BAD.has(e.key)) return;
+    const tg = e.target; if (tg && (tg.tagName === 'INPUT' || tg.tagName === 'TEXTAREA' || tg.tagName === 'SELECT' || tg.isContentEditable)) return;
+    const t = token(e);
+    for (const c of CMDS) {
+      if (st.map[c.id] !== t) continue;
+      const el = find(c);
+      if (el) { e.preventDefault(); if (document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur(); el.click(); return; }
+    }
+  }, true);
+
+  const mapped = () => Object.keys(st.map).filter(k => st.map[k]).length;
+  const applySuggest = () => { st.map = Object.assign({}, SUGGEST); persist(); };
+  function act(a, id) {
+    if (a === 'kbset') { cap = cap === id ? null : id; rerender(); }
+    else if (a === 'kbclear') { delete st.map[id]; persist(); rerender(); }
+    else if (a === 'kbtoggle') { st.on = !st.on; cap = null; persist(); rerender(); }
+    else if (a === 'kbhints') { st.hints = !st.hints; persist(); rerender(); }
+    else if (a === 'kbsuggest') {
+      if (!mapped()) { applySuggest(); rerender(); toast('Suggested keys added'); }
+      else askModal(['Replace your keys with the suggested ones?', '¿Reemplazar sus teclas por las sugeridas?', 'သင့်ခလုတ်များကို အကြံပြုချက်ဖြင့် အစားထိုးမလား?'], ['KEEP MINE', 'MANTENER', 'ထားမည်'], ['REPLACE', 'REEMPLAZAR', 'အစားထိုးမည်'], 'yes', 'kbsuggestgo', '', 'Keyboard shortcuts');
+    }
+    else if (a === 'kbsuggestgo') { applySuggest(); closeModal(); rerender(); toast('Suggested keys added'); }
+    else if (a === 'kbclearask') {
+      if (!mapped()) { toast('No keys are set'); return; }
+      askModal(['Remove every key?', '¿Quitar todas las teclas?', 'ခလုတ်အားလုံး ဖယ်ရှားမလား?'], ['KEEP', 'MANTENER', 'ထားမည်'], ['REMOVE ALL', 'QUITAR TODO', 'အားလုံးဖယ်မည်'], 'danger', 'kbclearall', '', 'Keyboard shortcuts');
+    }
+    else if (a === 'kbclearall') { st.map = {}; persist(); closeModal(); rerender(); }
+  }
+
+  return {
+    state: () => ({ on: st.on, hints: st.hints, map: st.map, cap }),
+    groups: () => { const g = []; CMDS.forEach(c => { let x = g.find(y => y.g === c.g); if (!x) { x = { g: c.g, items: [] }; g.push(x); } x.items.push(c); }); return g; },
+    sharedWith: id => { const t = st.map[id]; if (!t) return ''; const o = CMDS.filter(c => c.id !== id && st.map[c.id] === t).map(c => c.n); return o.length > 2 ? o.slice(0, 2).join(', ') + '…' : o.join(', '); },
+    label, act, hints, leave: () => { cap = null; }
   };
 })();
 
