@@ -648,7 +648,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.9.0';
+const APP_VERSION = '5.9.1';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -784,7 +784,7 @@ const byId = id => issues.find(i => i.id === id);
 /* ---------- helpers ---------- */
 const fmtTime = ts => ts ? new Date(ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'}) : '—';
 const fmtHM = ts => new Date(ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
-const fmtDate = ts => new Date(ts).toLocaleDateString([], {month:'short',day:'numeric'});
+const fmtDate = ts => new Date(ts).toLocaleDateString('en-US', {month:'short',day:'numeric'});
 const fmtDur = ms => {
   const s = Math.max(0, Math.floor(ms/1000)), h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60;
   return h ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}:${String(x).padStart(2,'0')}`;
@@ -860,7 +860,7 @@ function renderHome(){
     </div>`;
 }
 
-const backBtn = (act='home', id='') => `<button class="pill" data-act="${act}" ${id?`data-id="${id}"`:''}>${ico('chev','cc')}<span class="tx">${lg(T.back,'inline')}</span></button>`;
+const backBtn = (act='home', id='', en=false) => `<button class="pill" data-act="${act}" ${id?`data-id="${id}"`:''}>${ico('chev','cc')}<span class="tx">${en?'Back':lg(T.back,'inline')}</span></button>`;
 
 function renderColor(){
   const t = view.type, sel = view.color;
@@ -1100,14 +1100,14 @@ function renderHistory(){
       const months = !yOpen ? '' : Object.keys(years[y]).sort((a,b) => b - a).map(m => {
         const mArr = years[y][m]; const mKey = 'm' + y + '-' + m;
         const mOpen = mKey in g ? g[mKey] : (Number(y) === cy && Number(m) === cm);
-        const label = new Date(Number(y), Number(m), 1).toLocaleDateString([], {month:'long'});
+        const label = new Date(Number(y), Number(m), 1).toLocaleDateString('en-US', {month:'long'});
         return '<div class="grp">' + gh(mKey, 'mo', label, mArr, mOpen) + (mOpen ? '<div class="gcards">' + mArr.map(card).join('') + '</div>' : '') + '</div>';
       }).join('');
       return '<div class="grp yrg">' + gh(yKey, 'yr', y, yArr, yOpen) + (yOpen ? '<div class="gmonths">' + months + '</div>' : '') + '</div>';
     }).join('');
   }
   const typeOpts = '<option value="all">All issues</option>' + Object.keys(TYPES).map(k => '<option value="' + k + '"' + (f.t===k?' selected':'') + '>' + TYPES[k].t[0] + '</option>').join('');
-  return '<div class="head">' + backBtn() + '<div class="title">Issue Log <span class="vtag">v' + APP_VERSION + '</span></div></div>'
+  return '<div class="head">' + backBtn('home','',true) + '<div class="title">Issue Log <span class="vtag">v' + APP_VERSION + '</span></div></div>'
     + '<div class="card fbar"><div class="frow"><div class="seg">'
     + ['all','red','yellow'].map(u => '<button class="' + (f.u===u?'on ':'') + u + '" data-act="fu" data-v="' + u + '">' + (u==='all'?'All':u==='red'?'Red':'Yellow') + '</button>').join('')
     + '</div><select class="fsel" data-f="t" aria-label="Issue type">' + typeOpts + '</select>'
