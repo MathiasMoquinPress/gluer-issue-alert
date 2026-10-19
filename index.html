@@ -626,11 +626,15 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
   .opbtn{flex-direction:row;gap:calc(var(--vu)*1.6)}
 }
 
-.opok{flex:1;min-height:0;container-type:size;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:2.4cqh;text-align:center;border-radius:var(--r3);background:radial-gradient(60% 60% at 50% 40%,rgba(47,210,124,.28),transparent 70%)}
-.opok .okc{width:min(26cqh,40cqw);height:min(26cqh,40cqw);border-radius:50%;display:grid;place-items:center;background:linear-gradient(155deg,#34d683,#12905a);border:2px solid rgba(255,255,255,.5);box-shadow:0 0 calc(var(--vu)*6) calc(var(--vu)*1) rgba(47,210,124,.55)}
+.opok{flex:1;min-height:0;container-type:size;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;gap:2cqh;text-align:center;border-radius:var(--r3);background:radial-gradient(60% 60% at 50% 40%,rgba(47,210,124,.28),transparent 70%)}
+.opok .okc{width:min(29cqh,64cqw);height:min(29cqh,64cqw);border-radius:50%;display:grid;place-items:center;background:linear-gradient(155deg,#34d683,#12905a);border:2px solid rgba(255,255,255,.5);box-shadow:0 0 calc(var(--vu)*6) calc(var(--vu)*1) rgba(47,210,124,.55)}
 .opok .okc .ico{width:60%;height:60%;stroke:#fff}
-.opok .lg.xl{--u:min(7cqh,6cqw);align-items:center;text-align:center}
-.opok .oksub .lg{align-items:center;text-align:center;--u:min(3.6cqh,3.4cqw)}
+.opok .lg.xl{--u:min(7.6cqh,8cqw);align-items:center;text-align:center}
+.opstats{display:flex;gap:2.4cqw;width:100%;padding:0 4cqw}
+.ostat{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8cqh;padding:1.2cqh 1cqw;border-radius:calc(var(--vu)*2.4);background:rgba(255,255,255,.08);border:1px solid var(--hair)}
+.ostat b{white-space:nowrap;font-size:min(4.2cqh,5cqw);font-weight:900;font-variant-numeric:tabular-nums;line-height:1.1}
+.ostat .lg{--u:min(2cqh,3cqw)}
+.opok .oksub .lg{align-items:center;text-align:center;--u:min(4cqh,5cqw)}
 .turn.wait{background:rgba(255,255,255,.07)}
 /* ---------- language button ---------- */
 #langui{position:fixed;right:calc(var(--vu)*2.6);bottom:calc(var(--vu)*1.5);z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:calc(var(--vu)*1)}
@@ -690,7 +694,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.12.2';
+const APP_VERSION = '5.12.3';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -1126,6 +1130,16 @@ function renderRole(){
     <div class="rolefoot"><button class="pill teal" data-act="update">${ico('refresh','cc')}<span class="tx">Update</span></button></div>`;
 }
 
+/* quiet-time summary on the operator's all-clear screen */
+function opStats(){
+  const d0 = new Date(); d0.setHours(0,0,0,0);
+  const td = issues.filter(i => i.submittedAt >= d0.getTime());
+  const done = td.filter(i => i.resolvedAt || i.qaAt).length;
+  const last = [...issues].sort((a,b) => b.submittedAt - a.submittedAt)[0];
+  const S = [[['Today','Hoy','ယနေ့'], td.length], [['Resolved','Resueltos','ဖြေရှင်းပြီး'], done], [['Last issue','Último problema','နောက်ဆုံး ပြဿနာ'], last ? fmtHM(last.submittedAt) : '—']];
+  return `<div class="opstats">${S.map(s => `<div class="ostat"><b>${s[1]}</b>${lg(s[0],'sm c')}</div>`).join('')}</div>`;
+}
+
 function renderOpHome(){
   const open = issues.filter(isOpen);
   const todo = open.filter(i => turnOf(i) === 'op');
@@ -1163,7 +1177,7 @@ function renderOpHome(){
   };
   const body = open.length
     ? `<div class="opban ${ban.cls}">${ico(ban.icon,'cc')}${lg(ban.t,'')}<span class="num">${ban.n}</span></div><div class="oplist">${list.map(card).join('')}</div>`
-    : `<div class="opok"><span class="okc">${ico('checkc','cc')}</span>${lg(T.allgood,'xl c')}<div class="oksub">${lg(['No issues need you right now','Ningún problema lo necesita ahora','ယခု သင့်အတွက် ပြဿနာ မရှိပါ'],'md c')}</div></div>`;
+    : `<div class="opok"><span class="okc">${ico('checkc','cc')}</span>${lg(T.allgood,'xl c')}<div class="oksub">${lg(['No issues need you right now','Ningún problema lo necesita ahora','ယခု သင့်အတွက် ပြဿနာ မရှိပါ'],'md c')}</div>${opStats()}</div>`;
   return `${topbar()}${body}`;
 }
 
