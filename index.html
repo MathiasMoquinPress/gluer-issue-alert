@@ -487,6 +487,14 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .krow{flex:none;display:flex;align-items:center;gap:calc(var(--vu)*1.4);padding:calc(var(--vu)*1.1) calc(var(--vu)*1.8);border-radius:var(--r2);border:1px solid var(--hair);background:rgba(255,255,255,.07)}
 .krow.cap{border-color:#fff;background:rgba(255,255,255,.2);box-shadow:0 0 0 2px rgba(255,255,255,.5)}
 .kn{flex:1;min-width:0;font-weight:800;font-size:calc(var(--vu)*2.4)}
+.ken{display:block;font-style:normal;font-size:.72em;font-weight:600;color:var(--ink2);line-height:1.3}
+.kgroup .ken{display:inline;margin-left:.7em;text-transform:none;letter-spacing:0}
+.ktip p{margin:0}
+.ktip p.ken{margin-top:calc(var(--vu)*.6);font-size:.88em}
+.b2{display:flex;flex-direction:column;align-items:center;line-height:1.2;text-align:center}
+.b2 small{font-size:.72em;font-weight:600;opacity:.85}
+.kbar .pill{white-space:normal;padding-top:calc(var(--vu)*.6);padding-bottom:calc(var(--vu)*.6)}
+.kn{line-height:1.4}
 .kn small{display:block;font-size:calc(var(--vu)*1.7);font-weight:600;color:#ffd166}
 .kkey{min-width:calc(var(--vu)*15);text-align:center;font-size:calc(var(--vu)*2.2)}
 .kkey kbd,.kh{font:inherit;font-weight:900;border-radius:calc(var(--vu)*.9);background:#fff;color:#10222a;box-shadow:0 calc(var(--vu)*.4) 0 rgba(0,0,0,.35)}
@@ -648,7 +656,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.9.1';
+const APP_VERSION = '5.10.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -942,26 +950,90 @@ function renderDetail(){
     </div>`;
 }
 
+/* ---------- Settings page text: [Spanish, Burmese] for every English label ---------- */
+const TRK = {
+  'Settings':['Configuración','ဆက်တင်များ'],
+  'Change role':['Cambiar rol','တာဝန်ပြောင်းရန်'],
+  'Set key':['Asignar tecla','ကီးသတ်မှတ်ရန်'],
+  'Change':['Cambiar','ပြောင်းရန်'],
+  'Cancel':['Cancelar','ပယ်ဖျက်ရန်'],
+  'Press a key…':['Presione una tecla…','ကီးတစ်ခု နှိပ်ပါ…'],
+  'not set':['sin asignar','မသတ်မှတ်ရသေး'],
+  'Same key also used by:':['La misma tecla también la usa:','ဤကီးကို အောက်ပါတို့ကလည်း သုံးသည် -'],
+  'Keyboard':['Teclado','ကီးဘုတ်'],
+  'ON':['ACTIVADO','ဖွင့်'],
+  'OFF':['DESACTIVADO','ပိတ်'],
+  'Show keys on buttons':['Mostrar teclas en los botones','ခလုတ်များပေါ်တွင် ကီးပြရန်'],
+  'Use suggested keys':['Usar teclas sugeridas','အကြံပြု ကီးများ သုံးရန်'],
+  'Remove all keys':['Quitar todas las teclas','ကီးအားလုံး ဖယ်ရှားရန်'],
+  'tip':['¿Usa una computadora? Presione «Asignar tecla» junto a un botón y luego la tecla que quiera. Después, esa tecla hace lo mismo que tocar el botón. Las teclas se ignoran mientras escribe en un cuadro y se guardan solo en esta computadora.','ကွန်ပျူတာ သုံးနေပါသလား။ ခလုတ်ဘေးရှိ “ကီးသတ်မှတ်ရန်” ကို နှိပ်ပြီး လိုချင်သော ကီးကို နှိပ်ပါ။ နောက်ပိုင်း ထိုကီးကို နှိပ်လျှင် ခလုတ်ကို နှိပ်သကဲ့သို့ ဖြစ်သည်။ အကွက်ထဲတွင် စာရိုက်နေစဉ် ကီးများ အလုပ်မလုပ်ပါ။ ဤကွန်ပျူတာတွင်သာ သိမ်းထားသည်။'],
+  'Report an issue':['Reportar un problema','ပြဿနာ တင်ပြရန်'],
+  'Open issues on the home screen':['Problemas abiertos en la pantalla principal','ပင်မစာမျက်နှာရှိ ဖွင့်ထားသော ပြဿနာများ'],
+  'Inside an issue (operator, packers, QA)':['Dentro de un problema (operador, empacadores, QA)','ပြဿနာအတွင်း (အော်ပရေတာ၊ ထုပ်ပိုးသူများ၊ QA)'],
+  "Can't-fix reasons":['Motivos de «no se puede arreglar»','ပြင်၍မရခြင်း အကြောင်းရင်းများ'],
+  'Pop-up questions':['Preguntas emergentes','ပေါ်လာသော မေးခွန်းများ'],
+  'Move around':['Moverse por la app','အက်ပ်အတွင်း သွားလာရန်'],
+  'Log':['Registro','မှတ်တမ်း'],
+  'Urgency: RED':['Urgencia: ROJO','အရေးပေါ်အဆင့် - အနီ'],
+  'Urgency: YELLOW':['Urgencia: AMARILLO','အရေးပေါ်အဆင့် - အဝါ'],
+  'SEND the issue':['ENVIAR el problema','ပြဿနာကို ပို့မည်'],
+  'Operator: CONFIRM':['Operador: CONFIRMAR','အော်ပရေတာ - အတည်ပြုသည်'],
+  'Operator: ISSUE RESOLVED':['Operador: PROBLEMA RESUELTO','အော်ပရေတာ - ပြဿနာ ဖြေရှင်းပြီး'],
+  "Operator: CAN'T FIX":['Operador: NO SE PUEDE ARREGLAR','အော်ပရေတာ - ပြင်၍ မရပါ'],
+  'Packers: CONFIRM FIXED':['Empacadores: CONFIRMAR RESUELTO','ထုပ်ပိုးသူများ - ပြင်ပြီးကြောင်း အတည်ပြုသည်'],
+  'Packers: NOT FIXED':['Empacadores: NO ARREGLADO','ထုပ်ပိုးသူများ - မပြင်ရသေးပါ'],
+  "Packers: CAN'T FIX, ESCALATE":['Empacadores: NO SE PUEDE, ESCALAR','ထုပ်ပိုးသူများ - ပြင်မရ၊ တင်ပြမည်'],
+  'Packers: send back to operator (try again)':['Empacadores: devolver al operador (reintentar)','ထုပ်ပိုးသူများ - အော်ပရေတာထံ ပြန်ပို့ရန် (ထပ်ကြိုးစား)'],
+  'QA / Manager: APPROVED':['QA / Gerente: APROBADO','QA / မန်နေဂျာ - ခွင့်ပြုသည်'],
+  'QA / Manager: NOT APPROVED':['QA / Gerente: NO APROBADO','QA / မန်နေဂျာ - ခွင့်မပြုပါ'],
+  'Cancel the issue (sent by mistake)':['Cancelar el problema (enviado por error)','ပြဿနာကို ပယ်ဖျက်ရန် (မှားပို့မိ)'],
+  'Show / hide the issue history':['Mostrar / ocultar el historial del problema','ပြဿနာ မှတ်တမ်းကို ပြ / ဖျောက်ရန်'],
+  "Send the can't-fix reason":['Enviar el motivo de «no se puede arreglar»','ပြင်၍မရခြင်း အကြောင်းရင်းကို ပို့မည်'],
+  'Pop-up: YES / confirm':['Ventana emergente: SÍ / confirmar','ပေါ်လာသော မေးခွန်း - ဟုတ်ကဲ့ / အတည်ပြု'],
+  'Pop-up: NO / close':['Ventana emergente: NO / cerrar','ပေါ်လာသော မေးခွန်း - မဟုတ်ပါ / ပိတ်'],
+  'Back':['Atrás','နောက်သို့'],
+  'Open the Log':['Abrir el Registro','မှတ်တမ်းကို ဖွင့်ရန်'],
+  'Update the app':['Actualizar la app','အက်ပ်ကို အပ်ဒိတ်လုပ်ရန်'],
+  'Link tablets (Connect)':['Vincular tablets (Conectar)','တက်ဘလက်များ ချိတ်ဆက်ရန်'],
+  'Open Settings':['Abrir Configuración','ဆက်တင်ကို ဖွင့်ရန်'],
+  'Change role (Settings)':['Cambiar rol (Configuración)','တာဝန်ပြောင်းရန် (ဆက်တင်)'],
+  'Role: PACKERS':['Rol: EMPACADORES','တာဝန် - ထုပ်ပိုးသူများ'],
+  'Role: OPERATOR':['Rol: OPERADOR','တာဝန် - အော်ပရေတာ'],
+  'Log filter: All':['Filtro del Registro: Todos','မှတ်တမ်း စစ်ထုတ်ချက် - အားလုံး'],
+  'Log filter: Red':['Filtro del Registro: Rojo','မှတ်တမ်း စစ်ထုတ်ချက် - အနီ'],
+  'Log filter: Yellow':['Filtro del Registro: Amarillo','မှတ်တမ်း စစ်ထုတ်ချက် - အဝါ'],
+  'Log: clear filters':['Registro: quitar filtros','မှတ်တမ်း - စစ်ထုတ်ချက်များ ဖယ်ရန်'],
+  'Log: download CSV backup':['Registro: descargar copia CSV','မှတ်တမ်း - CSV အရန်ကူးယူရန်'],
+  'That key can’t be used. Try another.':['Esa tecla no se puede usar. Pruebe otra.','ထိုကီးကို မသုံးနိုင်ပါ။ အခြားတစ်ခု စမ်းပါ။'],
+  'Suggested keys added':['Teclas sugeridas agregadas','အကြံပြု ကီးများ ထည့်ပြီး'],
+  'No keys are set':['No hay teclas asignadas','ကီး မသတ်မှတ်ရသေးပါ']
+};
+const tk = en => [en].concat(TRK[en] || [en, en]);            // [English, Spanish, Burmese]
+const tp = en => pk(tk(en));                                   // text in the chosen language
+const bx = (en, p) => lang === 'en' ? en : `<span class="b2"><span>${p}</span><small>${en}</small></span>`;   // big text + small English
+const bi = en => bx(en, tp(en));
+const hd = en => lang === 'en' ? en : `${tp(en)}<i class="ken">${en}</i>`;
+
 function renderSettings(){
   const st = KB.state();
   const row = c => {
     const k = st.map[c.id], cap = st.cap === c.id, dup = KB.sharedWith(c.id);
-    return `<div class="krow ${cap?'cap':''}"><div class="kn">${c.n}${dup?`<small>Same key also used by: ${dup}</small>`:''}</div>
-      <div class="kkey">${cap?'<b class="wait">Press a key…</b>':k?`<kbd>${KB.label(k)}</kbd>`:'<span class="none">not set</span>'}</div>
-      <button class="pill ${cap?'teal':''}" data-act="kbset" data-id="${c.id}">${cap?'Cancel':k?'Change':'Set key'}</button>
+    return `<div class="krow ${cap?'cap':''}"><div class="kn">${KB.nm(c)}${dup?`<small>${tp('Same key also used by:')} ${dup}</small>`:''}</div>
+      <div class="kkey">${cap?`<b class="wait">${tp('Press a key…')}</b>`:k?`<kbd>${KB.label(k)}</kbd>`:`<span class="none">${tp('not set')}</span>`}</div>
+      <button class="pill ${cap?'teal':''}" data-act="kbset" data-id="${c.id}">${cap?tp('Cancel'):k?tp('Change'):tp('Set key')}</button>
       ${k?`<button class="pill ghost" data-act="kbclear" data-id="${c.id}" aria-label="Remove key">${ico('x','cc')}</button>`:'<span class="kgap"></span>'}</div>`;
   };
-  const groups = KB.groups().map(g => `<div class="kgroup">${g.g}</div>${g.items.map(row).join('')}`).join('');
-  return `<div class="head">${backBtn()}<div class="title">Settings</div></div>
-    <div class="card rolecard"><div class="khead">${lg(['This tablet is','Esta tablet es','ဤတက်ဘလက်သည်'],'inline')}</div><b>${myRole ? pk(ROLE_NAME[myRole]) : '—'}</b><button class="pill" data-act="rolechange">Change role</button></div>
+  const groups = KB.groups().map(g => `<div class="kgroup">${hd(g.g)}</div>${g.items.map(row).join('')}`).join('');
+  return `<div class="head">${backBtn()}<div class="title">${tp('Settings')}${lang==='en'?'':`<span class="vtag">Settings</span>`}</div></div>
+    <div class="card rolecard"><div class="khead">${lg(['This tablet is','Esta tablet es','ဤတက်ဘလက်သည်'],'inline')}</div><b>${myRole ? pk(ROLE_NAME[myRole]) : '—'}</b><button class="pill" data-act="rolechange">${bi('Change role')}</button></div>
     <div class="card kcard">
       <div class="khead">${lg(['Keyboard shortcuts','Atajos de teclado','ကီးဘုတ် ဖြတ်လမ်းများ'],'inline')}</div>
-      <div class="ktip">Using a computer? Press <b>Set key</b> next to a button, then press the key you want. Pressing that key later does the same as tapping the button. Keys are ignored while you are typing in a box, and are saved on this computer only.</div>
+      <div class="ktip"><p>${pk(['Using a computer? Press “Set key” next to a button, then press the key you want. Pressing that key later does the same as tapping the button. Keys are ignored while you are typing in a box, and are saved on this computer only.'].concat(TRK.tip))}</p>${lang==='en'?'':`<p class="ken">Using a computer? Press “Set key” next to a button, then press the key you want. Pressing that key later does the same as tapping the button. Keys are ignored while you are typing in a box, and are saved on this computer only.</p>`}</div>
       <div class="kbar">
-        <button class="pill ${st.on?'teal':''}" data-act="kbtoggle">Keyboard: ${st.on?'ON':'OFF'}</button>
-        <button class="pill ${st.hints?'teal':''}" data-act="kbhints">Show keys on buttons: ${st.hints?'ON':'OFF'}</button>
-        <button class="pill" data-act="kbsuggest">Use suggested keys</button>
-        <button class="pill ghost" data-act="kbclearask">Remove all keys</button>
+        <button class="pill ${st.on?'teal':''}" data-act="kbtoggle">${bx('Keyboard: ' + (st.on?'ON':'OFF'), tp('Keyboard') + ': ' + tp(st.on?'ON':'OFF'))}</button>
+        <button class="pill ${st.hints?'teal':''}" data-act="kbhints">${bx('Show keys on buttons: ' + (st.hints?'ON':'OFF'), tp('Show keys on buttons') + ': ' + tp(st.hints?'ON':'OFF'))}</button>
+        <button class="pill" data-act="kbsuggest">${bi('Use suggested keys')}</button>
+        <button class="pill ghost" data-act="kbclearask">${bi('Remove all keys')}</button>
       </div>
     </div>
     <div class="hist">${kbHelp()}${groups}</div>`;
@@ -1467,13 +1539,13 @@ KB = (() => {
   const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
 
   const CMDS = [];
-  const add = (g, id, n, sel, nth) => CMDS.push({ g, id, n, sel, nth: nth || 0 });
+  const add = (g, id, n, sel, nth, tri) => CMDS.push({ g, id, n, sel, nth: nth || 0, tri: tri || tk(n) });
   const G1 = 'Report an issue', G2 = 'Open issues on the home screen', G3 = 'Inside an issue (operator, packers, QA)', G4 = "Can't-fix reasons", G5 = 'Pop-up questions', G6 = 'Move around', G7 = 'Log';
-  Object.keys(TYPES).forEach(k => add(G1, 'pick-' + k, TYPES[k].t[0], '[data-act=pick][data-type=' + k + ']'));
+  Object.keys(TYPES).forEach(k => add(G1, 'pick-' + k, TYPES[k].t[0], '[data-act=pick][data-type=' + k + ']', 0, TYPES[k].t));
   add(G1, 'color-red', 'Urgency: RED', '[data-act=color][data-color=red]');
   add(G1, 'color-yellow', 'Urgency: YELLOW', '[data-act=color][data-color=yellow]');
   add(G1, 'send', 'SEND the issue', '[data-act=send]');
-  [1, 2, 3, 4, 5].forEach(n => add(G2, 'open-' + n, 'Open issue #' + n + ' in the list', '[data-act=open]', n - 1));
+  [1, 2, 3, 4, 5].forEach(n => add(G2, 'open-' + n, 'Open issue #' + n + ' in the list', '[data-act=open]', n - 1, ['Open issue #' + n + ' in the list', 'Abrir el problema n.º ' + n + ' de la lista', 'စာရင်းရှိ ပြဿနာ နံပါတ် ' + n + ' ကို ဖွင့်ရန်']));
   add(G3, 'ack', 'Operator: CONFIRM', '[data-act=ack]');
   add(G3, 'askop', 'Operator: ISSUE RESOLVED', '[data-act=askop]');
   add(G3, 'cantfix', "Operator: CAN'T FIX", '[data-act=cantfix]');
@@ -1485,7 +1557,7 @@ KB = (() => {
   add(G3, 'qa-no', 'QA / Manager: NOT APPROVED', '[data-act=askqa][data-d=rejected]');
   add(G3, 'askcancel', 'Cancel the issue (sent by mistake)', '[data-act=askcancel]');
   add(G3, 'tl', 'Show / hide the issue history', '[data-act=tl]');
-  Object.keys(REASONS).forEach(k => add(G4, 'reason-' + k, 'Reason: ' + REASONS[k].t[0], '[data-act=reason][data-r=' + k + ']'));
+  Object.keys(REASONS).forEach(k => add(G4, 'reason-' + k, 'Reason: ' + REASONS[k].t[0], '[data-act=reason][data-r=' + k + ']', 0, ['Reason: ' + REASONS[k].t[0], 'Motivo: ' + REASONS[k].t[1], 'အကြောင်းရင်း - ' + REASONS[k].t[2]]));
   add(G4, 'sendcant', "Send the can't-fix reason", '[data-act=sendcant]');
   add(G5, 'pop-yes', 'Pop-up: YES / confirm', '.modal .mrow .cell:last-child .bb');
   add(G5, 'pop-no', 'Pop-up: NO / close', '.modal [data-act=closemodal]');
@@ -1553,9 +1625,9 @@ KB = (() => {
       if (e.key === 'Shift' || e.key === 'Control' || e.key === 'Alt' || e.key === 'Meta' || e.key === 'AltGraph') return;
       e.preventDefault(); e.stopPropagation();
       if (e.key === 'Escape') { cap = null; rerender(); return; }
-      if (BAD.has(e.key)) { toast('That key can’t be used. Try another.'); return; }
+      if (BAD.has(e.key)) { toastL(tk('That key can’t be used. Try another.')); return; }
       const c = CMDS.find(x => x.id === cap), t = token(e);
-      st.map[cap] = t; cap = null; persist(); rerender(); toast((c ? c.n : 'Button') + ' → ' + label(t));
+      st.map[cap] = t; cap = null; persist(); rerender(); toast((c ? pk(c.tri) : '') + ' → ' + label(t));
       return;
     }
     if (!st.on || e.ctrlKey || e.altKey || e.metaKey || e.repeat || BAD.has(e.key)) return;
@@ -1576,12 +1648,12 @@ KB = (() => {
     else if (a === 'kbtoggle') { st.on = !st.on; cap = null; persist(); rerender(); }
     else if (a === 'kbhints') { st.hints = !st.hints; persist(); rerender(); }
     else if (a === 'kbsuggest') {
-      if (!mapped()) { applySuggest(); rerender(); toast('Suggested keys added'); }
+      if (!mapped()) { applySuggest(); rerender(); toastL(tk('Suggested keys added')); }
       else askModal(['Replace your keys with the suggested ones?', '¿Reemplazar sus teclas por las sugeridas?', 'သင့်ခလုတ်များကို အကြံပြုချက်ဖြင့် အစားထိုးမလား?'], ['KEEP MINE', 'MANTENER', 'ထားမည်'], ['REPLACE', 'REEMPLAZAR', 'အစားထိုးမည်'], 'yes', 'kbsuggestgo', '', 'Keyboard shortcuts');
     }
-    else if (a === 'kbsuggestgo') { applySuggest(); closeModal(); rerender(); toast('Suggested keys added'); }
+    else if (a === 'kbsuggestgo') { applySuggest(); closeModal(); rerender(); toastL(tk('Suggested keys added')); }
     else if (a === 'kbclearask') {
-      if (!mapped()) { toast('No keys are set'); return; }
+      if (!mapped()) { toastL(tk('No keys are set')); return; }
       askModal(['Remove every key?', '¿Quitar todas las teclas?', 'ခလုတ်အားလုံး ဖယ်ရှားမလား?'], ['KEEP', 'MANTENER', 'ထားမည်'], ['REMOVE ALL', 'QUITAR TODO', 'အားလုံးဖယ်မည်'], 'danger', 'kbclearall', '', 'Keyboard shortcuts');
     }
     else if (a === 'kbclearall') { st.map = {}; persist(); closeModal(); rerender(); }
@@ -1590,7 +1662,8 @@ KB = (() => {
   return {
     state: () => ({ on: st.on, hints: st.hints, map: st.map, cap }),
     groups: () => { const g = []; CMDS.forEach(c => { let x = g.find(y => y.g === c.g); if (!x) { x = { g: c.g, items: [] }; g.push(x); } x.items.push(c); }); return g; },
-    sharedWith: id => { const t = st.map[id]; if (!t) return ''; const o = CMDS.filter(c => c.id !== id && st.map[c.id] === t).map(c => c.n); return o.length > 2 ? o.slice(0, 2).join(', ') + '…' : o.join(', '); },
+    sharedWith: id => { const t = st.map[id]; if (!t) return ''; const o = CMDS.filter(c => c.id !== id && st.map[c.id] === t).map(c => pk(c.tri)); return o.length > 2 ? o.slice(0, 2).join(', ') + '…' : o.join(', '); },
+    nm: c => lang === 'en' ? c.n : `${pk(c.tri)}<i class="ken">${c.n}</i>`,
     label, act, hints, leave: () => { cap = null; }
   };
 })();
