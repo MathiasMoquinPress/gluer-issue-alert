@@ -465,6 +465,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .sync{gap:calc(var(--vu)*1);padding:0 calc(var(--vu)*1.9)}
 .sdot{width:calc(var(--vu)*2.2);height:calc(var(--vu)*2.2);border-radius:50%;background:#ff6a6e;box-shadow:0 0 8px rgba(255,106,110,.7);flex:none}
 .sync[data-s=on] .sdot{background:#3be28a;box-shadow:0 0 10px rgba(59,226,138,.85)}
+.sync[data-s=alone] .sdot{background:#ffbb33;box-shadow:0 0 10px rgba(255,187,51,.8);animation:pulse 1.2s infinite}
 .sync[data-s=wait] .sdot{background:#ffbb33;box-shadow:0 0 10px rgba(255,187,51,.8);animation:pulse 1s infinite}
 .stx{font-size:calc(var(--vu)*2);font-weight:900;min-width:1.4em;text-align:left}
 .rlab{text-align:center;font-size:calc(var(--vu)*2);font-weight:700;color:var(--ink2)}
@@ -527,7 +528,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .kh{position:absolute;top:calc(var(--vu)*.9);right:calc(var(--vu)*.9);z-index:5;min-width:calc(var(--vu)*3.4);padding:0 calc(var(--vu)*.9);text-align:center;font-size:calc(var(--vu)*2);line-height:calc(var(--vu)*3.2);pointer-events:none}
 @media (max-width:620px){.krow{flex-wrap:wrap}.kkey{min-width:0}}
 .lbcode{text-align:center}
-.digits{font-weight:900;font-size:calc(var(--vu)*8);letter-spacing:.2em;padding-left:.2em;line-height:1.1}
+.digits{font-weight:900;font-size:calc(var(--vu)*8);letter-spacing:.2em;padding-left:.2em;line-height:1.3;margin-top:calc(var(--vu)*.5)}
 .lblist{display:flex;flex-direction:column;gap:calc(var(--vu)*1);max-height:calc(var(--vu)*26);overflow-y:auto}
 .lbitem{display:flex;align-items:center;gap:calc(var(--vu)*1.6);width:100%;min-height:calc(var(--vu)*7.6);padding:0 calc(var(--vu)*2.6);border-radius:var(--r2);border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.10);color:#fff;font:inherit;font-weight:800;font-size:calc(var(--vu)*2.8);text-align:left}
 .lbitem b{flex:1}
@@ -697,7 +698,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.14.0';
+const APP_VERSION = '5.14.1';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -1415,10 +1416,12 @@ Sync = (() => {
   const sendRaw = s => { if (ws && ws.readyState === 1) { try { ws.send(s); return true; } catch (e) {} } return false; };
   const send = o => sendRaw(JSON.stringify(o));
   const label = () => !cfg().room ? 'LINK' : state === 'on' ? String(online) : state === 'wait' ? '…' : 'OFF';
-  const status = () => !cfg().room ? 'Not linked to another tablet yet.' : state === 'on' ? 'Connected · ' + online + (online === 1 ? ' tablet' : ' tablets') + ' online'
+  const status = () => !cfg().room ? 'Not linked to another tablet yet.' : state === 'on' ? (online >= 2
+      ? pk(['Connected · ' + online + ' devices online', 'Conectado · ' + online + ' dispositivos en línea', 'ချိတ်ဆက်ပြီး · စက် ' + online + ' လုံး အွန်လိုင်း'])
+      : pk(['Linked, but the other device is NOT connected yet. Open the app on it, or tap CHANGE TABLET to link again.', 'Vinculado, pero el otro dispositivo AÚN NO está conectado. Abra la app en él, o toque CAMBIAR TABLET para vincular de nuevo.', 'ချိတ်ဆက်ထားသော်လည်း အခြားစက် မချိတ်ဆက်သေးပါ။ ၎င်းတွင် အက်ပ်ကို ဖွင့်ပါ၊ သို့မဟုတ် CHANGE TABLET ကိုနှိပ်၍ ပြန်ချိတ်ပါ။']))
     : state === 'wait' ? 'Connecting…' : 'Offline. Changes are saved here and will sync when the connection returns.';
   function ui() {
-    document.querySelectorAll('.sync').forEach(b => { b.dataset.s = state; const t = b.querySelector('.stx'); if (t) t.textContent = label(); });
+    document.querySelectorAll('.sync').forEach(b => { b.dataset.s = (state === 'on' && online < 2) ? 'alone' : state; const t = b.querySelector('.stx'); if (t) t.textContent = label(); });
     const st = document.getElementById('syncstat'); if (st) st.textContent = status();
   }
   function afterSave() {
@@ -1573,8 +1576,9 @@ Sync = (() => {
   function open() {
     const c = cfg();
     if (c.room) {
-      modal(lg(['Tablets are linked','Tablets conectadas','တက်ဘလက်များ ချိတ်ဆက်ပြီး'], 'xl c') + '<div class="sub" id="syncstat">' + status() + '</div>'
+      modal(lg(state === 'on' && online < 2 ? ['Waiting for the other device','Esperando al otro dispositivo','အခြားစက်ကို စောင့်နေသည်'] : ['Tablets are linked','Tablets conectadas','တက်ဘလက်များ ချိတ်ဆက်ပြီး'], 'xl c') + '<div class="sub" id="syncstat">' + status() + '</div>'
         + (c.peer ? '<div class="rlab">Linked with <b>' + esc(c.peer) + '</b></div>' : '')
+        + '<div class="rlab">Link ID: <b>' + esc(c.room.slice(0, 4).toUpperCase()) + '</b> · same on both devices</div>'
         + '<div class="mrow"><div class="cell"><button class="bb mbtn g-teal" data-act="closemodal"><span class="bi">' + lg(['CLOSE','CERRAR','ပိတ်မည်'], 'c') + '</span></button></div>'
         + '<div class="cell"><button class="bb mbtn f-orange" data-act="changetab"><span class="bi">' + lg(['CHANGE TABLET','CAMBIAR TABLET','တက်ဘလက် ပြောင်းမည်'], 'c') + '</span></button></div></div>');
       return;
