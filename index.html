@@ -640,6 +640,9 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .langmenu{display:flex;flex-direction:column;gap:calc(var(--vu)*1);padding:calc(var(--vu)*1.2);border-radius:var(--r2);background:rgba(8,32,38,.97);border:1px solid rgba(255,255,255,.32);box-shadow:var(--shadow)}
 .langmenu button{min-width:calc(var(--vu)*26);min-height:calc(var(--vu)*7);display:flex;align-items:center;justify-content:space-between;gap:calc(var(--vu)*2);padding:0 calc(var(--vu)*2.4);border-radius:calc(var(--vu)*2);background:rgba(255,255,255,.1);color:#fff;font-weight:800;font-size:calc(var(--vu)*3);text-align:left}
 .langmenu button.on{background:#fff;color:#10222a}
+#verui{position:fixed;left:calc(var(--vu)*2.6);bottom:calc(var(--vu)*1.5);z-index:90}
+.vertag{display:inline-flex;align-items:center;min-height:calc(var(--vu)*5);padding:0 calc(var(--vu)*2.2);border-radius:99px;background:rgba(8,34,40,.82);border:1px solid rgba(255,255,255,.34);color:#d6f5f2;font-weight:800;font-size:calc(var(--vu)*1.9);white-space:nowrap}
+.vertag.new{background:#ffbb33;color:#2a1d00;border-color:#fff3c6;box-shadow:var(--shadow);animation:pulse 1.4s infinite}
 .langmenu .ico{width:calc(var(--vu)*3);height:calc(var(--vu)*3)}
 /* keep pop-ups clear of the language button */
 .modal{padding-bottom:calc(var(--vu)*8.5)}
@@ -650,13 +653,14 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 <div id="app"></div>
 <div id="overlay"></div>
 <div id="langui"></div>
+<div id="verui"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <linearGradient id="ig" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#f2fffd"/><stop offset="1" stop-color="#8fe6e0"/></linearGradient>
   <linearGradient id="ia" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#fff1b8"/><stop offset="1" stop-color="#ffc15a"/></linearGradient>
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.10.0';
+const APP_VERSION = '5.11.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -1239,17 +1243,23 @@ function exportCsv(){
   a.download = 'gluer-issue-log.csv'; document.body.appendChild(a); a.click(); a.remove();
 }
 
+async function fetchLatest(){
+  const r = await fetch(location.pathname + '?check=' + Date.now(), {cache:'no-store'});
+  const m = (await r.text()).match(/APP_VERSION = '([^']+)'/);
+  return m ? m[1] : null;
+}
 async function updateApp(){
-  toast('Checking for update…');
+  toastL(['Checking for update…','Buscando actualización…','အပ်ဒိတ် စစ်ဆေးနေသည်…']);
   try {
-    const r = await fetch(location.pathname + '?check=' + Date.now(), {cache:'no-store'});
-    const m = (await r.text()).match(/APP_VERSION = '([^']+)'/);
-    const latest = m ? m[1] : APP_VERSION;
+    const latest = (await fetchLatest()) || APP_VERSION;
+    try { sessionStorage.setItem('gluer.target', latest); sessionStorage.setItem('gluer.tries', '0'); } catch(e){}
     try { if ('caches' in window) (await caches.keys()).forEach(k => caches.delete(k)); } catch(e){}
     try { if (navigator.serviceWorker) (await navigator.serviceWorker.getRegistrations()).forEach(x => x.unregister()); } catch(e){}
-    toast(latest !== APP_VERSION ? `Updating to v${latest}…` : `Already latest (v${APP_VERSION}) – reloading`);
-    setTimeout(() => { location.href = location.pathname + '?v=' + Date.now(); }, 900);
-  } catch(e){ toast('No internet – try again'); }
+    toastL(latest !== APP_VERSION
+      ? ['Updating to v' + latest + '…', 'Actualizando a v' + latest + '…', 'v' + latest + ' သို့ အပ်ဒိတ်လုပ်နေသည်…']
+      : ['Already the latest (v' + APP_VERSION + ') – reloading', 'Ya es la última (v' + APP_VERSION + ') – recargando', 'နောက်ဆုံးဗားရှင်း (v' + APP_VERSION + ') – ပြန်ဖွင့်နေသည်']);
+    setTimeout(() => { location.replace(location.pathname + '?v=' + Date.now()); }, 900);   // a brand-new address, so nothing old can be reused
+  } catch(e){ toastL(['No internet – try again','Sin internet – intente de nuevo','အင်တာနက်မရှိပါ – ထပ်ကြိုးစားပါ']); }
 }
 
 document.addEventListener('input', e => { if (e.target.id === 'note') view.note = e.target.value; });
@@ -1674,7 +1684,33 @@ async function keepAwake(){ try { if (navigator.wakeLock && !wl) { wl = await na
 document.addEventListener('pointerdown', keepAwake, {passive:true});
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); });
 
+/* ---------- version tag + automatic "new version available" check ---------- */
+let latestSeen = null;
+function renderVer(){
+  const nw = latestSeen && latestSeen !== APP_VERSION;
+  $('#verui').innerHTML = nw
+    ? `<button class="vertag new" data-act="update">v${APP_VERSION} · ${pk(['Update available','Actualización disponible','အပ်ဒိတ် ရနိုင်ပြီ'])}: v${latestSeen}</button>`
+    : `<span class="vertag">v${APP_VERSION}</span>`;
+}
+async function checkLatest(){ try { latestSeen = await fetchLatest(); } catch(e){} renderVer(); }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkLatest(); });
+setInterval(checkLatest, 300000);
+
+/* after an Update, if the page that loaded is still older than what Update found (a slow cache), try again */
+(function(){
+  let target = null, tries = 0;
+  try { target = sessionStorage.getItem('gluer.target'); tries = Number(sessionStorage.getItem('gluer.tries')) || 0; } catch(e){}
+  if (target && target !== APP_VERSION && tries < 2) {
+    try { sessionStorage.setItem('gluer.tries', String(tries + 1)); } catch(e){}
+    setTimeout(() => location.replace(location.pathname + '?v=' + Date.now() + 'r'), 700);
+    return;
+  }
+  try { sessionStorage.removeItem('gluer.target'); sessionStorage.removeItem('gluer.tries'); } catch(e){}
+})();
+
 renderLang();
+renderVer();
+checkLatest();
 render();
 </script>
 </body>
