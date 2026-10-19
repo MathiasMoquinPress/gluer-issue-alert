@@ -663,6 +663,11 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .top.c1.optop .status .lg.inline{--u:calc(var(--vu)*2)}
 .top.c1.optop .status .cnt{font-size:calc(var(--vu)*2.1)}
 .top.c1.optop .status .cnt b{font-size:calc(var(--vu)*3.2)}
+/* circles stay perfect circles: never squeezed by neighbours, always square boxes */
+.lamps{flex:none}
+.lamp,.sdot,.stp .dot,.opok .okc,.rd,.rchip,.opc .chip,.chip{flex:none;flex-shrink:0;min-width:0}
+.lamp,.sdot,.stp .dot,.opok .okc,.rd{aspect-ratio:1/1;box-sizing:border-box}
+.lamp,.sdot{display:block}
 #verui{position:fixed;left:calc(var(--vu)*2.6);bottom:calc(var(--vu)*1.5);z-index:90}
 .vertag{display:inline-flex;align-items:center;min-height:calc(var(--vu)*5);padding:0 calc(var(--vu)*2.2);border-radius:99px;background:rgba(8,34,40,.82);border:1px solid rgba(255,255,255,.34);color:#d6f5f2;font-weight:800;font-size:calc(var(--vu)*1.9);white-space:nowrap}
 .vertag.new{background:#ffbb33;color:#2a1d00;border-color:#fff3c6;box-shadow:var(--shadow);animation:pulse 1.4s infinite}
@@ -683,7 +688,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.12.0';
+const APP_VERSION = '5.12.1';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
