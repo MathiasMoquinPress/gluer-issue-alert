@@ -113,6 +113,8 @@ const code4 = () => String(rnd(10000)).padStart(4, '0');
 const rid = () => { const a = new Uint8Array(12); crypto.getRandomValues(a); return [...a].map(b => b.toString(16).padStart(2, '0')).join(''); };
 const clean = s => String(s || '').replace(/[^\p{L}\p{N} _.-]/gu, '').trim().slice(0, 20) || 'Tablet';
 
+const FRESH = 40000;   // a tablet that sends heartbeats drops out of the list after this long without one
+
 export class Lobby extends DurableObject {
   constructor(ctx, env) {
     super(ctx, env);
@@ -124,24 +126,51 @@ export class Lobby extends DurableObject {
     return new Response(null, { status: 101, webSocket: client });
   }
   send(ws, o) { try { ws.send(JSON.stringify(o)); } catch (e) {} }
-  who() { return this.ctx.getWebSockets().map(w => ({ w, a: w.deserializeAttachment() })).filter(x => x.a && x.a.id); }
+  who() {
+    const t = Date.now();
+    return this.ctx.getWebSockets().map(w => ({ w, a: w.deserializeAttachment() })).filter(x => x.a && x.a.id && (!x.a.hb || t - x.a.seen < FRESH));
+  }
   list() { return this.who().map(x => ({ id: x.a.id, name: x.a.name })); }
   broadcast() { const list = this.list(); for (const x of this.who()) this.send(x.w, { t: 'list', list }); }
+  /* a finished pairing is remembered for a few minutes, so a tablet whose connection was asleep still hears about it */
+  async pendingFor(cid) {
+    if (!cid) return null;
+    const p = await this.ctx.storage.get('p:' + cid);
+    if (!p) return null;
+    if (Date.now() - p.at > 300000) { await this.ctx.storage.delete('p:' + cid); return null; }
+    return p;
+  }
 
   async webSocketMessage(ws, msg) {
     if (typeof msg !== 'string' || msg.length > 2000) return;
     let m; try { m = JSON.parse(msg); } catch (e) { return; }
     let a = ws.deserializeAttachment();
     if (m.t === 'enter') {
-      a = { id: rid().slice(0, 10), name: clean(m.name), code: code4(), fails: 0, tries: 0 };
+      const cid = String(m.c || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 12);
+      if (cid) for (const x of this.ctx.getWebSockets()) {          // one entry per device: the newest window wins
+        if (x === ws) continue;
+        const b = x.deserializeAttachment();
+        if (b && b.cid === cid) { try { x.close(4001, 'replaced'); } catch (e) {} }
+      }
+      a = { id: rid().slice(0, 10), name: clean(m.name), code: code4(), fails: 0, tries: 0, cid, hb: false, seen: Date.now() };
       ws.serializeAttachment(a);
       this.send(ws, { t: 'you', id: a.id, code: a.code });
+      for (const [k, v] of await this.ctx.storage.list({ prefix: 'p:' })) if (Date.now() - v.at > 300000) await this.ctx.storage.delete(k);
+      const p = await this.pendingFor(cid);
+      if (p) this.send(ws, { t: 'paired', room: p.room, peer: p.peer });
       this.broadcast();
     } else if (!a) {
       return;
+    } else if (m.t === 'hb') {
+      a.hb = true; a.seen = Date.now(); ws.serializeAttachment(a);
+      const t = Date.now();
+      if (this.ctx.getWebSockets().some(w => { const b = w.deserializeAttachment(); return b && b.id && b.hb && t - b.seen >= FRESH; })) this.broadcast();
+    } else if (m.t === 'ok') {
+      if (a.cid) await this.ctx.storage.delete('p:' + a.cid);
     } else if (m.t === 'name') {
-      a.name = clean(m.name); ws.serializeAttachment(a); this.broadcast();
+      a.name = clean(m.name); a.seen = Date.now(); ws.serializeAttachment(a); this.broadcast();
     } else if (m.t === 'join') {
+      a.seen = Date.now();
       if (++a.tries > 10) { this.send(ws, { t: 'err', e: 'locked' }); ws.serializeAttachment(a); return; }
       ws.serializeAttachment(a);
       const tgt = this.who().find(x => x.a.id === m.target && x.w !== ws);
@@ -152,7 +181,9 @@ export class Lobby extends DurableObject {
         tgt.w.serializeAttachment(tgt.a);
         return this.send(ws, { t: 'err', e: 'code' });
       }
-      const room = rid();
+      const room = rid(), at = Date.now();
+      if (tgt.a.cid) await this.ctx.storage.put('p:' + tgt.a.cid, { room, peer: a.name, at });
+      if (a.cid) await this.ctx.storage.put('p:' + a.cid, { room, peer: tgt.a.name, at });
       this.send(tgt.w, { t: 'paired', room, peer: a.name });
       this.send(ws, { t: 'paired', room, peer: tgt.a.name });
     }

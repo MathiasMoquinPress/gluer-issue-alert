@@ -596,6 +596,9 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .opban.yellow{background:linear-gradient(160deg,#ffd366,#e09a00);color:#2a1d00;animation:banflash 1.2s infinite}
 .opban.yellow .lg{--es:#2a1d00;--my:#2a1d00;--en:#2a1d00}
 .opban.yellow>.ico,.opban.yellow>.ico [stroke]{stroke:#2a1d00}
+.opban.bflash{background:linear-gradient(160deg,#6fa8ff,#2a5fd6);animation:banflash 1s infinite}
+#app.pkblue{animation:appblue 1s infinite}
+@keyframes appblue{50%{box-shadow:inset 0 0 calc(var(--vu)*9) calc(var(--vu)*1.2) rgba(74,141,255,.95),0 0 0 1px rgba(255,255,255,.10),0 calc(var(--vu)*1.5) calc(var(--vu)*4) rgba(0,0,0,.55)}}
 .opban.blue{background:linear-gradient(160deg,#5c9dff,#2961d8)}
 .opban.wait{background:linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,.07))}
 @keyframes banflash{50%{filter:brightness(1.35)}}
@@ -694,7 +697,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.12.3';
+const APP_VERSION = '5.14.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -900,7 +903,7 @@ function renderHome(){
       </div>
     </button>`).join('');
   const side = open.length ? `<div class="openwrap"><h2>${L2(['Open','Abiertos','ဖွင့်ထားသည်'])}</h2>${cards}</div>` : '';
-  return `${topbar()}
+  return `${topbar()}${pkBanner()}
     <div class="home ${open.length?'has-open':''}">
       <div class="issues"><div class="sec">${lg(['Report a quality issue','Reportar un problema de calidad','အရည်အသွေး ပြဿနာ တင်ပြရန်'],'inline')}</div><div class="igbox"><div class="igrid">${tiles}</div></div></div>${side}
     </div>`;
@@ -1140,6 +1143,18 @@ function opStats(){
   return `<div class="opstats">${S.map(s => `<div class="ostat"><b>${s[1]}</b>${lg(s[0],'sm c')}</div>`).join('')}</div>`;
 }
 
+/* packers: when the work comes back to them, the screen strobes blue (the operator's red alert, in blue) */
+function pkBanner(){
+  if (myRole !== 'packer') return '';
+  const back = issues.filter(i => isOpen(i) && turnOf(i) === 'pk');
+  if (!back.length) return '';
+  const fixed = back.filter(i => i.opResolvedAt).length, cant = back.length - fixed;
+  const t = fixed && !cant ? ['OPERATOR FIXED IT – CHECK NOW','EL OPERADOR LO ARREGLÓ – REVISEN YA','အော်ပရေတာ ပြင်ပြီး – ယခု စစ်ဆေးပါ']
+    : cant && !fixed ? ["OPERATOR CAN'T FIX – DECIDE NOW",'EL OPERADOR NO PUEDE – DECIDAN YA','အော်ပရေတာ ပြင်မရ – ယခု ဆုံးဖြတ်ပါ']
+    : ['PACKERS: ACTION NEEDED NOW','EMPACADORES: ACCIÓN NECESARIA YA','ထုပ်ပိုးသူများ – ယခု လုပ်ဆောင်ပါ'];
+  return `<div class="opban bflash">${ico(cant && !fixed ? 'warn' : 'checkc','cc')}${lg(t,'')}<span class="num">${back.length}</span></div>`;
+}
+
 function renderOpHome(){
   const open = issues.filter(isOpen);
   const todo = open.filter(i => turnOf(i) === 'op');
@@ -1241,6 +1256,7 @@ function render(){
   const v = view.name;
   $('#app').innerHTML = v==='color' ? renderColor() : v==='detail' ? renderDetail() : v==='cant' ? renderCant() : v==='history' ? renderHistory() : v==='settings' ? renderSettings() : v==='role' ? renderRole() : renderHome();
   $('#app').classList.toggle('opred', myRole === 'operator' && v === 'home' && issues.some(i => isOpen(i) && !i.ackAt && i.color === 'red'));
+  $('#app').classList.toggle('pkblue', myRole === 'packer' && v === 'home' && issues.some(i => isOpen(i) && turnOf(i) === 'pk'));
   if (typeof KB !== 'undefined' && KB) KB.hints();
 }
 
@@ -1464,7 +1480,7 @@ Sync = (() => {
   /* ---- lobby: pick the tablet to link with, type its 4-digit code ---- */
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const L = { ws: null, open: false, you: null, list: [], sel: null, retry: null, ping: null };
-  const myName = () => get('gluer.name') || ('Tablet ' + cid.slice(0, 3).toUpperCase());
+  const myName = () => get('gluer.name') || ((window.matchMedia && matchMedia('(pointer:coarse)').matches ? 'Tablet ' : 'Computer ') + cid.slice(0, 3).toUpperCase());
   const $$ = id => document.getElementById(id);
   const lsend = o => { if (L.ws && L.ws.readyState === 1) { try { L.ws.send(JSON.stringify(o)); } catch (e) {} } };
   const setErr = t => { const e = $$('lberr'); if (e) e.textContent = t || ''; };
@@ -1496,7 +1512,10 @@ Sync = (() => {
     if (!L.open) return;
     let w; try { w = new WebSocket(cfg().url.replace(/\/ws$/, '/lobby')); } catch (e) { L.retry = setTimeout(lobbyConnect, 2000); return; }
     L.ws = w;
-    w.onopen = () => { lsend({ t: 'enter', name: myName() }); clearInterval(L.ping); L.ping = setInterval(() => { try { w.send('ping'); } catch (e) {} }, 20000); };
+    w.onopen = () => {
+      lsend({ t: 'enter', name: myName(), c: cid }); lsend({ t: 'hb' });
+      clearInterval(L.ping); L.ping = setInterval(() => { try { w.send('ping'); lsend({ t: 'hb' }); } catch (e) {} }, 12000);   // heartbeat: a dead window drops off the list fast
+    };
     w.onmessage = ev => {
       if (ev.data === 'pong') return;
       let m; try { m = JSON.parse(ev.data); } catch (e) { return; }
@@ -1511,17 +1530,26 @@ Sync = (() => {
         setErr(m.e === 'code' ? 'Wrong code. Check the other tablet’s screen and try again.' : m.e === 'gone' ? 'That tablet left the lobby.' : 'Too many tries. Close this and open Connect again.');
       }
       else if (m.t === 'paired') {
+        lsend({ t: 'ok' });
         put('gluer.room', m.room); put('gluer.peer', m.peer); markAll();
         const peer = m.peer;
-        closeModal(); cleanup(); tries = 0; connect(); toast('Connected to ' + peer);
+        closeModal(); cleanup(); tries = 0; connect();
+        toastL(['Linking with ' + peer + '…', 'Vinculando con ' + peer + '…', peer + ' နှင့် ချိတ်ဆက်နေသည်…']);
+        setTimeout(() => toastL(online >= 2
+          ? ['Connected to ' + peer, 'Conectado con ' + peer, peer + ' နှင့် ချိတ်ဆက်ပြီး']
+          : ['Linked. Waiting for ' + peer + ' to connect…', 'Vinculado. Esperando que ' + peer + ' se conecte…', 'ချိတ်ဆက်ပြီး။ ' + peer + ' ချိတ်ဆက်ရန် စောင့်နေသည်…']), 4500);
       }
     };
-    w.onclose = () => { if (L.ws !== w) return; L.ws = null; L.you = null; clearInterval(L.ping); rCode(); if (L.open) L.retry = setTimeout(lobbyConnect, 1500); };
+    w.onclose = ev => {
+      if (L.ws !== w) return; L.ws = null; L.you = null; clearInterval(L.ping); rCode();
+      if (ev && ev.code === 4001) { L.open = false; clearTimeout(L.retry); setErr('Another window on this device opened the link screen. Use that one, or close it and try again.'); return; }
+      if (L.open) L.retry = setTimeout(lobbyConnect, 1500);
+    };
     w.onerror = () => {};
   }
   function lobbyClose() {
     if (!L.open && !L.ws) return;
-    L.open = false; clearTimeout(L.retry); clearInterval(L.ping);
+    L.open = false; clearTimeout(L.retry); clearInterval(L.ping); clearTimeout(L.expire);
     const w = L.ws; L.ws = null; L.you = null; L.list = []; L.sel = null;
     if (w) { w.onclose = w.onmessage = w.onerror = null; try { w.close(); } catch (e) {} }
   }
@@ -1556,7 +1584,18 @@ Sync = (() => {
   function lobbyOpenUi() {
     L.open = true; L.sel = null; L.list = []; L.you = null;
     lobbyModal(); lobbyConnect();
+    clearTimeout(L.expire);      // a link screen left open for ages is closed, so it never hangs around half-alive
+    L.expire = setTimeout(() => { if (L.open) { closeModal(); toastL(['Link screen closed after 10 minutes. Open it again to link.', 'Pantalla de vinculación cerrada tras 10 minutos. Ábrala de nuevo.', 'ချိတ်ဆက်စာမျက်နှာကို ၁၀ မိနစ်အကြာ ပိတ်လိုက်သည်။ ထပ်ဖွင့်ပါ။']); } }, 600000);
   }
+  /* several windows of the app on one computer share the same saved link: when another window links, this one follows */
+  window.addEventListener('storage', e => {
+    if (e.key !== null && e.key !== 'gluer.room') return;
+    if (cfg().room) { lobbyClose(); if (document.querySelector('.modal')) closeModal(); cleanup(); tries = 0; connect(); }
+    else { cleanup(); ui(); }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && L.open && (!L.ws || L.ws.readyState > 1)) lobbyConnect();
+  });
   function relang() {
     if (!document.querySelector('.modal')) return;
     if (L.open) lobbyModal(); else if (cfg().room && document.getElementById('syncstat')) open();
