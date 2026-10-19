@@ -640,6 +640,29 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .langmenu{display:flex;flex-direction:column;gap:calc(var(--vu)*1);padding:calc(var(--vu)*1.2);border-radius:var(--r2);background:rgba(8,32,38,.97);border:1px solid rgba(255,255,255,.32);box-shadow:var(--shadow)}
 .langmenu button{min-width:calc(var(--vu)*26);min-height:calc(var(--vu)*7);display:flex;align-items:center;justify-content:space-between;gap:calc(var(--vu)*2);padding:0 calc(var(--vu)*2.4);border-radius:calc(var(--vu)*2);background:rgba(255,255,255,.1);color:#fff;font-weight:800;font-size:calc(var(--vu)*3);text-align:left}
 .langmenu button.on{background:#fff;color:#10222a}
+/* top bar shrinks as issues come in, so the issues get the room */
+.top.c1{padding:calc(var(--vu)*.9) calc(var(--vu)*1.8);gap:calc(var(--vu)*1.2);flex-wrap:nowrap;align-items:center}
+.top.c1 .lamps{gap:calc(var(--vu)*.8);flex:none}
+.top.c1 .lamp{width:calc(var(--vu)*3.6);height:calc(var(--vu)*3.6);border-width:1px}
+.top.c1 .lamp.r.on{box-shadow:0 0 calc(var(--vu)*1.8) calc(var(--vu)*.4) rgba(255,90,95,.65)}
+.top.c1 .lamp.y.on{box-shadow:0 0 calc(var(--vu)*1.8) calc(var(--vu)*.4) rgba(255,187,51,.6)}
+.top.c1 .lamp.b.on{box-shadow:0 0 calc(var(--vu)*1.8) calc(var(--vu)*.4) rgba(74,141,255,.65)}
+.top.c1 .lamp.g.on{box-shadow:0 0 calc(var(--vu)*1.8) calc(var(--vu)*.4) rgba(47,210,124,.55)}
+.top.c1 .lamps{margin-right:0}
+.top.c1 .status{order:0;flex:1 1 0;display:flex;align-items:baseline;flex-wrap:wrap;gap:0 calc(var(--vu)*1.4);min-width:0}
+.top.c1 .status .cnt{font-size:calc(var(--vu)*1.9);line-height:1.2}
+.top.c1 .status .cnt b{font-size:calc(var(--vu)*2.8)}
+.top.c1 .status .lg.inline{--u:calc(var(--vu)*1.7)}
+.top.c1 .pill{min-height:calc(var(--vu)*5);padding:0 calc(var(--vu)*1.5);font-size:calc(var(--vu)*1.9);gap:calc(var(--vu)*.6)}
+.top.c1 .pill .ico{width:calc(var(--vu)*2.6);height:calc(var(--vu)*2.6)}
+.top.c1 .sdot{width:calc(var(--vu)*1.9);height:calc(var(--vu)*1.9)}
+.top.c1 .stx{font-size:calc(var(--vu)*1.8)}
+.top.c2 .status .lg{display:none}
+@media (max-width:900px){.top.c1 .pill .tx{display:none}.top.c1 .pill{padding:0 calc(var(--vu)*1.3)}}
+.top.c1.optop .lamp{width:calc(var(--vu)*4.4);height:calc(var(--vu)*4.4)}
+.top.c1.optop .status .lg.inline{--u:calc(var(--vu)*2)}
+.top.c1.optop .status .cnt{font-size:calc(var(--vu)*2.1)}
+.top.c1.optop .status .cnt b{font-size:calc(var(--vu)*3.2)}
 #verui{position:fixed;left:calc(var(--vu)*2.6);bottom:calc(var(--vu)*1.5);z-index:90}
 .vertag{display:inline-flex;align-items:center;min-height:calc(var(--vu)*5);padding:0 calc(var(--vu)*2.2);border-radius:99px;background:rgba(8,34,40,.82);border:1px solid rgba(255,255,255,.34);color:#d6f5f2;font-weight:800;font-size:calc(var(--vu)*1.9);white-space:nowrap}
 .vertag.new{background:#ffbb33;color:#2a1d00;border-color:#fff3c6;box-shadow:var(--shadow);animation:pulse 1.4s infinite}
@@ -660,7 +683,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.11.0';
+const APP_VERSION = '5.12.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -832,7 +855,7 @@ function topbar(){
     : o === 'yellow' ? ['ATTENTION','ATENCIÓN','အာရုံစိုက်ပါ']
     : needPack ? ['PACKERS: CONFIRM','EMPACADORES: CONFIRMEN','ထုပ်ပိုးသူများ – အတည်ပြုပါ']
     : ['OPERATOR WORKING','OPERADOR TRABAJANDO','အော်ပရေတာ လုပ်ဆောင်နေသည်'];
-  return `<div class="top card ${o==='cop'?'cop':''} ${myRole==='operator'?'optop':''}">
+  return `<div class="top card ${o==='cop'?'cop':''} ${myRole==='operator'?'optop':''} ${n>=4?'c1 c2':n>=1?'c1':''}">
     <div class="lamps">
       <div class="lamp r ${o==='red'?'on pulse':''} ${o==='cop'?'on cop':''}"></div>
       <div class="lamp y ${o==='yellow'?'on':''}"></div>
