@@ -531,6 +531,82 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 
 @media (max-width:600px){.pill .stx{display:inline}}
 
+/* ---------- roles ---------- */
+.rolehead{flex:none;padding:calc(var(--vu)*1) 0}
+.rolegrid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:var(--g)}
+@media (max-aspect-ratio:1/1){.rolegrid{grid-template-columns:1fr;grid-template-rows:1fr 1fr}}
+.rolebtn{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--vu)*2.4);min-height:0;padding:calc(var(--vu)*3);border-radius:calc(var(--vu)*4);color:#fff;text-align:center;
+  background:linear-gradient(155deg,var(--b1),var(--b2));border:1px solid rgba(255,255,255,.38);
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.32),inset 0 calc(var(--vu)*-1) calc(var(--vu)*2) rgba(0,0,0,.14);transition:transform .08s ease,filter .08s ease}
+.rolebtn:active{transform:translateY(calc(var(--vu)*.5)) scale(.99);filter:brightness(1.1)}
+.rolebtn.rp{--b1:#5c9dff;--b2:#2961d8}
+.rolebtn.ro{--b1:#ffa24d;--b2:#cf5f0c}
+.rolebtn.cur{outline:calc(var(--vu)*.7) solid #fff;outline-offset:calc(var(--vu)*.4)}
+.rolebtn .lg{align-items:center;text-align:center;--es:#fff;--my:#fff;--en:rgba(255,255,255,.92)}
+.rtxt{display:flex;flex-direction:column;align-items:center;gap:calc(var(--vu)*1.2)}
+.rchip{width:calc(var(--vu)*16);height:calc(var(--vu)*16);border-radius:30%;display:grid;place-items:center;background:rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.38),0 calc(var(--vu)*.5) calc(var(--vu)*1.2) rgba(0,0,0,.22)}
+.rchip .ico{width:62%;height:62%}
+.rchip .ico,.rchip .ico [stroke]{stroke:#fff}
+.rchip .ico [stroke*="ia"]{stroke:#ffeaa8}
+.rolefoot{flex:none;display:flex;justify-content:center}
+.rolecard{flex:none;display:flex;align-items:center;gap:calc(var(--vu)*1.6);padding:calc(var(--vu)*1.4) calc(var(--vu)*2.2)}
+.rolecard .khead{flex:1}
+.rolecard b{font-size:calc(var(--vu)*2.6);color:#fff}
+@media (max-width:620px){.rolecard{flex-wrap:wrap}}
+
+/* ---------- operator screen: big alerts ---------- */
+.top.optop .lamp{width:calc(var(--vu)*7);height:calc(var(--vu)*7)}
+.top.optop .lamps{gap:calc(var(--vu)*1.8)}
+.top.optop .status .lg.inline{--u:calc(var(--vu)*2.9)}
+.top.optop .status .cnt{font-size:calc(var(--vu)*3)}
+.top.optop .status .cnt b{font-size:calc(var(--vu)*5.4)}
+#app.opred{animation:appred 1s infinite}
+@keyframes appred{50%{box-shadow:inset 0 0 calc(var(--vu)*9) calc(var(--vu)*1.2) rgba(255,90,95,.9),0 0 0 1px rgba(255,255,255,.10),0 calc(var(--vu)*1.5) calc(var(--vu)*4) rgba(0,0,0,.55)}}
+.opban{flex:none;display:flex;align-items:center;gap:calc(var(--vu)*2.4);padding:calc(var(--vu)*1.6) calc(var(--vu)*3);border-radius:var(--r3);color:#fff;border:1px solid rgba(255,255,255,.4);box-shadow:var(--shadow),var(--hi)}
+.opban>.ico{width:calc(var(--vu)*8);height:calc(var(--vu)*8);flex:none}
+.opban>.ico,.opban>.ico [stroke]{stroke:#fff}
+.opban .lg{flex:1;--u:calc(var(--vu)*3.2);--es:#fff;--my:#fff;--en:rgba(255,255,255,.92)}
+.opban .num{flex:none;min-width:1.1em;text-align:center;font-size:calc(var(--vu)*11);font-weight:900;line-height:1;text-shadow:0 calc(var(--vu)*.4) calc(var(--vu)*1) rgba(0,0,0,.3)}
+.opban.red{background:linear-gradient(160deg,#ff6c70,#bd2630);animation:banflash 1s infinite}
+.opban.yellow{background:linear-gradient(160deg,#ffd366,#e09a00);color:#2a1d00;animation:banflash 1.2s infinite}
+.opban.yellow .lg{--es:#2a1d00;--my:#2a1d00;--en:#2a1d00}
+.opban.yellow>.ico,.opban.yellow>.ico [stroke]{stroke:#2a1d00}
+.opban.blue{background:linear-gradient(160deg,#5c9dff,#2961d8)}
+.opban.wait{background:linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,.07))}
+@keyframes banflash{50%{filter:brightness(1.35)}}
+.oplist{flex:1;min-height:0;overflow-y:auto;display:grid;grid-auto-rows:minmax(calc(var(--vu)*17),calc(var(--vu)*34));align-content:start;gap:var(--g);scrollbar-width:thin}
+.opc.ocard{display:block;margin:0;height:100%}
+.opbody{height:100%;display:flex;align-items:stretch}
+.opinfo{flex:1;min-width:0;display:flex;align-items:center;gap:calc(var(--vu)*2.4);padding:calc(var(--vu)*1.4) calc(var(--vu)*2) calc(var(--vu)*1.4) calc(var(--vu)*4);text-align:left}
+.opc .chip{width:calc(var(--vu)*10.5);height:calc(var(--vu)*10.5);aspect-ratio:auto;flex:none}
+.opt{display:flex;flex-direction:column;align-items:flex-start;gap:calc(var(--vu)*.9);min-width:0}
+.opmeta{display:flex;flex-wrap:wrap;align-items:center;gap:calc(var(--vu)*1.4)}
+.u.big{font-size:calc(var(--vu)*2.8);padding:calc(var(--vu)*.4) calc(var(--vu)*2)}
+.optime{font-weight:900;font-size:calc(var(--vu)*2.8);font-variant-numeric:tabular-nums}
+.opcf{display:flex;align-items:center;gap:calc(var(--vu)*.8);font-size:calc(var(--vu)*2.2);font-weight:800;color:#ffb066}
+.opcf .ico{width:1.15em;height:1.15em}
+.opact{flex:none;width:44%;display:flex;align-items:stretch;justify-content:center;gap:calc(var(--vu)*1.2);padding:calc(var(--vu)*1.2) calc(var(--vu)*1.4)}
+.opact .who{align-self:center}
+.opbtn{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--vu)*.5);padding:calc(var(--vu)*.6);border-radius:calc(var(--vu)*3);color:#fff;
+  background:linear-gradient(155deg,var(--b1),var(--b2));border:1px solid rgba(255,255,255,.4);
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.32),inset 0 calc(var(--vu)*-1) calc(var(--vu)*2) rgba(0,0,0,.14);transition:transform .08s ease,filter .08s ease}
+.opbtn:active{transform:translateY(calc(var(--vu)*.4)) scale(.98);filter:brightness(1.1)}
+.opbtn .ico{width:calc(var(--vu)*4);height:calc(var(--vu)*4);flex:none}
+.opbtn .ico,.opbtn .ico [stroke]{stroke:#fff}
+.opbtn .lg{--u:calc(var(--vu)*2.1);align-items:center;text-align:center;--es:#fff;--my:#fff;--en:rgba(255,255,255,.92)}
+@media (max-aspect-ratio:1/1){
+  .opbody{flex-direction:column}
+  .opact{width:auto;padding:0 calc(var(--vu)*1.4) calc(var(--vu)*1.4) calc(var(--vu)*4);min-height:calc(var(--vu)*10)}
+  .oplist{grid-auto-rows:minmax(calc(var(--vu)*32),calc(var(--vu)*44))}
+  .opbtn{flex-direction:row;gap:calc(var(--vu)*1.6)}
+}
+
+.opok{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--vu)*2.4);text-align:center;border-radius:var(--r3);background:radial-gradient(60% 60% at 50% 40%,rgba(47,210,124,.28),transparent 70%)}
+.opok .okc{width:calc(var(--vu)*24);height:calc(var(--vu)*24);border-radius:50%;display:grid;place-items:center;background:linear-gradient(155deg,#34d683,#12905a);border:2px solid rgba(255,255,255,.5);box-shadow:0 0 calc(var(--vu)*6) calc(var(--vu)*1) rgba(47,210,124,.55)}
+.opok .okc .ico{width:60%;height:60%;stroke:#fff}
+.opok .lg.xl{--u:calc(var(--vu)*7);align-items:center;text-align:center}
+.opok .oksub .lg{align-items:center;text-align:center}
+.turn.wait{background:rgba(255,255,255,.07)}
 </style>
 </head>
 <body>
@@ -542,7 +618,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.7.2';
+const APP_VERSION = '5.8.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -611,6 +687,10 @@ const T = {
   nokeep:['NO, KEEP','NO, MANTENER','မဟုတ်ပါ ဆက်ထားမည်'],
   typeit:['Type the reason…','Escriba el motivo…','အကြောင်းရင်း ရေးပါ…']
 };
+Object.assign(T, {
+  waitop:['Waiting for the OPERATOR','Esperando al OPERADOR','အော်ပရေတာကို စောင့်နေသည်'],
+  waitpk:['Waiting for the PACKERS','Esperando a los EMPACADORES','ထုပ်ပိုးသူများကို စောင့်နေသည်']
+});
 const TS = {rejected:['Not fixed','No arreglado','မပြင်ရသေး'], escalated:['Escalated','Escalado','တင်ပြပြီး'], qa:['QA / Manager','QA / Gerente','QA / မန်နေဂျာ'], sent:['Sent','Enviado','ပို့ပြီး'], ack:['Operator in','Operador listo','အော်ပရေတာ လက်ခံ'], cantfixed:["Can't fix",'No se puede','ပြင်မရ'], opfixed:['Op. fixed','Arreglado','ပြင်ပြီး'], resolved:['Packers OK','Empacadores OK','ထုပ်ပိုးသူ OK']};
 const IC = {
   fold:'<path d="M8 12h16v26H8z"/><path d="M24 12l16 5v26l-16-5"/><path d="M24 6v37" stroke="url(#ia)"/>',
@@ -639,6 +719,7 @@ const IC = {
   undo:'<path d="M17 11L6 22l11 11"/><path d="M6 22h24a11 11 0 0 1 0 22H20"/>',
   dl:'<path d="M24 6v26M14 23l10 10 10-10M8 42h32"/>',
   trash:'<path d="M9 14h30M18 14V8h12v6M13 14l2 28h18l2-28"/>',
+  pack:'<path d="M8 19h32v21H8z"/><path d="M8 19l4-11h24l4 11"/><path d="M24 8v11" stroke="url(#ia)"/><path d="M18 28h12" stroke="url(#ia)"/>',
   gear:'<path d="M20.7 9.9L21.3 4.7L26.7 4.7L27.3 9.9L31.7 11.7L35.7 8.4L39.6 12.3L36.3 16.3L38.1 20.7L43.3 21.3L43.3 26.7L38.1 27.3L36.3 31.7L39.6 35.7L35.7 39.6L31.7 36.3L27.3 38.1L26.7 43.3L21.3 43.3L20.7 38.1L16.3 36.3L12.3 39.6L8.4 35.7L11.7 31.7L9.9 27.3L4.7 26.7L4.7 21.3L9.9 20.7L11.7 16.3L8.4 12.3L12.3 8.4L16.3 11.7Z"/><circle cx="24" cy="24" r="6"/>'
 };
 const ico = (n, cls='') => {
@@ -654,7 +735,9 @@ try { issues = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch(e){ 
 var Sync;
 var KB;
 const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(issues)); } catch(e){} if (typeof Sync !== 'undefined' && Sync) Sync.afterSave(); };
-let view = {name:'home'};          // home | color | detail | cant | history
+let myRole = null;                  // 'packer' | 'operator' (chosen on this tablet)
+try { const r = localStorage.getItem('gluer.role'); if (r === 'packer' || r === 'operator') myRole = r; } catch(e){}
+let view = {name: myRole ? 'home' : 'role'};   // role | home | color | detail | cant | history | settings
 const $ = s => document.querySelector(s);
 const isOpen = i => !i.resolvedAt && !i.cancelledAt && !i.qaAt;
 const isEsc = i => i.escalatedAt && !i.qaAt;
@@ -698,7 +781,7 @@ function topbar(){
     : o === 'yellow' ? ['ATTENTION','ATENCIÓN','အာရုံစိုက်ပါ']
     : needPack ? ['PACKERS: CONFIRM','EMPACADORES: CONFIRMEN','ထုပ်ပိုးသူများ – အတည်ပြုပါ']
     : ['OPERATOR WORKING','OPERADOR TRABAJANDO','အော်ပရေတာ လုပ်ဆောင်နေသည်'];
-  return `<div class="top card ${o==='cop'?'cop':''}">
+  return `<div class="top card ${o==='cop'?'cop':''} ${myRole==='operator'?'optop':''}">
     <div class="lamps">
       <div class="lamp r ${o==='red'?'on pulse':''} ${o==='cop'?'on cop':''}"></div>
       <div class="lamp y ${o==='yellow'?'on':''}"></div>
@@ -718,6 +801,7 @@ const whoTag = i => { const k = isEsc(i) ? 'qa' : (i.opResolvedAt || i.cantFixAt
 const statusEmoji = i => { const k = isEsc(i) ? ['siren','siren'] : (i.opResolvedAt || i.cantFixAt) ? ['checkc','check'] : i.ackAt ? ['wrench','wrench'] : ['clock','clock']; return ico(k[0],'cc s-'+k[1]); };
 
 function renderHome(){
+  if (myRole === 'operator') return renderOpHome();
   const open = issues.filter(isOpen).sort((a,b) => (a.color===b.color ? a.submittedAt-b.submittedAt : a.color==='red'?-1:1));
   const tiles = Object.keys(TYPES).map(k => `
     <div class="cell ${k==='other'?'other':''}"><button class="bb tile sq c-${k}" data-act="pick" data-type="${k}"><span class="bi"><span class="chip">${ico(TYPES[k].ic)}</span>${lg(TYPES[k].t)}</span></button></div>`).join('');
@@ -782,7 +866,9 @@ function renderDetail(){
     const tk = stage === 'qa' ? 'turnqa' : stage === 'cf' ? 'turncf' : 'turn'+stage;
     const btn = (cls, icon, act, label, extra='') => `<div class="cell"><button class="bb abtn ${cls}" data-act="${act}" data-id="${i.id}" ${extra}><span class="bi adapt"><span class="chip">${ico(icon)}</span>${lg(label)}</span></button></div>`;
     const acts = (n, inner) => `<div class="acts"><div class="actg n${n}">${inner}</div></div>`;
-    action = `<div class="turn">${ico('arrow','cc')}${lg(T[tk],'md')}</div>` + (stage === 'qa'
+    const tn = stage === 'qa' ? 'qa' : (stage === 0 || stage === 1) ? 'op' : 'pk';
+    const mineT = tn === 'qa' || (tn === 'op' && myRole === 'operator') || (tn === 'pk' && myRole === 'packer');
+    action = !mineT ? `<div class="turn wait">${ico('clock','cc')}${lg(tn === 'op' ? T.waitop : T.waitpk,'md')}</div>` : `<div class="turn">${ico('arrow','cc')}${lg(T[tk],'md')}</div>` + (stage === 'qa'
       ? acts(2, btn('f-green','checkc','askqa',T.approved,'data-d="approved"') + btn('f-red','x','askqa',T.notapproved,'data-d="rejected"'))
       : stage === 'cf'
       ? acts(1, btn('f-orange','siren','askesc',T.escal)) + `<button class="pill retry" data-act="retry" data-id="${i.id}">${ico('undo','cc')}${T.retry[1]} · ${T.retry[2]}</button>`
@@ -806,7 +892,7 @@ function renderDetail(){
     + ((i.attempts&&i.attempts.length) ? row('rejected', i.attempts[i.attempts.length-1].at, `<div class="why">×${i.attempts.length}</div>`, true) : '')
     + cfRow
     + (i.escalatedAt||i.qaAt ? row('escalated', i.escalatedAt) + row('qa', i.qaAt, i.qaAt?`<div class="why ${i.qaDecision==='approved'?'qa-ok':'qa-no'}">${T[i.qaDecision==='approved'?'approved':'notapproved'][0]}</div>`:'') : row('opfixed', i.opResolvedAt) + row('resolved', i.resolvedAt));
-  return `<div class="head">${backBtn()}<span class="sp"></span>${!cancelled&&!done?`<button class="pill ghost" data-act="askcancel" data-id="${i.id}">${ico('x','cc')}<span class="tx">Cancel</span></button><div class="el" style="font-size:calc(var(--vu)*4)"><small>${T.sent[1]} · ${T.sent[0]}</small>${fmtHM(i.submittedAt)}</div>`:''}</div>
+  return `<div class="head">${backBtn()}<span class="sp"></span>${!cancelled&&!done?`${myRole==='operator'?'':`<button class="pill ghost" data-act="askcancel" data-id="${i.id}">${ico('x','cc')}<span class="tx">Cancel</span></button>`}<div class="el" style="font-size:calc(var(--vu)*4)"><small>${T.sent[1]} · ${T.sent[0]}</small>${fmtHM(i.submittedAt)}</div>`:''}</div>
     <div class="dgrid">
       <div class="card sumcard ${(!cancelled&&!done&&i.color==='red'&&!i.ackAt)?'flash':''} ${esc?'cop':''}">
         <div class="sumtop"><span class="chip c-${i.type}">${ico(TYPES[i.type].ic)}</span><div class="grow">${lg(TYPES[i.type].t,'xl')}<div class="badges">${tags.join('')}</div></div></div>
@@ -828,6 +914,7 @@ function renderSettings(){
   };
   const groups = KB.groups().map(g => `<div class="kgroup">${g.g}</div>${g.items.map(row).join('')}`).join('');
   return `<div class="head">${backBtn()}<div class="title">Settings</div></div>
+    <div class="card rolecard"><div class="khead">${lg(['This tablet is','Esta tablet es','ဤတက်ဘလက်သည်'],'inline')}</div><b>${myRole ? ROLE_NAME[myRole][0] : '—'}</b><button class="pill" data-act="rolechange">Change role</button></div>
     <div class="card kcard">
       <div class="khead">${lg(['Keyboard shortcuts','Atajos de teclado','ကီးဘုတ် ဖြတ်လမ်းများ'],'inline')}</div>
       <div class="ktip">Using a computer? Press <b>Set key</b> next to a button, then press the key you want. Pressing that key later does the same as tapping the button. Keys are ignored while you are typing in a box, and are saved on this computer only.</div>
@@ -872,6 +959,63 @@ function kbHelp(){
       ${faq.map((f, n) => `<div class="hq"><b>${f[0]}</b><i>${f[1]}</i><i class="my">${faqMy[n][0]}</i><p>${f[2]}</p><p class="es">${f[3]}</p><p class="my">${faqMy[n][1]}</p></div>`).join('')}
     </div>` : '';
   return `<div class="card khelp ${open?'open':''}"><button class="tlh" data-act="kbhelp" aria-expanded="${open}">${ico('log','cc')}<span class="grow">${lg(['Help · Keyboard shortcuts','Ayuda · Atajos de teclado','အကူအညီ · ကီးဘုတ် ဖြတ်လမ်းများ'],'inline')}</span>${ico(open?'chevu':'chevd','cc')}</button>${body}</div>`;
+}
+
+/* ---------- roles: Packers send issues, the Operator watches for them ---------- */
+const turnOf = i => isEsc(i) ? 'qa' : (i.opResolvedAt || i.cantFixAt) ? 'pk' : 'op';
+const ROLE_NAME = {packer:['PACKERS','EMPACADORES','ထုပ်ပိုးသူများ'], operator:['OPERATOR','OPERADOR','အော်ပရေတာ']};
+
+function renderRole(){
+  const cur = myRole;
+  const card = (k, cls, icon, title, sub) => `<button class="rolebtn ${cls} ${cur===k?'cur':''}" data-act="role" data-r="${k}"><span class="rchip">${ico(icon)}</span><span class="rtxt">${lg(title,'xl c')}${lg(sub,'md c')}</span></button>`;
+  return `${cur?`<div class="head">${backBtn()}</div>`:''}
+    <div class="rolehead">${lg(['Who are you?','¿Quién es usted?','သင်ဘယ်သူလဲ'],'xl c')}</div>
+    <div class="rolegrid">
+      ${card('packer','rp','pack',ROLE_NAME.packer,['I send quality issues','Yo envío problemas de calidad','ကျွန်ုပ်က အရည်အသွေး ပြဿနာ ပို့သည်'])}
+      ${card('operator','ro','wrench',ROLE_NAME.operator,['I fix the issues','Yo arreglo los problemas','ကျွန်ုပ်က ပြဿနာ ပြင်ဆင်သည်'])}
+    </div>
+    <div class="rolefoot"><button class="pill teal" data-act="update">${ico('refresh','cc')}<span class="tx">Update</span></button></div>`;
+}
+
+function renderOpHome(){
+  const open = issues.filter(isOpen);
+  const todo = open.filter(i => turnOf(i) === 'op');
+  const fresh = todo.filter(i => !i.ackAt);
+  const rank = i => turnOf(i) === 'op' ? (i.ackAt ? 1 : 0) : turnOf(i) === 'qa' ? 3 : 2;
+  const list = [...open].sort((a,b) => rank(a) - rank(b) || (a.color === b.color ? a.submittedAt - b.submittedAt : a.color === 'red' ? -1 : 1));
+  let ban;
+  if (fresh.length) {
+    const red = fresh.some(i => i.color === 'red');
+    ban = {cls: red ? 'red' : 'yellow', icon: 'siren', n: fresh.length, t: red ? ['NEW ISSUE – GO NOW','NUEVO PROBLEMA – VAYA YA','ပြဿနာအသစ် – ယခု သွားပါ'] : ['NEW ISSUE – CHECK IT','NUEVO PROBLEMA – REVÍSELO','ပြဿနာအသစ် – စစ်ဆေးပါ']};
+  } else if (todo.length) {
+    ban = {cls: 'blue', icon: 'wrench', n: todo.length, t: ['YOU ARE WORKING ON IT','USTED ESTÁ TRABAJANDO EN ELLO','သင် လုပ်ဆောင်နေသည်']};
+  } else if (open.length) {
+    ban = {cls: 'wait', icon: 'clock', n: open.length, t: ['WAITING FOR PACKERS / QA','ESPERANDO A EMPACADORES / QA','ထုပ်ပိုးသူ / QA ကို စောင့်နေသည်']};
+  }
+  const act = (cls, icon, a, label, id) => `<button class="opbtn ${cls}" data-act="${a}" data-id="${id}">${ico(icon)}${lg(label,'c')}</button>`;
+  const card = i => {
+    const turn = turnOf(i);
+    const stage1 = turn === 'op' && i.ackAt;
+    const actions = turn === 'op'
+      ? (stage1 ? act('f-green','checkc','askop',T.fixed,i.id) + act('f-orange','warn','cantfix',T.cant,i.id) : act('f-blue','check','ack',T.confirm,i.id))
+      : '';
+    return `<div class="card ocard opc ${cardColor(i)} ${fresh.includes(i) && i.color === 'red' ? 'flash' : ''}">
+      <div class="opbody">
+        <button class="opinfo" data-act="open" data-id="${i.id}">
+          <span class="chip c-${i.type}">${ico(TYPES[i.type].ic)}</span>
+          <span class="opt">${lg(TYPES[i.type].t,'md')}
+            <span class="opmeta"><span class="u big ${i.color}">${URG[i.color].en}</span><span class="optime">${T.sent[1]} · ${fmtHM(i.submittedAt)}</span>${(i.attempts&&i.attempts.length)?`<span class="u big retry">${ico('undo','cc')}${i.attempts.length+1}</span>`:''}</span>
+            ${i.cantFixAt&&!i.opResolvedAt?`<span class="opcf">${ico('warn','cc')} ${T.cant[0]} · ${cfText(i)}</span>`:''}
+          </span>
+        </button>
+        <div class="opact">${actions || whoTag(i)}</div>
+      </div>
+    </div>`;
+  };
+  const body = open.length
+    ? `<div class="opban ${ban.cls}">${ico(ban.icon,'cc')}${lg(ban.t,'')}<span class="num">${ban.n}</span></div><div class="oplist">${list.map(card).join('')}</div>`
+    : `<div class="opok"><span class="okc">${ico('checkc','cc')}</span>${lg(T.allgood,'xl c')}<div class="oksub">${lg(['No issues need you right now','Ningún problema lo necesita ahora','ယခု သင့်အတွက် ပြဿနာ မရှိပါ'],'md c')}</div></div>`;
+  return `${topbar()}${body}`;
 }
 
 function renderHistory(){
@@ -932,7 +1076,8 @@ function renderHistory(){
 
 function render(){
   const v = view.name;
-  $('#app').innerHTML = v==='color' ? renderColor() : v==='detail' ? renderDetail() : v==='cant' ? renderCant() : v==='history' ? renderHistory() : v==='settings' ? renderSettings() : renderHome();
+  $('#app').innerHTML = v==='color' ? renderColor() : v==='detail' ? renderDetail() : v==='cant' ? renderCant() : v==='history' ? renderHistory() : v==='settings' ? renderSettings() : v==='role' ? renderRole() : renderHome();
+  $('#app').classList.toggle('opred', myRole === 'operator' && v === 'home' && issues.some(i => isOpen(i) && !i.ackAt && i.color === 'red'));
   if (typeof KB !== 'undefined' && KB) KB.hints();
 }
 
@@ -986,6 +1131,8 @@ document.addEventListener('click', e => {
     case 'tl': view.tl = !view.tl; render(); break;
     case 'sync': Sync.open(); break;
     case 'settings': view = {name:'settings'}; render(); break;
+    case 'rolechange': view = {name:'role'}; render(); break;
+    case 'role': myRole = b.dataset.r === 'operator' ? 'operator' : 'packer'; try { localStorage.setItem('gluer.role', myRole); } catch(e){} view = {name:'home'}; render(); toast(ROLE_NAME[myRole].join(' · ')); break;
     case 'kbhelp': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.help = !view.help; render(); const s2 = document.querySelector('.hist'); if (s2) s2.scrollTop = top; break; }
     case 'kbset': case 'kbclear': case 'kbtoggle': case 'kbhints': case 'kbsuggest': case 'kbsuggestgo': case 'kbclearask': case 'kbclearall': KB.act(act, id); break;
     case 'lobbypick': Sync.lobbyPick(b.dataset.id); break;
@@ -1275,6 +1422,9 @@ KB = (() => {
   add(G6, 'update', 'Update the app', '[data-act=update]');
   add(G6, 'sync', 'Link tablets (Connect)', '[data-act=sync]');
   add(G6, 'settings', 'Open Settings', '[data-act=settings]');
+  add(G6, 'rolechange', 'Change role (Settings)', '[data-act=rolechange]');
+  add(G6, 'role-packer', 'Role: PACKERS', '[data-act=role][data-r=packer]');
+  add(G6, 'role-operator', 'Role: OPERATOR', '[data-act=role][data-r=operator]');
   add(G7, 'fu-all', 'Log filter: All', '[data-act=fu][data-v=all]');
   add(G7, 'fu-red', 'Log filter: Red', '[data-act=fu][data-v=red]');
   add(G7, 'fu-yellow', 'Log filter: Yellow', '[data-act=fu][data-v=yellow]');
