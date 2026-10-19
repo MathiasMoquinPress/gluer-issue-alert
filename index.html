@@ -24,7 +24,7 @@
 :root{
   --vu:min(1vh,1.8vw);
   --g:calc(var(--vu)*1.7);
-  --pb:calc(var(--vu)*2);
+  --pb:calc(var(--vu)*6.6);
   --ink:#f4fcfb; --ink2:#a9d4d1; --ink3:#6f9d9a;
   --es:#ffe8b8; --my:#aaf1ea; --en:#d6eeec;
   --surf:rgba(255,255,255,.07); --surf2:rgba(255,255,255,.12); --hair:rgba(255,255,255,.15);
@@ -54,10 +54,12 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;margin:0;cu
 /* ---------- three-language text: Spanish + Burmese lead, English supports ---------- */
 .lg{--u:calc(var(--vu)*3.2);display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:calc(var(--u)*.12);line-height:1.22;min-width:0;max-width:100%}
 .lg.c{align-items:center;text-align:center}
-.lg .es,.lg .my{font-weight:760;font-size:var(--u);overflow-wrap:anywhere}
+.lg .es,.lg .my{font-weight:760;overflow-wrap:anywhere}
+.lg .es{font-size:calc(var(--u)*1.28)}
+.lg .my{font-size:calc(var(--u)*1.2)}
 .lg .es{color:var(--es)}
 .lg .my{color:var(--my);line-height:1.5}
-.lg .en{font-style:normal;font-weight:650;font-size:calc(var(--u)*.74);color:var(--en);line-height:1.25;margin-top:calc(var(--u)*.06)}
+.lg .en{font-style:normal;font-weight:650;font-size:calc(var(--u)*.84);color:var(--en);line-height:1.25;margin-top:calc(var(--u)*.06)}
 .lg.xl{--u:calc(var(--vu)*4.4)}
 .lg.md{--u:calc(var(--vu)*2.9)}
 .lg.sm{--u:calc(var(--vu)*2.3)}
@@ -532,10 +534,11 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 @media (max-width:600px){.pill .stx{display:inline}}
 
 /* ---------- roles ---------- */
-.rolehead{flex:none;padding:calc(var(--vu)*1) 0}
+.rolehead{flex:none;padding:calc(var(--vu)*.6) 0}
+.langrow{flex:none;display:flex;justify-content:center;gap:calc(var(--vu)*1.4)}
 .rolegrid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:var(--g)}
 @media (max-aspect-ratio:1/1){.rolegrid{grid-template-columns:1fr;grid-template-rows:1fr 1fr}}
-.rolebtn{position:relative;container-type:size;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3cqh;min-height:0;padding:3cqh 3cqw;border-radius:calc(var(--vu)*4);color:#fff;text-align:center;
+.rolebtn{position:relative;container-type:size;overflow:hidden;display:block;min-height:0;padding:0;border-radius:calc(var(--vu)*4);color:#fff;text-align:center;
   background:linear-gradient(155deg,var(--b1),var(--b2));border:1px solid rgba(255,255,255,.38);
   box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.32),inset 0 calc(var(--vu)*-1) calc(var(--vu)*2) rgba(0,0,0,.14);transition:transform .08s ease,filter .08s ease}
 .rolebtn:active{transform:translateY(calc(var(--vu)*.5)) scale(.99);filter:brightness(1.1)}
@@ -543,13 +546,25 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .rolebtn.ro{--b1:#ffa24d;--b2:#cf5f0c}
 .rolebtn.cur{outline:calc(var(--vu)*.7) solid #fff;outline-offset:calc(var(--vu)*.4)}
 .rolebtn .lg{align-items:center;text-align:center;--es:#fff;--my:#fff;--en:rgba(255,255,255,.92)}
-.rolebtn .lg.xl{--u:min(9.4cqh,7.6cqw)}
-.rolebtn .lg.md{--u:min(5.4cqh,4.4cqw)}
-.rtxt{display:flex;flex-direction:column;align-items:center;gap:2cqh;max-width:100%}
-.rchip{flex:none;width:min(26cqh,30cqw);height:min(26cqh,30cqw);border-radius:30%;display:grid;place-items:center;background:rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.38),0 calc(var(--vu)*.5) calc(var(--vu)*1.2) rgba(0,0,0,.22)}
+.rcard{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3cqh;padding:3cqh 4cqw}
+.rleft{display:flex;flex-direction:column;align-items:center;gap:2cqh;max-width:100%}
+.rright{display:flex;flex-direction:column;align-items:center;max-width:100%}
+.rchip{flex:none;width:min(24cqh,28cqw);height:min(24cqh,28cqw);border-radius:30%;display:grid;place-items:center;background:rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.38),0 calc(var(--vu)*.5) calc(var(--vu)*1.2) rgba(0,0,0,.22)}
 .rchip .ico{width:62%;height:62%}
 .rchip .ico,.rchip .ico [stroke]{stroke:#fff}
 .rchip .ico [stroke*="ia"]{stroke:#ffeaa8}
+.rolebtn .lg.xl{--u:min(8cqh,6.2cqw)}
+.rolebtn .lg.md{--u:min(5cqh,3.8cqw)}
+/* wide cards (tablet held upright): icon + title on the left, description on the right */
+@container (min-aspect-ratio:1.5/1){
+  .rcard{flex-direction:row;gap:4cqw;padding:3cqh 4cqw}
+  .rleft{flex:1.35;flex-direction:row;gap:3cqw;justify-content:flex-start;min-width:0}
+  .rright{flex:1;min-width:0;padding-left:4cqw;border-left:2px solid rgba(255,255,255,.4)}
+  .rchip{width:min(46cqh,9cqw);height:min(46cqh,9cqw)}
+  .rolebtn .lg.xl{--u:min(13cqh,3.4cqw)}
+  .rolebtn .lg.md{--u:min(8.5cqh,2.9cqw)}
+  .rleft .lg,.rright .lg{align-items:flex-start;text-align:left}
+}
 .rolefoot{flex:none;display:flex;justify-content:center}
 .rolecard{flex:none;display:flex;align-items:center;gap:calc(var(--vu)*1.6);padding:calc(var(--vu)*1.4) calc(var(--vu)*2.2)}
 .rolecard .khead{flex:1}
@@ -609,18 +624,31 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .opok .lg.xl{--u:calc(var(--vu)*7);align-items:center;text-align:center}
 .opok .oksub .lg{align-items:center;text-align:center}
 .turn.wait{background:rgba(255,255,255,.07)}
+/* ---------- language button ---------- */
+#langui{position:fixed;right:calc(var(--vu)*2.6);bottom:calc(var(--vu)*1.5);z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:calc(var(--vu)*1)}
+.langfab{display:inline-flex;align-items:center;gap:calc(var(--vu)*1);min-height:calc(var(--vu)*5);padding:0 calc(var(--vu)*2.2);border-radius:99px;background:rgba(8,34,40,.92);border:1px solid rgba(255,255,255,.42);box-shadow:var(--shadow);color:#fff;font-weight:800;font-size:calc(var(--vu)*2.1);white-space:nowrap}
+.langfab .ico{width:calc(var(--vu)*2.8);height:calc(var(--vu)*2.8);flex:none}
+.langfab:active{filter:brightness(1.2)}
+.langmenu{display:flex;flex-direction:column;gap:calc(var(--vu)*1);padding:calc(var(--vu)*1.2);border-radius:var(--r2);background:rgba(8,32,38,.97);border:1px solid rgba(255,255,255,.32);box-shadow:var(--shadow)}
+.langmenu button{min-width:calc(var(--vu)*26);min-height:calc(var(--vu)*7);display:flex;align-items:center;justify-content:space-between;gap:calc(var(--vu)*2);padding:0 calc(var(--vu)*2.4);border-radius:calc(var(--vu)*2);background:rgba(255,255,255,.1);color:#fff;font-weight:800;font-size:calc(var(--vu)*3);text-align:left}
+.langmenu button.on{background:#fff;color:#10222a}
+.langmenu .ico{width:calc(var(--vu)*3);height:calc(var(--vu)*3)}
+/* keep pop-ups clear of the language button */
+.modal{padding-bottom:calc(var(--vu)*8.5)}
+.sheet{max-height:calc(100dvh - var(--vu)*11)}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <div id="overlay"></div>
+<div id="langui"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <linearGradient id="ig" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#f2fffd"/><stop offset="1" stop-color="#8fe6e0"/></linearGradient>
   <linearGradient id="ia" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#fff1b8"/><stop offset="1" stop-color="#ffc15a"/></linearGradient>
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.8.1';
+const APP_VERSION = '5.9.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -722,6 +750,7 @@ const IC = {
   dl:'<path d="M24 6v26M14 23l10 10 10-10M8 42h32"/>',
   trash:'<path d="M9 14h30M18 14V8h12v6M13 14l2 28h18l2-28"/>',
   pack:'<path d="M8 19h32v21H8z"/><path d="M8 19l4-11h24l4 11"/><path d="M24 8v11" stroke="url(#ia)"/><path d="M18 28h12" stroke="url(#ia)"/>',
+  globe:'<circle cx="24" cy="24" r="17"/><path d="M7 24h34M24 7c-7 8-7 26 0 34M24 7c7 8 7 26 0 34"/>',
   gear:'<path d="M20.7 9.9L21.3 4.7L26.7 4.7L27.3 9.9L31.7 11.7L35.7 8.4L39.6 12.3L36.3 16.3L38.1 20.7L43.3 21.3L43.3 26.7L38.1 27.3L36.3 31.7L39.6 35.7L35.7 39.6L31.7 36.3L27.3 38.1L26.7 43.3L21.3 43.3L20.7 38.1L16.3 36.3L12.3 39.6L8.4 35.7L11.7 31.7L9.9 27.3L4.7 26.7L4.7 21.3L9.9 20.7L11.7 16.3L8.4 12.3L12.3 8.4L16.3 11.7Z"/><circle cx="24" cy="24" r="6"/>'
 };
 const ico = (n, cls='') => {
@@ -729,7 +758,14 @@ const ico = (n, cls='') => {
   const inner = cc ? IC[n].split('url(#ia)').join('currentColor') : IC[n];
   return '<svg class="ico ' + cls + '" viewBox="0 0 48 48" fill="none" stroke="' + (cc ? 'currentColor' : 'url(#ig)') + '" stroke-width="' + (cc ? 3 : 2.4) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
 };
-const lg = (a, cls='') => `<div class="lg ${cls}"><span class="es">${a[1]}</span><span class="my">${a[2]}</span><i class="en">${a[0]}</i></div>`;
+/* ---------- language: the chosen language is big, English is the small second line ---------- */
+let lang = 'es'; try { const l = localStorage.getItem('gluer.lang'); if (l === 'es' || l === 'my' || l === 'en') lang = l; } catch(e){}
+const pk = a => lang === 'my' ? a[2] : lang === 'en' ? a[0] : a[1];            // a = [English, Spanish, Burmese]
+const L2 = a => lang === 'en' ? a[0] : pk(a) + ' · ' + a[0];
+const lg = (a, cls='') => lang === 'en'
+  ? `<div class="lg ${cls}"><span class="es">${a[0]}</span></div>`
+  : `<div class="lg ${cls}"><span class="${lang === 'my' ? 'my' : 'es'}">${pk(a)}</span><i class="en">${a[0]}</i></div>`;
+const toastL = a => toast(L2(a));
 
 /* ---------- state ---------- */
 let issues = [];
@@ -753,6 +789,7 @@ const fmtDur = ms => {
   const s = Math.max(0, Math.floor(ms/1000)), h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60;
   return h ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}:${String(x).padStart(2,'0')}`;
 };
+const cfTextL = i => i.cantFixReason ? (i.cantFixReason === 'other' && i.cantFixNote ? `${pk(REASONS.other.t)}: ${i.cantFixNote}` : pk(REASONS[i.cantFixReason].t)) : '';
 const cfText = i => i.cantFixReason ? (i.cantFixReason === 'other' && i.cantFixNote ? `Other: ${i.cantFixNote}` : REASONS[i.cantFixReason].t[0]) : '';
 const hasCF = i => i.cantFixAt && !i.opResolvedAt;
 
@@ -790,7 +827,7 @@ function topbar(){
       <div class="lamp b ${o==='blue'?'on':''} ${o==='blue'&&needPack?'pulse':''} ${o==='cop'?'on cop':''}"></div>
       <div class="lamp g ${o==='green'?'on':''}"></div>
     </div>
-    <div class="status">${n?`<div class="cnt"><b>${n}</b> OPEN · <b>${n}</b> ABIERTO${n>1?'S':''}</div>`:''}${lg(sub,'inline')}</div>
+    <div class="status">${n?`<div class="cnt">${lang==='en' ? `<b>${n}</b> OPEN` : lang==='my' ? `<b>${n}</b> ဖွင့်ထား · <b>${n}</b> OPEN` : `<b>${n}</b> ABIERTO${n>1?'S':''} · <b>${n}</b> OPEN`}</div>`:''}${lg(sub,'inline')}</div>
     <button class="pill sync" data-act="sync" data-s="${Sync ? Sync.state() : 'off'}" aria-label="Sync"><span class="sdot"></span><span class="stx">${Sync ? Sync.label() : 'OFF'}</span></button>
     <button class="pill" data-act="settings" aria-label="Settings">${ico('gear','cc')}</button>
     <button class="pill" data-act="history">${ico('log','cc')}<span class="tx">Log</span></button>
@@ -799,7 +836,7 @@ function topbar(){
 }
 
 const WHO = {op:['OPERATOR','OPERADOR','အော်ပရေတာ'], pk:['PACKERS','EMPACADORES','ထုပ်ပိုးသူများ'], qa:['QA / MANAGER','QA / GERENTE','QA / မန်နေဂျာ']};
-const whoTag = i => { const k = isEsc(i) ? 'qa' : (i.opResolvedAt || i.cantFixAt) ? 'pk' : 'op'; const w = WHO[k]; return `<span class="who ${k}">${ico('arrow','cc')}<span class="wt"><span>${w[1]}</span><span>${w[2]}</span></span><small>${w[0]}</small></span>`; };
+const whoTag = i => { const k = isEsc(i) ? 'qa' : (i.opResolvedAt || i.cantFixAt) ? 'pk' : 'op'; const w = WHO[k]; return `<span class="who ${k}">${ico('arrow','cc')}<span class="wt"><span>${pk(w)}</span></span>${lang==='en'?'':`<small>${w[0]}</small>`}</span>`; };
 const statusEmoji = i => { const k = isEsc(i) ? ['siren','siren'] : (i.opResolvedAt || i.cantFixAt) ? ['checkc','check'] : i.ackAt ? ['wrench','wrench'] : ['clock','clock']; return ico(k[0],'cc s-'+k[1]); };
 
 function renderHome(){
@@ -810,13 +847,13 @@ function renderHome(){
   const cards = open.map(i => `
     <button class="card ocard ${cardColor(i)} ${i.color==='red'&&!i.ackAt?'flash':''} ${(i.opResolvedAt||(i.cantFixAt&&!isEsc(i)))?'flashb':''}" data-act="open" data-id="${i.id}">
       <div class="oi">
-        <div class="r1">${lg(TYPES[i.type].t,'inline')}<div class="el"><small>${T.sent[1]} · ${T.sent[0]}</small>${fmtHM(i.submittedAt)}</div></div>
+        <div class="r1">${lg(TYPES[i.type].t,'inline')}<div class="el"><small>${L2(T.sent)}</small>${fmtHM(i.submittedAt)}</div></div>
         <div class="r2">${whoTag(i)}</div>
         <div class="r3"><span class="u ${i.color}">${URG[i.color].en}</span><span class="st">${statusEmoji(i)}</span>${(i.attempts&&i.attempts.length)?`<span class="u retry">${ico('undo','cc')}${i.attempts.length+1}</span>`:''}</div>
-        ${i.cantFixAt&&!i.opResolvedAt?`<div class="cf">${ico('warn','cc')} ${T.cant[0]} · ${cfText(i)}</div>`:''}
+        ${i.cantFixAt&&!i.opResolvedAt?`<div class="cf">${ico('warn','cc')} ${pk(T.cant)} · ${cfTextL(i)}</div>`:''}
       </div>
     </button>`).join('');
-  const side = open.length ? `<div class="openwrap"><h2>Open · Abiertos · ဖွင့်ထားသည်</h2>${cards}</div>` : '';
+  const side = open.length ? `<div class="openwrap"><h2>${L2(['Open','Abiertos','ဖွင့်ထားသည်'])}</h2>${cards}</div>` : '';
   return `${topbar()}
     <div class="home ${open.length?'has-open':''}">
       <div class="issues"><div class="sec">${lg(['Report a quality issue','Reportar un problema de calidad','အရည်အသွေး ပြဿနာ တင်ပြရန်'],'inline')}</div><div class="igbox"><div class="igrid">${tiles}</div></div></div>${side}
@@ -838,7 +875,7 @@ function renderCant(){
   const i = byId(view.id); if (!i) return renderHome();
   const r = view.reason;
   const rt = k => `<div class="cell"><button class="bb g-teal ${r===k?'sel':''} ${r&&r!==k?'dim':''}" data-act="reason" data-r="${k}"><span class="bi adapt"><span class="chip">${ico(REASONS[k].ic)}</span>${lg(REASONS[k].t)}</span></button></div>`;
-  const note = r === 'other' ? `<textarea id="note" placeholder="${T.typeit[0]} / ${T.typeit[1]} / ${T.typeit[2]}">${view.note||''}</textarea>` : '';
+  const note = r === 'other' ? `<textarea id="note" placeholder="${L2(T.typeit)}">${view.note||''}</textarea>` : '';
   return `<div class="head">${backBtn('open', i.id)}</div>
     <div class="card whycard">${lg(T.why,'md')}<div class="sub">${TYPES[i.type].t[0]}</div></div>
     <div class="reasons"><div class="rg">${rt('die')}${rt('paper')}${rt('cad')}${rt('other')}</div></div>
@@ -849,10 +886,10 @@ function renderCant(){
 function stepper(i){
   const pathB = i.cantFixAt || i.escalatedAt || i.qaAt;
   const S = pathB
-    ? [['sent',i.submittedAt,'arrow',['Enviado','ပို့ပြီး']],['ack',i.ackAt,'wrench',['Operador','အော်ပရေတာ']],['esc',i.escalatedAt,'siren',['Escalado','တင်ပြပြီး']],['qa',i.qaAt,'checkc',['QA','QA']]]
-    : [['sent',i.submittedAt,'arrow',['Enviado','ပို့ပြီး']],['ack',i.ackAt,'wrench',['Operador','အော်ပရေတာ']],['opf',i.opResolvedAt,'check',['Arreglado','ပြင်ပြီး']],['pk',i.resolvedAt,'checkc',['Empacadores','ထုပ်ပိုးသူ']]];
+    ? [['sent',i.submittedAt,'arrow',['Sent','Enviado','ပို့ပြီး']],['ack',i.ackAt,'wrench',['Operator','Operador','အော်ပရေတာ']],['esc',i.escalatedAt,'siren',['Escalated','Escalado','တင်ပြပြီး']],['qa',i.qaAt,'checkc',['QA','QA','QA']]]
+    : [['sent',i.submittedAt,'arrow',['Sent','Enviado','ပို့ပြီး']],['ack',i.ackAt,'wrench',['Operator','Operador','အော်ပရေတာ']],['opf',i.opResolvedAt,'check',['Fixed','Arreglado','ပြင်ပြီး']],['pk',i.resolvedAt,'checkc',['Packers','Empacadores','ထုပ်ပိုးသူ']]];
   let cur = S.findIndex(x => !x[1]); if (cur < 0) cur = S.length - 1;
-  return `<div class="stp">${S.map((x,idx) => `<div class="step ${x[1]?'done':''} ${idx===cur&&!x[1]?'cur':''} ${x[0]==='esc'?'esc':''}"><span class="dot">${ico(x[2],'cc')}</span><span class="lab">${x[3][0]}<br>${x[3][1]}</span><span class="tm">${x[1]?fmtHM(x[1]):'—'}</span></div>`).join('')}</div>`;
+  return `<div class="stp">${S.map((x,idx) => `<div class="step ${x[1]?'done':''} ${idx===cur&&!x[1]?'cur':''} ${x[0]==='esc'?'esc':''}"><span class="dot">${ico(x[2],'cc')}</span><span class="lab">${pk(x[3])}${lang==='en'?'':`<br>${x[3][0]}`}</span><span class="tm">${x[1]?fmtHM(x[1]):'—'}</span></div>`).join('')}</div>`;
 }
 
 function renderDetail(){
@@ -873,7 +910,7 @@ function renderDetail(){
     action = !mineT ? `<div class="turn wait">${ico('clock','cc')}${lg(tn === 'op' ? T.waitop : T.waitpk,'md')}</div>` : `<div class="turn">${ico('arrow','cc')}${lg(T[tk],'md')}</div>` + (stage === 'qa'
       ? acts(2, btn('f-green','checkc','askqa',T.approved,'data-d="approved"') + btn('f-red','x','askqa',T.notapproved,'data-d="rejected"'))
       : stage === 'cf'
-      ? acts(1, btn('f-orange','siren','askesc',T.escal)) + `<button class="pill retry" data-act="retry" data-id="${i.id}">${ico('undo','cc')}${T.retry[1]} · ${T.retry[2]}</button>`
+      ? acts(1, btn('f-orange','siren','askesc',T.escal)) + `<button class="pill retry" data-act="retry" data-id="${i.id}">${ico('undo','cc')}${L2(T.retry)}</button>`
       : stage === 0
       ? acts(1, btn('f-blue','check','ack',T.confirm))
       : stage === 1
@@ -881,20 +918,20 @@ function renderDetail(){
       : acts(2, btn('f-green','checkc','askres',T.pconfirm) + btn('f-red','x','asknot',T.notfixed)));
   }
   const tags = [];
-  if (cancelled) tags.push(`<span class="tag">Cancelled</span>`);
-  else if (i.qaAt) tags.push(`<span class="tag ${i.qaDecision==='approved'?'green':'red'}">QA: ${T[i.qaDecision==='approved'?'approved':'notapproved'].join(' · ')}</span>`);
-  else if (done) tags.push(`<span class="tag green">${ico('checkc','cc')}Resolved · Resuelto · ဖြေရှင်းပြီး</span>`);
+  if (cancelled) tags.push(`<span class="tag">${L2(['Cancelled','Cancelado','ပယ်ဖျက်ပြီး'])}</span>`);
+  else if (i.qaAt) tags.push(`<span class="tag ${i.qaDecision==='approved'?'green':'red'}">QA: ${L2(T[i.qaDecision==='approved'?'approved':'notapproved'])}</span>`);
+  else if (done) tags.push(`<span class="tag green">${ico('checkc','cc')}${L2(['Resolved','Resuelto','ဖြေရှင်းပြီး'])}</span>`);
   else {
-    tags.push(`<span class="tag ${i.color}">${URG[i.color].en} · ${URG[i.color].tag[1]} · ${URG[i.color].tag[2]}</span>`);
-    if (esc) tags.push(`<span class="tag cop">${ico('siren','cc')}${T.escwait[0]}</span>`);
-    else if (i.cantFixAt && !i.opResolvedAt) tags.push(`<span class="tag orange">${ico('warn','cc')}${T.cant[0]} · ${i.cantFixReason?REASONS[i.cantFixReason].t[0]:''}</span>`);
+    tags.push(`<span class="tag ${i.color}">${URG[i.color].en} · ${L2(URG[i.color].tag)}</span>`);
+    if (esc) tags.push(`<span class="tag cop">${ico('siren','cc')}${pk(T.escwait)}</span>`);
+    else if (i.cantFixAt && !i.opResolvedAt) tags.push(`<span class="tag orange">${ico('warn','cc')}${pk(T.cant)} · ${i.cantFixReason?pk(REASONS[i.cantFixReason].t):''}</span>`);
   }
-  const cfRow = i.cantFixAt ? row('cantfixed', i.cantFixAt, `<div class="why">${cfText(i)}</div>`, true) : '';
+  const cfRow = i.cantFixAt ? row('cantfixed', i.cantFixAt, `<div class="why">${cfTextL(i)}</div>`, true) : '';
   const rows = row('sent', i.submittedAt) + row('ack', i.ackAt)
     + ((i.attempts&&i.attempts.length) ? row('rejected', i.attempts[i.attempts.length-1].at, `<div class="why">×${i.attempts.length}</div>`, true) : '')
     + cfRow
-    + (i.escalatedAt||i.qaAt ? row('escalated', i.escalatedAt) + row('qa', i.qaAt, i.qaAt?`<div class="why ${i.qaDecision==='approved'?'qa-ok':'qa-no'}">${T[i.qaDecision==='approved'?'approved':'notapproved'][0]}</div>`:'') : row('opfixed', i.opResolvedAt) + row('resolved', i.resolvedAt));
-  return `<div class="head">${backBtn()}<span class="sp"></span>${!cancelled&&!done?`${myRole==='operator'?'':`<button class="pill ghost" data-act="askcancel" data-id="${i.id}">${ico('x','cc')}<span class="tx">Cancel</span></button>`}<div class="el" style="font-size:calc(var(--vu)*4)"><small>${T.sent[1]} · ${T.sent[0]}</small>${fmtHM(i.submittedAt)}</div>`:''}</div>
+    + (i.escalatedAt||i.qaAt ? row('escalated', i.escalatedAt) + row('qa', i.qaAt, i.qaAt?`<div class="why ${i.qaDecision==='approved'?'qa-ok':'qa-no'}">${pk(T[i.qaDecision==='approved'?'approved':'notapproved'])}</div>`:'') : row('opfixed', i.opResolvedAt) + row('resolved', i.resolvedAt));
+  return `<div class="head">${backBtn()}<span class="sp"></span>${!cancelled&&!done?`${myRole==='operator'?'':`<button class="pill ghost" data-act="askcancel" data-id="${i.id}">${ico('x','cc')}<span class="tx">Cancel</span></button>`}<div class="el" style="font-size:calc(var(--vu)*4)"><small>${L2(T.sent)}</small>${fmtHM(i.submittedAt)}</div>`:''}</div>
     <div class="dgrid">
       <div class="card sumcard ${(!cancelled&&!done&&i.color==='red'&&!i.ackAt)?'flash':''} ${esc?'cop':''}">
         <div class="sumtop"><span class="chip c-${i.type}">${ico(TYPES[i.type].ic)}</span><div class="grow">${lg(TYPES[i.type].t,'xl')}<div class="badges">${tags.join('')}</div></div></div>
@@ -916,7 +953,7 @@ function renderSettings(){
   };
   const groups = KB.groups().map(g => `<div class="kgroup">${g.g}</div>${g.items.map(row).join('')}`).join('');
   return `<div class="head">${backBtn()}<div class="title">Settings</div></div>
-    <div class="card rolecard"><div class="khead">${lg(['This tablet is','Esta tablet es','ဤတက်ဘလက်သည်'],'inline')}</div><b>${myRole ? ROLE_NAME[myRole][0] : '—'}</b><button class="pill" data-act="rolechange">Change role</button></div>
+    <div class="card rolecard"><div class="khead">${lg(['This tablet is','Esta tablet es','ဤတက်ဘလက်သည်'],'inline')}</div><b>${myRole ? pk(ROLE_NAME[myRole]) : '—'}</b><button class="pill" data-act="rolechange">Change role</button></div>
     <div class="card kcard">
       <div class="khead">${lg(['Keyboard shortcuts','Atajos de teclado','ကီးဘုတ် ဖြတ်လမ်းများ'],'inline')}</div>
       <div class="ktip">Using a computer? Press <b>Set key</b> next to a button, then press the key you want. Pressing that key later does the same as tapping the button. Keys are ignored while you are typing in a box, and are saved on this computer only.</div>
@@ -955,10 +992,10 @@ function kbHelp(){
     ['ဘယ်ကီးတွေ သုံးလို့မရလဲ။','Tab၊ Esc၊ F5၊ F11၊ F12 (စာမျက်နှာ ပြန်ဖွင့်ခြင်းနှင့် မျက်နှာပြင်အပြည့် သုံးခြင်း ဆက်လက် အလုပ်လုပ်စေရန်) နှင့် Ctrl / Alt / Cmd ပေါင်းနှိပ်ခြင်းများ။']
   ];
   const body = open ? `<div class="hbody">
-      <div class="hsub">Step by step · Paso a paso · အဆင့်ဆင့်</div>
-      <ol class="hsteps">${steps.map(s => `<li><b>${s[0]}</b><span>${s[1]}</span><span class="my">${s[2]}</span></li>`).join('')}</ol>
-      <div class="hsub">Questions · Preguntas</div>
-      ${faq.map((f, n) => `<div class="hq"><b>${f[0]}</b><i>${f[1]}</i><i class="my">${faqMy[n][0]}</i><p>${f[2]}</p><p class="es">${f[3]}</p><p class="my">${faqMy[n][1]}</p></div>`).join('')}
+      <div class="hsub">${L2(['Step by step','Paso a paso','အဆင့်ဆင့်'])}</div>
+      <ol class="hsteps">${steps.map(s => `<li><b>${pk(s)}</b>${lang==='en'?'':`<span>${s[0]}</span>`}</li>`).join('')}</ol>
+      <div class="hsub">${L2(['Questions','Preguntas','မေးခွန်းများ'])}</div>
+      ${faq.map((f, n) => { const q = lang==='my' ? faqMy[n][0] : lang==='en' ? f[0] : f[1], a = lang==='my' ? faqMy[n][1] : lang==='en' ? f[2] : f[3]; return `<div class="hq"><b>${q}</b><p>${a}</p>${lang==='en'?'':`<i>${f[0]}</i><p class="es">${f[2]}</p>`}</div>`; }).join('')}
     </div>` : '';
   return `<div class="card khelp ${open?'open':''}"><button class="tlh" data-act="kbhelp" aria-expanded="${open}">${ico('log','cc')}<span class="grow">${lg(['Help · Keyboard shortcuts','Ayuda · Atajos de teclado','အကူအညီ · ကီးဘုတ် ဖြတ်လမ်းများ'],'inline')}</span>${ico(open?'chevu':'chevd','cc')}</button>${body}</div>`;
 }
@@ -969,9 +1006,13 @@ const ROLE_NAME = {packer:['PACKERS','EMPACADORES','ထုပ်ပိုးသ�
 
 function renderRole(){
   const cur = myRole;
-  const card = (k, cls, icon, title, sub) => `<button class="rolebtn ${cls} ${cur===k?'cur':''}" data-act="role" data-r="${k}"><span class="rchip">${ico(icon)}</span><span class="rtxt">${lg(title,'xl c')}${lg(sub,'md c')}</span></button>`;
+  const card = (k, cls, icon, title, sub) => `<button class="rolebtn ${cls} ${cur===k?'cur':''}" data-act="role" data-r="${k}"><span class="rcard">
+      <span class="rleft"><span class="rchip">${ico(icon)}</span><span class="rtit">${lg(title,'xl c')}</span></span>
+      <span class="rright">${lg(sub,'md c')}</span></span></button>`;
+  const lb = x => `<button class="pill ${lang===x[0]?'teal':''}" data-act="lang" data-l="${x[0]}">${x[1]}</button>`;
   return `${cur?`<div class="head">${backBtn()}</div>`:''}
     <div class="rolehead">${lg(['Who are you?','¿Quién es usted?','သင်ဘယ်သူလဲ'],'xl c')}</div>
+    <div class="langrow">${LANGS.map(lb).join('')}</div>
     <div class="rolegrid">
       ${card('packer','rp','pack',ROLE_NAME.packer,['I send quality issues','Yo envío problemas de calidad','ကျွန်ုပ်က အရည်အသွေး ပြဿနာ ပို့သည်'])}
       ${card('operator','ro','wrench',ROLE_NAME.operator,['I fix the issues','Yo arreglo los problemas','ကျွန်ုပ်က ပြဿနာ ပြင်ဆင်သည်'])}
@@ -1006,8 +1047,8 @@ function renderOpHome(){
         <button class="opinfo" data-act="open" data-id="${i.id}">
           <span class="chip c-${i.type}">${ico(TYPES[i.type].ic)}</span>
           <span class="opt">${lg(TYPES[i.type].t,'md')}
-            <span class="opmeta"><span class="u big ${i.color}">${URG[i.color].en}</span><span class="optime">${T.sent[1]} · ${fmtHM(i.submittedAt)}</span>${(i.attempts&&i.attempts.length)?`<span class="u big retry">${ico('undo','cc')}${i.attempts.length+1}</span>`:''}</span>
-            ${i.cantFixAt&&!i.opResolvedAt?`<span class="opcf">${ico('warn','cc')} ${T.cant[0]} · ${cfText(i)}</span>`:''}
+            <span class="opmeta"><span class="u big ${i.color}">${URG[i.color].en}</span><span class="optime">${pk(T.sent)} · ${fmtHM(i.submittedAt)}</span>${(i.attempts&&i.attempts.length)?`<span class="u big retry">${ico('undo','cc')}${i.attempts.length+1}</span>`:''}</span>
+            ${i.cantFixAt&&!i.opResolvedAt?`<span class="opcf">${ico('warn','cc')} ${pk(T.cant)} · ${cfTextL(i)}</span>`:''}
           </span>
         </button>
         <div class="opact">${actions || whoTag(i)}</div>
@@ -1084,11 +1125,31 @@ function render(){
 }
 
 /* ---------- modal ---------- */
-function modal(html){ $('#overlay').innerHTML = `<div class="modal"><div class="sheet">${html}</div></div>`; if (typeof KB !== 'undefined' && KB) KB.hints(); }
-function closeModal(){ $('#overlay').innerHTML = ''; if (typeof Sync !== 'undefined' && Sync) { Sync.lobbyClose(); Sync.flush(); } }
-const askModal = (q, noLbl, yesLbl, yesCls, yesAct, id, sub) => modal(`${lg(q,'xl c')}${sub?`<div class="sub">${sub}</div>`:''}
+let modalRebuild = null;     // lets a confirmation pop-up redraw itself when the language changes
+function modal(html){ modalRebuild = null; $('#overlay').innerHTML = `<div class="modal"><div class="sheet">${html}</div></div>`; if (typeof KB !== 'undefined' && KB) KB.hints(); }
+function closeModal(){ modalRebuild = null; $('#overlay').innerHTML = ''; if (typeof Sync !== 'undefined' && Sync) { Sync.lobbyClose(); Sync.flush(); } }
+const askModal0 = (q, noLbl, yesLbl, yesCls, yesAct, id, sub) => modal(`${lg(q,'xl c')}${sub?`<div class="sub">${sub}</div>`:''}
   <div class="mrow"><div class="cell"><button class="bb mbtn g-teal" data-act="closemodal"><span class="bi">${lg(noLbl,'c')}</span></button></div>
   <div class="cell"><button class="bb mbtn ${yesCls==='yes'?'f-green':'f-red'}" data-act="${yesAct}" data-id="${id}"><span class="bi">${lg(yesLbl,'c')}</span></button></div></div>`);
+
+const askModal = (...a) => { askModal0(...a); modalRebuild = () => askModal(...a); };
+
+/* ---------- language button (always on top, on every screen and pop-up) ---------- */
+let langOpen = false;
+const LANGS = [['es','Español'],['my','မြန်မာ'],['en','English']];
+function renderLang(){
+  const cur = LANGS.find(x => x[0] === lang);
+  $('#langui').innerHTML = (langOpen ? `<div class="langmenu">${LANGS.map(x => `<button class="${x[0]===lang?'on':''}" data-act="lang" data-l="${x[0]}"><span>${x[1]}</span>${x[0]===lang?ico('check','cc'):''}</button>`).join('')}</div>` : '')
+    + `<button class="langfab" data-act="langmenu" aria-label="Language">${ico('globe','cc')}<span>${cur[1]}</span></button>`;
+}
+function setLang(l){
+  lang = l; langOpen = false;
+  try { localStorage.setItem('gluer.lang', l); } catch(e){}
+  document.documentElement.lang = l === 'my' ? 'my' : l;
+  render(); renderLang();
+  if (modalRebuild) modalRebuild(); else if (typeof Sync !== 'undefined' && Sync) Sync.relang();
+}
+document.addEventListener('click', e => { if (langOpen && !e.target.closest('#langui')) { langOpen = false; renderLang(); } }, true);
 
 /* ---------- actions ---------- */
 function exportCsv(){
@@ -1133,8 +1194,10 @@ document.addEventListener('click', e => {
     case 'tl': view.tl = !view.tl; render(); break;
     case 'sync': Sync.open(); break;
     case 'settings': view = {name:'settings'}; render(); break;
+    case 'langmenu': langOpen = !langOpen; renderLang(); break;
+    case 'lang': setLang(b.dataset.l); break;
     case 'rolechange': view = {name:'role'}; render(); break;
-    case 'role': myRole = b.dataset.r === 'operator' ? 'operator' : 'packer'; try { localStorage.setItem('gluer.role', myRole); } catch(e){} view = {name:'home'}; render(); toast(ROLE_NAME[myRole].join(' · ')); break;
+    case 'role': myRole = b.dataset.r === 'operator' ? 'operator' : 'packer'; try { localStorage.setItem('gluer.role', myRole); } catch(e){} view = {name:'home'}; render(); toastL(ROLE_NAME[myRole]); break;
     case 'kbhelp': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.help = !view.help; render(); const s2 = document.querySelector('.hist'); if (s2) s2.scrollTop = top; break; }
     case 'kbset': case 'kbclear': case 'kbtoggle': case 'kbhints': case 'kbsuggest': case 'kbsuggestgo': case 'kbclearask': case 'kbclearall': KB.act(act, id); break;
     case 'lobbypick': Sync.lobbyPick(b.dataset.id); break;
@@ -1151,26 +1214,26 @@ document.addEventListener('click', e => {
     case 'send':
       if (!view.color) return;
       issues.push({id:'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,5), type:view.type, color:view.color, submittedAt:Date.now(), ackAt:null, opResolvedAt:null, resolvedAt:null, cancelledAt:null});
-      save(); view = {name:'home'}; render(); toast('Sent · Enviado · ပို့ပြီး'); break;
+      save(); view = {name:'home'}; render(); toastL(['Sent','Enviado','ပို့ပြီး']); break;
     case 'open': view = {name:'detail', id}; render(); break;
     case 'ack': { const i = byId(id); if (i && !i.ackAt){ i.ackAt = Date.now(); save(); render(); } break; }
     case 'askop': askModal(T.isfixed, T.notyet, T.yesfixed, 'yes', 'opres', id, 'Operator'); break;
-    case 'opres': { const i = byId(id); if (i && i.ackAt && !i.opResolvedAt){ i.opResolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('Packers: please confirm · confirmen · အတည်ပြုပါ'); break; }
+    case 'opres': { const i = byId(id); if (i && i.ackAt && !i.opResolvedAt){ i.opResolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toastL(['Packers: please confirm','Empacadores: confirmen','ထုပ်ပိုးသူများ – အတည်ပြုပါ']); break; }
     case 'askesc': askModal(T.escq, T.notyet, T.yesesc, 'yes', 'esc', id, 'Packers'); break;
-    case 'esc': { const i = byId(id); if (i && i.cantFixAt && !i.escalatedAt){ i.escalatedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('Escalated · Escalado · တင်ပြပြီး'); break; }
+    case 'esc': { const i = byId(id); if (i && i.cantFixAt && !i.escalatedAt){ i.escalatedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toastL(['Escalated','Escalado','တင်ပြပြီး']); break; }
     case 'retry': { const i = byId(id); if (i && i.cantFixAt && !i.escalatedAt){ (i.cfHistory = i.cfHistory || []).push({at:i.cantFixAt, reason:i.cantFixReason, note:i.cantFixNote}); i.cantFixAt = null; i.cantFixReason = null; i.cantFixNote = ''; save(); render(); } break; }
     case 'askqa': { const ap = b.dataset.d === 'approved'; askModal(ap ? T.appq : T.nappq, T.notyet, ap ? T.yesapp : T.yesnapp, ap ? 'yes' : 'danger', ap ? 'qaok' : 'qano', id, 'QA / Manager'); break; }
-    case 'qaok': case 'qano': { const i = byId(id); if (i && isEsc(i)){ i.qaAt = Date.now(); i.qaDecision = act === 'qaok' ? 'approved' : 'rejected'; save(); } closeModal(); view = {name:'home'}; render(); toast(act === 'qaok' ? 'Approved · Aprobado · ခွင့်ပြုသည်' : 'Not approved · No aprobado · ခွင့်မပြုပါ'); break; }
+    case 'qaok': case 'qano': { const i = byId(id); if (i && isEsc(i)){ i.qaAt = Date.now(); i.qaDecision = act === 'qaok' ? 'approved' : 'rejected'; save(); } closeModal(); view = {name:'home'}; render(); toastL(act === 'qaok' ? T.approved : T.notapproved); break; }
     case 'cantfix': view = {name:'cant', id, reason:null, note:''}; render(); break;
     case 'reason': view.reason = b.dataset.r; render(); { const n = $('#note'); if (n) n.focus(); } break;
     case 'sendcant': {
       const i = byId(view.id);
       if (i && view.reason){ i.cantFixAt = Date.now(); i.cantFixReason = view.reason; i.cantFixNote = view.reason === 'other' ? (view.note || '').trim() : ''; save(); }
-      view = {name:'home'}; render(); toast("Can't fix recorded · No se puede arreglar · ပြင်၍ မရ"); break; }
+      view = {name:'home'}; render(); toastL(["Can't fix recorded",'No se puede arreglar','ပြင်၍ မရ']); break; }
     case 'asknot': askModal(T.notfixq, T.notyet, T.yesnotfix, 'danger', 'notfix', id, 'Packers'); break;
-    case 'notfix': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ (i.attempts = i.attempts || []).push({opAt:i.opResolvedAt, at:Date.now()}); i.opResolvedAt = null; save(); } closeModal(); view = {name:'home'}; render(); toast('Back to operator · Vuelve al operador · အော်ပရေတာထံ ပြန်ပို့ပြီး'); break; }
+    case 'notfix': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ (i.attempts = i.attempts || []).push({opAt:i.opResolvedAt, at:Date.now()}); i.opResolvedAt = null; save(); } closeModal(); view = {name:'home'}; render(); toastL(['Back to operator','Vuelve al operador','အော်ပရေတာထံ ပြန်ပို့ပြီး']); break; }
     case 'askres': askModal(T.boxesgood, T.notyet, T.yesgood, 'yes', 'res', id, 'Packers'); break;
-    case 'res': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ i.resolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toast('Resolved · Resuelto · ဖြေရှင်းပြီး'); break; }
+    case 'res': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ i.resolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toastL(['Resolved','Resuelto','ဖြေရှင်းပြီး']); break; }
     case 'askcancel': askModal(T.cancelq, T.nokeep, T.yescancel, 'danger', 'cancel', id, 'Sent by mistake'); break;
     case 'cancel': { const i = byId(id); if (i && isOpen(i)){ i.cancelledAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); break; }
     case 'closemodal': closeModal(); break;
@@ -1366,12 +1429,19 @@ Sync = (() => {
   }
   function lobbyOpenUi() {
     L.open = true; L.sel = null; L.list = []; L.you = null;
+    lobbyModal(); lobbyConnect();
+  }
+  function relang() {
+    if (!document.querySelector('.modal')) return;
+    if (L.open) lobbyModal(); else if (cfg().room && document.getElementById('syncstat')) open();
+  }
+  function lobbyModal() {
     modal(lg(['Connect tablets','Conectar tablets','တက်ဘလက်များ ချိတ်ဆက်ရန်'], 'xl c')
       + '<div class="lbname"><span class="rlab">This tablet is called</span><input id="tabname" class="rin sm" value="' + esc(myName()) + '" maxlength="20" autocomplete="off" spellcheck="false"></div>'
       + '<div id="lbcode" class="lbcode"></div><div id="lblist" class="lblist"></div><div id="lbsel" class="lbsel"></div><div id="lberr" class="lberr"></div>'
       + '<div class="mrow sm"><div class="cell"><button class="bb mbtn g-teal" data-act="closemodal"><span class="bi">' + lg(['CLOSE','CERRAR','ပိတ်မည်'], 'c') + '</span></button></div>'
       + '<div class="cell"><button id="lbgo" class="bb mbtn f-green lbgo" data-act="lobbyjoin" disabled><span class="bi">' + lg(['CONNECT','CONECTAR','ချိတ်ဆက်မည်'], 'c') + '</span></button></div></div>');
-    rCode(); rList(); lobbyConnect();
+    rCode(); rList(); rSel();
   }
   function unpair() {
     put('gluer.room', ''); put('gluer.peer', ''); clearTimeout(timer); cleanup(); lobbyOpenUi();
@@ -1381,7 +1451,7 @@ Sync = (() => {
     afterSave, cfg, status, label, ui,
     state: () => state, online: () => online,
     flush: () => { if (dirty) soft(); },
-    open, lobbyClose, lobbyPick, lobbyJoin, unpair
+    open, lobbyClose, lobbyPick, lobbyJoin, unpair, relang
   };
 })();
 
@@ -1531,6 +1601,7 @@ async function keepAwake(){ try { if (navigator.wakeLock && !wl) { wl = await na
 document.addEventListener('pointerdown', keepAwake, {passive:true});
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); });
 
+renderLang();
 render();
 </script>
 </body>
