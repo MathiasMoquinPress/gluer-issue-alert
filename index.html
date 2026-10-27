@@ -545,8 +545,9 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 /* ---------- roles ---------- */
 .rolehead{flex:none;padding:calc(var(--vu)*.6) 0}
 .langrow{flex:none;display:flex;justify-content:center;gap:calc(var(--vu)*1.4)}
-.rolegrid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:var(--g)}
-@media (max-aspect-ratio:1/1){.rolegrid{grid-template-columns:1fr;grid-template-rows:1fr 1fr}}
+.rolegrid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr) minmax(0,.5fr);gap:var(--g)}
+.rolebtn.rb{grid-column:1/-1;--b1:#3fd0b6;--b2:#13806f}
+@media (max-aspect-ratio:1/1){.rolegrid{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) minmax(0,1fr) minmax(0,.8fr)}}
 .rolebtn{position:relative;container-type:size;overflow:hidden;display:block;min-height:0;padding:0;border-radius:calc(var(--vu)*4);color:#fff;text-align:center;
   background:linear-gradient(155deg,var(--b1),var(--b2));border:1px solid rgba(255,255,255,.38);
   box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.32),inset 0 calc(var(--vu)*-1) calc(var(--vu)*2) rgba(0,0,0,.14);transition:transform .08s ease,filter .08s ease}
@@ -562,10 +563,30 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .rchip .ico{width:62%;height:62%}
 .rchip .ico,.rchip .ico [stroke]{stroke:#fff}
 .rchip .ico [stroke*="ia"]{stroke:#ffeaa8}
+/* alert light card */
+.lightcard{flex:none;display:flex;flex-direction:column;gap:calc(var(--vu)*1.2);padding:calc(var(--vu)*1.8) calc(var(--vu)*2.2)}
+.lightrow{display:flex;align-items:center;gap:calc(var(--vu)*2)}
+.lightprev{flex:none;display:block;width:calc(var(--vu)*8);height:calc(var(--vu)*8);aspect-ratio:1/1;border-radius:50%;background:#2a3b3d;border:2px solid rgba(255,255,255,.3);transition:background .2s}
+.lightprev[data-l^=red]{background:var(--red);box-shadow:0 0 calc(var(--vu)*2.4) calc(var(--vu)*.6) rgba(255,90,95,.7)}
+.lightprev[data-l^=yellow]{background:var(--amber);box-shadow:0 0 calc(var(--vu)*2.4) calc(var(--vu)*.6) rgba(255,187,51,.65)}
+.lightprev[data-l^=blue]{background:var(--blue);box-shadow:0 0 calc(var(--vu)*2.4) calc(var(--vu)*.6) rgba(74,141,255,.7)}
+.lightprev[data-l$=flash]{animation:pulse .6s infinite}
+.lightprev[data-l^=cop]{animation:lightcop .6s steps(1) infinite}
+@keyframes lightcop{0%{background:var(--red);box-shadow:0 0 18px 4px rgba(255,90,95,.7)}50%{background:var(--blue);box-shadow:0 0 18px 4px rgba(74,141,255,.7)}}
+.lighttxt{display:flex;flex-direction:column;gap:calc(var(--vu)*.3);min-width:0}
+.lighttxt b{font-size:calc(var(--vu)*2.4)}
+.lighttxt small{font-size:calc(var(--vu)*1.8);font-weight:600;color:var(--ink2)}
+.lighttxt .ken{font-size:calc(var(--vu)*1.9)}
+/* hand the tablet back */
+.sheet.hand{border:2px solid #6fa8ff;animation:handflash 1s infinite}
+@keyframes handflash{50%{box-shadow:0 0 calc(var(--vu)*7) calc(var(--vu)*1.4) rgba(74,141,255,.9)}}
+.handwrap{display:flex;flex-direction:column;align-items:center;gap:calc(var(--vu)*1.6);text-align:center}
+.handwrap .ico{width:calc(var(--vu)*9);height:calc(var(--vu)*9);stroke:#6fa8ff}
+.mrow.one{grid-template-columns:1fr}
 .rolebtn .lg.xl{--u:min(8cqh,6.2cqw)}
 .rolebtn .lg.md{--u:min(5cqh,3.8cqw)}
 /* wide cards (tablet held upright): icon + title on the left, description on the right */
-@container (min-aspect-ratio:1.5/1){
+@container (min-aspect-ratio:2.1/1){
   .rcard{flex-direction:row;gap:4cqw;padding:3cqh 4cqw}
   .rleft{flex:1.35;flex-direction:row;gap:3cqw;justify-content:flex-start;min-width:0}
   .rright{flex:1;min-width:0;padding-left:4cqw;border-left:2px solid rgba(255,255,255,.4)}
@@ -698,7 +719,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.14.1';
+const APP_VERSION = '5.15.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -801,6 +822,7 @@ const IC = {
   trash:'<path d="M9 14h30M18 14V8h12v6M13 14l2 28h18l2-28"/>',
   pack:'<path d="M8 19h32v21H8z"/><path d="M8 19l4-11h24l4 11"/><path d="M24 8v11" stroke="url(#ia)"/><path d="M18 28h12" stroke="url(#ia)"/>',
   globe:'<circle cx="24" cy="24" r="17"/><path d="M7 24h34M24 7c-7 8-7 26 0 34M24 7c7 8 7 26 0 34"/>',
+  swap:'<path d="M8 17h28M28 9l8 8-8 8"/><path d="M40 31H12M20 23l-8 8 8 8" stroke="url(#ia)"/>',
   gear:'<path d="M20.7 9.9L21.3 4.7L26.7 4.7L27.3 9.9L31.7 11.7L35.7 8.4L39.6 12.3L36.3 16.3L38.1 20.7L43.3 21.3L43.3 26.7L38.1 27.3L36.3 31.7L39.6 35.7L35.7 39.6L31.7 36.3L27.3 38.1L26.7 43.3L21.3 43.3L20.7 38.1L16.3 36.3L12.3 39.6L8.4 35.7L11.7 31.7L9.9 27.3L4.7 26.7L4.7 21.3L9.9 20.7L11.7 16.3L8.4 12.3L12.3 8.4L16.3 11.7Z"/><circle cx="24" cy="24" r="6"/>'
 };
 const ico = (n, cls='') => {
@@ -822,9 +844,10 @@ let issues = [];
 try { issues = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch(e){ issues = []; }
 var Sync;
 var KB;
+var Light;
 const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(issues)); } catch(e){} if (typeof Sync !== 'undefined' && Sync) Sync.afterSave(); };
 let myRole = null;                  // 'packer' | 'operator' (chosen on this tablet)
-try { const r = localStorage.getItem('gluer.role'); if (r === 'packer' || r === 'operator') myRole = r; } catch(e){}
+try { const r = localStorage.getItem('gluer.role'); if (r === 'packer' || r === 'operator' || r === 'both') myRole = r; } catch(e){}
 let view = {name: myRole ? 'home' : 'role'};   // role | home | color | detail | cant | history | settings
 const $ = s => document.querySelector(s);
 const isOpen = i => !i.resolvedAt && !i.cancelledAt && !i.qaAt;
@@ -956,7 +979,7 @@ function renderDetail(){
     const btn = (cls, icon, act, label, extra='') => `<div class="cell"><button class="bb abtn ${cls}" data-act="${act}" data-id="${i.id}" ${extra}><span class="bi adapt"><span class="chip">${ico(icon)}</span>${lg(label)}</span></button></div>`;
     const acts = (n, inner) => `<div class="acts"><div class="actg n${n}">${inner}</div></div>`;
     const tn = stage === 'qa' ? 'qa' : (stage === 0 || stage === 1) ? 'op' : 'pk';
-    const mineT = tn === 'qa' || (tn === 'op' && myRole === 'operator') || (tn === 'pk' && myRole === 'packer');
+    const mineT = tn === 'qa' || myRole === 'both' || (tn === 'op' && myRole === 'operator') || (tn === 'pk' && myRole === 'packer');
     action = !mineT ? `<div class="turn wait">${ico('clock','cc')}${lg(tn === 'op' ? T.waitop : T.waitpk,'md')}</div>` : `<div class="turn">${ico('arrow','cc')}${lg(T[tk],'md')}</div>` + (stage === 'qa'
       ? acts(2, btn('f-green','checkc','askqa',T.approved,'data-d="approved"') + btn('f-red','x','askqa',T.notapproved,'data-d="rejected"'))
       : stage === 'cf'
@@ -1041,6 +1064,7 @@ const TRK = {
   'Change role (Settings)':['Cambiar rol (Configuración)','တာဝန်ပြောင်းရန် (ဆက်တင်)'],
   'Role: PACKERS':['Rol: EMPACADORES','တာဝန် - ထုပ်ပိုးသူများ'],
   'Role: OPERATOR':['Rol: OPERADOR','တာဝန် - အော်ပရေတာ'],
+  'Role: ONE TABLET':['Rol: UNA TABLET','တာဝန် - တက်ဘလက်တစ်လုံး'],
   'Log filter: All':['Filtro del Registro: Todos','မှတ်တမ်း စစ်ထုတ်ချက် - အားလုံး'],
   'Log filter: Red':['Filtro del Registro: Rojo','မှတ်တမ်း စစ်ထုတ်ချက် - အနီ'],
   'Log filter: Yellow':['Filtro del Registro: Amarillo','မှတ်တမ်း စစ်ထုတ်ချက် - အဝါ'],
@@ -1068,6 +1092,7 @@ function renderSettings(){
   const groups = KB.groups().map(g => `<div class="kgroup">${hd(g.g)}</div>${g.items.map(row).join('')}`).join('');
   return `<div class="head">${backBtn()}<div class="title">${tp('Settings')}${lang==='en'?'':`<span class="vtag">Settings</span>`}</div></div>
     <div class="hist"><div class="card rolecard"><div class="khead">${lg(['This tablet is','Esta tablet es','ဤတက်ဘလက်သည်'],'inline')}</div><b>${myRole ? pk(ROLE_NAME[myRole]) : '—'}</b><button class="pill" data-act="rolechange">${bi('Change role')}</button></div>
+    ${lightCard()}
     <div class="card kcard">
       <div class="khead">${lg(['Keyboard shortcuts','Atajos de teclado','ကီးဘုတ် ဖြတ်လမ်းများ'],'inline')}</div>
       <div class="ktip"><p>${pk(['Using a computer? Press “Set key” next to a button, then press the key you want. Pressing that key later does the same as tapping the button. Keys are ignored while you are typing in a box, and are saved on this computer only.'].concat(TRK.tip))}</p>${lang==='en'?'':`<p class="ken">Using a computer? Press “Set key” next to a button, then press the key you want. Pressing that key later does the same as tapping the button. Keys are ignored while you are typing in a box, and are saved on this computer only.</p>`}</div>
@@ -1116,7 +1141,7 @@ function kbHelp(){
 
 /* ---------- roles: Packers send issues, the Operator watches for them ---------- */
 const turnOf = i => isEsc(i) ? 'qa' : (i.opResolvedAt || i.cantFixAt) ? 'pk' : 'op';
-const ROLE_NAME = {packer:['PACKERS','EMPACADORES','ထုပ်ပိုးသူများ'], operator:['OPERATOR','OPERADOR','အော်ပရေတာ']};
+const ROLE_NAME = {packer:['PACKERS','EMPACADORES','ထုပ်ပိုးသူများ'], operator:['OPERATOR','OPERADOR','အော်ပရေတာ'], both:['ONE TABLET','UNA TABLET','တက်ဘလက်တစ်လုံး']};
 
 function renderRole(){
   const cur = myRole;
@@ -1130,6 +1155,7 @@ function renderRole(){
     <div class="rolegrid">
       ${card('packer','rp','pack',ROLE_NAME.packer,['I send quality issues','Yo envío problemas de calidad','ကျွန်ုပ်က အရည်အသွေး ပြဿနာ ပို့သည်'])}
       ${card('operator','ro','wrench',ROLE_NAME.operator,['I fix the issues','Yo arreglo los problemas','ကျွန်ုပ်က ပြဿနာ ပြင်ဆင်သည်'])}
+      ${card('both','rb','swap',ROLE_NAME.both,['Packers and operator share this tablet (with the alert light)','Empacadores y operador comparten esta tablet (con la luz de alerta)','ထုပ်ပိုးသူနှင့် အော်ပရေတာ ဤတက်ဘလက်ကို မျှသုံးသည် (သတိပေးမီးနှင့်)'])}
     </div>
     <div class="rolefoot"><button class="pill teal" data-act="update">${ico('refresh','cc')}<span class="tx">Update</span></button></div>`;
 }
@@ -1146,7 +1172,14 @@ function opStats(){
 
 /* packers: when the work comes back to them, the screen strobes blue (the operator's red alert, in blue) */
 function pkBanner(){
-  if (myRole !== 'packer') return '';
+  if (myRole !== 'packer' && myRole !== 'both') return '';
+  if (myRole === 'both') {      // one shared tablet: a brand-new issue needs the operator first
+    const fresh = issues.filter(i => isOpen(i) && !i.ackAt);
+    if (fresh.length) {
+      const red = fresh.some(i => i.color === 'red');
+      return `<div class="opban ${red?'red':'yellow'}">${ico('siren','cc')}${lg(['NEW ISSUE – OPERATOR: CONFIRM NOW','NUEVO PROBLEMA – OPERADOR: CONFIRME YA','ပြဿနာအသစ် – အော်ပရေတာ အတည်ပြုပါ'],'')}<span class="num">${fresh.length}</span></div>`;
+    }
+  }
   const back = issues.filter(i => isOpen(i) && turnOf(i) === 'pk');
   if (!back.length) return '';
   const fixed = back.filter(i => i.opResolvedAt).length, cant = back.length - fixed;
@@ -1256,8 +1289,10 @@ function renderHistory(){
 function render(){
   const v = view.name;
   $('#app').innerHTML = v==='color' ? renderColor() : v==='detail' ? renderDetail() : v==='cant' ? renderCant() : v==='history' ? renderHistory() : v==='settings' ? renderSettings() : v==='role' ? renderRole() : renderHome();
-  $('#app').classList.toggle('opred', myRole === 'operator' && v === 'home' && issues.some(i => isOpen(i) && !i.ackAt && i.color === 'red'));
-  $('#app').classList.toggle('pkblue', myRole === 'packer' && v === 'home' && issues.some(i => isOpen(i) && turnOf(i) === 'pk'));
+  const freshRed = issues.some(i => isOpen(i) && !i.ackAt && i.color === 'red');
+  $('#app').classList.toggle('opred', (myRole === 'operator' || myRole === 'both') && v === 'home' && freshRed);
+  $('#app').classList.toggle('pkblue', (myRole === 'packer' || (myRole === 'both' && !freshRed)) && v === 'home' && issues.some(i => isOpen(i) && turnOf(i) === 'pk'));
+  if (typeof Light !== 'undefined' && Light) Light.apply();
   if (typeof KB !== 'undefined' && KB) KB.hints();
 }
 
@@ -1338,9 +1373,11 @@ document.addEventListener('click', e => {
     case 'sync': Sync.open(); break;
     case 'settings': view = {name:'settings'}; render(); break;
     case 'langmenu': langOpen = !langOpen; renderLang(); break;
+    case 'lighttoggle': Light.toggle(); break;
+    case 'lighttest': Light.test(b.dataset.c); break;
     case 'lang': setLang(b.dataset.l); break;
     case 'rolechange': view = {name:'role'}; render(); break;
-    case 'role': myRole = b.dataset.r === 'operator' ? 'operator' : 'packer'; try { localStorage.setItem('gluer.role', myRole); } catch(e){} view = {name:'home'}; render(); toastL(ROLE_NAME[myRole]); break;
+    case 'role': myRole = b.dataset.r === 'operator' ? 'operator' : b.dataset.r === 'both' ? 'both' : 'packer'; try { localStorage.setItem('gluer.role', myRole); } catch(e){} view = {name:'home'}; render(); toastL(ROLE_NAME[myRole]); break;
     case 'kbhelp': { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; view.help = !view.help; render(); const s2 = document.querySelector('.hist'); if (s2) s2.scrollTop = top; break; }
     case 'kbset': case 'kbclear': case 'kbtoggle': case 'kbhints': case 'kbsuggest': case 'kbsuggestgo': case 'kbclearask': case 'kbclearall': KB.act(act, id); break;
     case 'lobbypick': Sync.lobbyPick(b.dataset.id); break;
@@ -1361,7 +1398,7 @@ document.addEventListener('click', e => {
     case 'open': view = {name:'detail', id}; render(); break;
     case 'ack': { const i = byId(id); if (i && !i.ackAt){ i.ackAt = Date.now(); save(); render(); } break; }
     case 'askop': askModal(T.isfixed, T.notyet, T.yesfixed, 'yes', 'opres', id, 'Operator'); break;
-    case 'opres': { const i = byId(id); if (i && i.ackAt && !i.opResolvedAt){ i.opResolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toastL(['Packers: please confirm','Empacadores: confirmen','ထုပ်ပိုးသူများ – အတည်ပြုပါ']); break; }
+    case 'opres': { const i = byId(id); if (i && i.ackAt && !i.opResolvedAt){ i.opResolvedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toastL(['Packers: please confirm','Empacadores: confirmen','ထုပ်ပိုးသူများ – အတည်ပြုပါ']); if (myRole === 'both') handoffBack(); break; }
     case 'askesc': askModal(T.escq, T.notyet, T.yesesc, 'yes', 'esc', id, 'Packers'); break;
     case 'esc': { const i = byId(id); if (i && i.cantFixAt && !i.escalatedAt){ i.escalatedAt = Date.now(); save(); } closeModal(); view = {name:'home'}; render(); toastL(['Escalated','Escalado','တင်ပြပြီး']); break; }
     case 'retry': { const i = byId(id); if (i && i.cantFixAt && !i.escalatedAt){ (i.cfHistory = i.cfHistory || []).push({at:i.cantFixAt, reason:i.cantFixReason, note:i.cantFixNote}); i.cantFixAt = null; i.cantFixReason = null; i.cantFixNote = ''; save(); render(); } break; }
@@ -1372,7 +1409,7 @@ document.addEventListener('click', e => {
     case 'sendcant': {
       const i = byId(view.id);
       if (i && view.reason){ i.cantFixAt = Date.now(); i.cantFixReason = view.reason; i.cantFixNote = view.reason === 'other' ? (view.note || '').trim() : ''; save(); }
-      view = {name:'home'}; render(); toastL(["Can't fix recorded",'No se puede arreglar','ပြင်၍ မရ']); break; }
+      view = {name:'home'}; render(); toastL(["Can't fix recorded",'No se puede arreglar','ပြင်၍ မရ']); if (myRole === 'both') handoffBack(); break; }
     case 'asknot': askModal(T.notfixq, T.notyet, T.yesnotfix, 'danger', 'notfix', id, 'Packers'); break;
     case 'notfix': { const i = byId(id); if (i && i.opResolvedAt && !i.resolvedAt){ (i.attempts = i.attempts || []).push({opAt:i.opResolvedAt, at:Date.now()}); i.opResolvedAt = null; save(); } closeModal(); view = {name:'home'}; render(); toastL(['Back to operator','Vuelve al operador','အော်ပရေတာထံ ပြန်ပို့ပြီး']); break; }
     case 'askres': askModal(T.boxesgood, T.notyet, T.yesgood, 'yes', 'res', id, 'Packers'); break;
@@ -1666,6 +1703,7 @@ KB = (() => {
   add(G6, 'rolechange', 'Change role (Settings)', '[data-act=rolechange]');
   add(G6, 'role-packer', 'Role: PACKERS', '[data-act=role][data-r=packer]');
   add(G6, 'role-operator', 'Role: OPERATOR', '[data-act=role][data-r=operator]');
+  add(G6, 'role-both', 'Role: ONE TABLET', '[data-act=role][data-r=both]');
   add(G7, 'fu-all', 'Log filter: All', '[data-act=fu][data-v=all]');
   add(G7, 'fu-red', 'Log filter: Red', '[data-act=fu][data-v=red]');
   add(G7, 'fu-yellow', 'Log filter: Yellow', '[data-act=fu][data-v=yellow]');
@@ -1764,6 +1802,79 @@ KB = (() => {
     label, act, hints, leave: () => { cap = null; }
   };
 })();
+
+/* ---------- alert light ----------
+   The light does exactly what the top-bar lamps do: red flashing = a new red issue, yellow = a new yellow issue,
+   blue = the operator is on it, blue flashing = it is back with the packers, red/blue alternating = escalated.
+   A real light plugs in through Light.setDriver({ set(state) }). Until then the circle in Settings shows what it will do. */
+Light = (() => {
+  const KEY = 'gluer.light';
+  let st = { on: false };
+  try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) st = { on: !!s.on }; } catch (e) {}
+  let driver = null, last = '', testing = null, tt = null;
+  const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+  const want = () => {
+    if (testing) return testing;
+    if (!st.on) return { c: 'off', m: 'steady' };
+    const o = overall(), open = issues.filter(isOpen);
+    const needPack = open.some(i => i.opResolvedAt || (i.cantFixAt && !isEsc(i)));
+    return o === 'cop' ? { c: 'cop', m: 'alt' } : o === 'red' ? { c: 'red', m: 'flash' } : o === 'yellow' ? { c: 'yellow', m: 'steady' }
+      : o === 'blue' ? { c: 'blue', m: needPack ? 'flash' : 'steady' } : { c: 'off', m: 'steady' };
+  };
+  function apply() {
+    const w = want(), key = w.c + ' ' + w.m;
+    document.querySelectorAll('.lightprev').forEach(e => { e.dataset.l = key; });
+    if (key !== last) { last = key; if (driver) { try { driver.set(w); } catch (e) {} } }
+  }
+  return {
+    state: () => ({ on: st.on, now: want(), connected: !!driver }),
+    toggle: () => { st.on = !st.on; persist(); last = ''; apply(); if (view.name === 'settings') render(); },
+    test: c => {
+      clearTimeout(tt);
+      testing = c === 'off' ? null : { c, m: c === 'red' ? 'flash' : c === 'cop' ? 'alt' : 'steady' };
+      last = ''; apply(); if (view.name === 'settings') render();
+      tt = setTimeout(() => { testing = null; last = ''; apply(); if (view.name === 'settings') render(); }, 6000);
+    },
+    setDriver: d => { driver = d; last = ''; apply(); },
+    apply
+  };
+})();
+
+const LIGHT_NAMES = {
+  'off steady': ['OFF','APAGADA','ပိတ်ထားသည်'],
+  'red flash': ['RED, flashing – new red issue','ROJO parpadeando – problema rojo nuevo','အနီ မှိတ်တုတ် – အနီပြဿနာအသစ်'],
+  'yellow steady': ['YELLOW – new yellow issue','AMARILLO – problema amarillo nuevo','အဝါ – အဝါပြဿနာအသစ်'],
+  'blue steady': ['BLUE – operator is on it','AZUL – el operador está en ello','အပြာ – အော်ပရေတာ လုပ်ဆောင်နေသည်'],
+  'blue flash': ['BLUE, flashing – back with the packers','AZUL parpadeando – de vuelta con los empacadores','အပြာ မှိတ်တုတ် – ထုပ်ပိုးသူများထံ ပြန်ရောက်'],
+  'cop alt': ['RED / BLUE alternating – escalated','ROJO / AZUL alternando – escalado','အနီ / အပြာ ပြောင်းလှည့် – တင်ပြပြီး']
+};
+function lightCard(){
+  const s = Light.state(), key = s.now.c + ' ' + s.now.m;
+  const tip = ['When ON, the light copies the lamps in the top bar: red flashing for a new red issue, yellow for a new yellow issue, blue when the operator is on it, blue flashing when it is back with the packers, and red/blue alternating when escalated. If the light stops working, switch to two tablets (one for packers, one for the operator).',
+    'Si está ACTIVADA, la luz copia las luces de la barra superior: rojo parpadeante para un problema rojo nuevo, amarillo para uno amarillo nuevo, azul cuando el operador está en ello, azul parpadeante cuando vuelve a los empacadores, y rojo/azul alternando cuando se escala. Si la luz falla, use dos tablets (empacadores y operador).',
+    'ဖွင့်ထားလျှင် မီးသည် အပေါ်ဘားရှိ မီးများအတိုင်း လုပ်ဆောင်သည် - အနီပြဿနာအသစ်အတွက် အနီမှိတ်တုတ်၊ အဝါပြဿနာအသစ်အတွက် အဝါ၊ အော်ပရေတာ လုပ်ဆောင်နေစဉ် အပြာ၊ ထုပ်ပိုးသူများထံ ပြန်ရောက်လျှင် အပြာမှိတ်တုတ်၊ တင်ပြပြီးလျှင် အနီ/အပြာ ပြောင်းလှည့်။ မီးမကောင်းလျှင် တက်ဘလက်နှစ်လုံး (ထုပ်ပိုးသူနှင့် အော်ပရေတာ) သုံးပါ။'];
+  const note = s.connected ? ['Light connected','Luz conectada','မီး ချိတ်ဆက်ပြီး'] : ['No light connected yet – the circle shows what it will do','Aún no hay luz conectada – el círculo muestra lo que hará','မီး မချိတ်ဆက်ရသေးပါ – စက်ဝိုင်းက မီးလုပ်မည့်အတိုင်း ပြသည်'];
+  const nm = LIGHT_NAMES[key] || LIGHT_NAMES['off steady'];
+  const LB = { red:['Test red','Probar rojo','အနီ စမ်းမည်'], yellow:['Test yellow','Probar amarillo','အဝါ စမ်းမည်'], blue:['Test blue','Probar azul','အပြာ စမ်းမည်'], cop:['Test escalated','Probar escalado','တင်ပြပြီး စမ်းမည်'], off:['Stop test','Detener prueba','စမ်းသပ်မှု ရပ်မည်'] };
+  const onoff = s.on ? ['ON','ACTIVADA','ဖွင့်'] : ['OFF','APAGADA','ပိတ်'];
+  return `<div class="card lightcard">
+    <div class="khead">${lg(['Alert light','Luz de alerta','သတိပေးမီး'],'inline')}</div>
+    <div class="ktip"><p>${pk(tip)}</p>${lang==='en'?'':`<p class="ken">${tip[0]}</p>`}</div>
+    <div class="lightrow"><span class="lightprev" data-l="${key}"></span><div class="lighttxt"><b>${pk(nm)}</b>${lang==='en'?'':`<i class="ken">${nm[0]}</i>`}<small>${pk(note)}</small></div></div>
+    <div class="kbar">
+      <button class="pill ${s.on?'teal':''}" data-act="lighttoggle">${bx('Alert light: ' + onoff[0], pk(['Alert light','Luz de alerta','သတိပေးမီး']) + ': ' + pk(onoff))}</button>
+      ${Object.keys(LB).map(c => `<button class="pill ${c==='off'?'ghost':''}" data-act="lighttest" data-c="${c}">${bx(LB[c][0], pk(LB[c]))}</button>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* one shared tablet: after the operator answers, a big blue message tells them to hand the tablet back */
+function handoffBack(){
+  modal(`<div class="handwrap">${ico('arrow','cc')}${lg(['GIVE THE TABLET BACK TO THE PACKERS','DEVUELVA LA TABLET A LOS EMPACADORES','တက်ဘလက်ကို ထုပ်ပိုးသူများထံ ပြန်ပေးပါ'],'xl c')}</div>
+    <div class="mrow one"><div class="cell"><button class="bb mbtn f-blue" data-act="closemodal"><span class="bi">${lg(['PACKERS HAVE IT','LOS EMPACADORES LA TIENEN','ထုပ်ပိုးသူများ ရပြီ'],'c')}</span></button></div></div>`);
+  const sh = document.querySelector('#overlay .sheet'); if (sh) sh.classList.add('hand');
+  modalRebuild = handoffBack;
+}
 
 /* keep the tablet screen awake */
 let wl = null;
