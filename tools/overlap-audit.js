@@ -3,7 +3,7 @@ window.__audit = (tag) => {
   const vis = e => { const r = e.getBoundingClientRect(), cs = getComputedStyle(e); return r.width > 1 && r.height > 1 && cs.visibility !== 'hidden' && cs.display !== 'none' && cs.opacity !== '0'; };
   const skip = e => e.closest('.toast, script, style, #overlay > .modal:not(:last-child), .kh');
   const modalOpen = !!document.querySelector('.modal');
-  const all = [...document.querySelectorAll((modalOpen ? '' : '#app *, ') + '#overlay *, #langui *, #verui *')].filter(e => vis(e) && !skip(e));
+  const all = [...document.querySelectorAll((modalOpen ? '' : '#app *, ') + '#overlay *, #langui *, #verui *, #homeui *')].filter(e => vis(e) && !skip(e));
   const own = e => [...e.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim());
   const leaves = all.filter(e => own(e).length);
   const clipTo = (e, r) => { let p = e.parentElement; let L = r.left, T = r.top, R = r.right, B = r.bottom; while (p && p !== document.body && p !== document.documentElement) { const cs = getComputedStyle(p); if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') { const b = p.getBoundingClientRect(); if (cs.overflowX !== 'visible' && (p.matches('.hist,.oplist,.openwrap,.lblist,.dgrid,.tlb,#app'))) { L = Math.max(L, b.left); R = Math.min(R, b.right); } if (cs.overflowY !== 'visible' && p.matches('.hist,.oplist,.openwrap,.lblist,.dgrid,.tlb,#app')) { T = Math.max(T, b.top); B = Math.min(B, b.bottom); } } p = p.parentElement; } return R - L > 1 && B - T > 1 ? { left: L, top: T, right: R, bottom: B, width: R - L, height: B - T } : null; };
@@ -40,7 +40,7 @@ window.__audit = (tag) => {
     }
   }
   // 4. fixed buttons (language / version) must not sit on top of other content
-  for (const id of ['langui', 'verui']) {
+  for (const id of ['langui', 'verui', 'homeui']) {
     const f = document.getElementById(id); if (!f) continue;
     f.querySelectorAll('.langfab, span.vertag, button.vertag').forEach(fb => {
       const fr = fb.getBoundingClientRect(); if (fr.width < 2) return;

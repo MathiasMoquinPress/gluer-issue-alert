@@ -699,6 +699,11 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .lamp,.sdot,.stp .dot,.opok .okc,.rd{aspect-ratio:1/1;box-sizing:border-box}
 .lamp,.sdot{display:block}
 .pill.retry{white-space:normal;max-width:100%;text-align:center;line-height:1.3;padding-top:calc(var(--vu)*.8);padding-bottom:calc(var(--vu)*.8)}
+#homeui{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--vu)*1.5);z-index:90}
+.homebtn{display:inline-flex;align-items:center;gap:calc(var(--vu)*1);min-height:calc(var(--vu)*5);padding:0 calc(var(--vu)*2.2);border-radius:99px;background:rgba(8,34,40,.92);border:1px solid rgba(255,255,255,.42);box-shadow:var(--shadow);color:#fff;font-weight:800;font-size:calc(var(--vu)*2.1);white-space:nowrap}
+.homebtn .ico{width:calc(var(--vu)*2.8);height:calc(var(--vu)*2.8);flex:none}
+.homebtn:active{filter:brightness(1.2)}
+@media (max-width:470px){.homebtn .tx{display:none}.homebtn{padding:0 calc(var(--vu)*2.4)}}
 #verui{position:fixed;left:calc(var(--vu)*2.6);bottom:calc(var(--vu)*1.5);z-index:90}
 .vertag{display:inline-flex;align-items:center;min-height:calc(var(--vu)*5);padding:0 calc(var(--vu)*2.2);border-radius:99px;background:rgba(8,34,40,.82);border:1px solid rgba(255,255,255,.34);color:#d6f5f2;font-weight:800;font-size:calc(var(--vu)*1.9);white-space:nowrap}
 .vertag.new{background:#ffbb33;color:#2a1d00;border-color:#fff3c6;box-shadow:var(--shadow);animation:pulse 1.4s infinite}
@@ -713,13 +718,14 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 <div id="overlay"></div>
 <div id="langui"></div>
 <div id="verui"></div>
+<div id="homeui"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <linearGradient id="ig" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#f2fffd"/><stop offset="1" stop-color="#8fe6e0"/></linearGradient>
   <linearGradient id="ia" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="44" y2="44"><stop offset="0" stop-color="#fff1b8"/><stop offset="1" stop-color="#ffc15a"/></linearGradient>
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.15.0';
+const APP_VERSION = '5.15.1';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -822,6 +828,7 @@ const IC = {
   trash:'<path d="M9 14h30M18 14V8h12v6M13 14l2 28h18l2-28"/>',
   pack:'<path d="M8 19h32v21H8z"/><path d="M8 19l4-11h24l4 11"/><path d="M24 8v11" stroke="url(#ia)"/><path d="M18 28h12" stroke="url(#ia)"/>',
   globe:'<circle cx="24" cy="24" r="17"/><path d="M7 24h34M24 7c-7 8-7 26 0 34M24 7c7 8 7 26 0 34"/>',
+  home:'<path d="M7 23L24 8l17 15"/><path d="M12 20v20h24V20"/><path d="M20 40V28h8v12" stroke="url(#ia)"/>',
   swap:'<path d="M8 17h28M28 9l8 8-8 8"/><path d="M40 31H12M20 23l-8 8 8 8" stroke="url(#ia)"/>',
   gear:'<path d="M20.7 9.9L21.3 4.7L26.7 4.7L27.3 9.9L31.7 11.7L35.7 8.4L39.6 12.3L36.3 16.3L38.1 20.7L43.3 21.3L43.3 26.7L38.1 27.3L36.3 31.7L39.6 35.7L35.7 39.6L31.7 36.3L27.3 38.1L26.7 43.3L21.3 43.3L20.7 38.1L16.3 36.3L12.3 39.6L8.4 35.7L11.7 31.7L9.9 27.3L4.7 26.7L4.7 21.3L9.9 20.7L11.7 16.3L8.4 12.3L12.3 8.4L16.3 11.7Z"/><circle cx="24" cy="24" r="6"/>'
 };
@@ -1293,6 +1300,7 @@ function render(){
   $('#app').classList.toggle('opred', (myRole === 'operator' || myRole === 'both') && v === 'home' && freshRed);
   $('#app').classList.toggle('pkblue', (myRole === 'packer' || (myRole === 'both' && !freshRed)) && v === 'home' && issues.some(i => isOpen(i) && turnOf(i) === 'pk'));
   if (typeof Light !== 'undefined' && Light) Light.apply();
+  renderHomeBtn();
   if (typeof KB !== 'undefined' && KB) KB.hints();
 }
 
@@ -1305,6 +1313,12 @@ const askModal0 = (q, noLbl, yesLbl, yesCls, yesAct, id, sub) => modal(`${lg(q,'
   <div class="cell"><button class="bb mbtn ${yesCls==='yes'?'f-green':'f-red'}" data-act="${yesAct}" data-id="${id}"><span class="bi">${lg(yesLbl,'c')}</span></button></div></div>`);
 
 const askModal = (...a) => { askModal0(...a); modalRebuild = () => askModal(...a); };
+
+/* ---------- home button: back to the choice of one tablet / packers / operator ---------- */
+function renderHomeBtn(){
+  const el = $('#homeui'); if (!el) return;
+  el.innerHTML = view.name === 'role' ? '' : `<button class="homebtn" data-act="rolechange" aria-label="Home">${ico('home','cc')}<span class="tx">${pk(['Home','Inicio','ပင်မ'])}</span></button>`;
+}
 
 /* ---------- language button (always on top, on every screen and pop-up) ---------- */
 let langOpen = false;
