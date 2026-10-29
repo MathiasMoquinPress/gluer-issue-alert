@@ -26,7 +26,26 @@ connections; it is not a count of working tower controllers.
    all of them before pairing. Old browsers do not send their current room or
    light settings, so mixed-version pairing is not a reliable repair.
 
-## Connect the computer
+## Normal operation: the phone is optional
+
+Use the company tablet/computer as the regular operator interface. Its browser
+and the tower each connect to the online service independently. Pairing from a
+phone copies the existing configuration; it does not make the phone a server or
+a permanent primary device. After pairing, the phone can close the app or leave.
+The company browser must have the app open and its light settings enabled for
+the newer `/light` firmware to receive automatic issue-state updates.
+
+The tower needs its own working company Wi-Fi connection with Internet access.
+If its saved Wi-Fi is a personal phone hotspot, leaving with that phone removes
+the tower's network connection. Configure company Wi-Fi through the installed
+controller's setup process when someone is at the hardware.
+
+The `192.168.4.1` setup page requires a local connection to the controller's
+setup network. The public Gluer app uses the Internet service; being on a
+different Wi-Fi network is not, by itself, a reason for alert control to fail.
+The exact installed firmware still needs verification as described below.
+
+## Copy the working configuration to the company computer
 
 1. Keep the phone that already controls the tower on its existing configuration.
    Note its Link ID and the status in **Settings → Alert light**. Do not create a
@@ -37,9 +56,10 @@ connections; it is not a count of working tower controllers.
    the phone, and enter the phone's four-digit code.
 4. Both should show the same Link ID. If the phone had Alert light enabled, the
    computer should have the same light code and relay mapping.
-5. When an operational test is appropriate, verify an issue from each device and
-   its resolution reach the tower. A green board LED or browser connection count
-   alone does not establish this.
+5. When an operational test is appropriate, close the phone app and disconnect
+   the phone from Wi-Fi. Verify that an issue and its resolution from the company
+   computer still reach the tower. The phone must not be required. A green board
+   LED or browser connection count alone does not establish this.
 
 ## If the tower was already disconnected
 

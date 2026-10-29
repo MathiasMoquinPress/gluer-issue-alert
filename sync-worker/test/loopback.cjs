@@ -39,6 +39,8 @@ function waitFor(ws, predicate) {
     assert.deepEqual(paired.light, light);
     assert.equal((await waitFor(phone, m => m.t === 'paired')).room, room);
     phone.sendJson({ t: 'ok' }); pc.sendJson({ t: 'ok' });
+    // The phone is a temporary pairing source, not a primary controller or gateway.
+    await new Promise(resolve => { phone.once('close', resolve); phone.close(); });
 
     // A controller listening in the original issue room still receives a PC update.
     const oldController = await open('/ws?room=' + room);
@@ -60,7 +62,7 @@ function waitFor(ws, predicate) {
     const output = await waitFor(tower, m => m.t === 'light');
     assert.deepEqual(output.a, [1]);
     assert.equal(output.m, 'flash');
-    console.log('PASS: real local Worker preserves the room, syncs PC issues, and reaches the simulated tower.');
+    console.log('PASS: after the phone disconnects, the real local Worker preserves the room, syncs PC issues, and reaches the simulated tower.');
   } finally {
     for (const ws of sockets) ws.terminate();
   }
