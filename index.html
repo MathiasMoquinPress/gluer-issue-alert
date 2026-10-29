@@ -567,6 +567,15 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 .lightcard{flex:none;display:flex;flex-direction:column;gap:calc(var(--vu)*1.2);padding:calc(var(--vu)*1.8) calc(var(--vu)*2.2)}
 .lightrow{display:flex;align-items:center;gap:calc(var(--vu)*2)}
 .lightprev{flex:none;display:block;width:calc(var(--vu)*8);height:calc(var(--vu)*8);aspect-ratio:1/1;border-radius:50%;background:#2a3b3d;border:2px solid rgba(255,255,255,.3);transition:background .2s}
+.lightcode{display:flex;flex-direction:column;gap:calc(var(--vu)*.8)}
+.lcrow{display:flex;gap:calc(var(--vu)*1.4);align-items:center}
+.lcrow .rin{flex:1;min-height:calc(var(--vu)*6.4);font-size:calc(var(--vu)*3);letter-spacing:.14em}
+.lmrow{display:flex;flex-wrap:wrap;gap:calc(var(--vu)*1.4)}
+.lmsel{display:flex;align-items:center;gap:calc(var(--vu)*1);font-weight:800;font-size:calc(var(--vu)*2.2)}
+.lightlink[data-s=ok]{color:#6df0a8}
+.lightlink[data-s=warn]{color:#ffd166}
+.lightlink[data-s=wait]{color:var(--ink2)}
+.lightprev[data-l^=green]{background:var(--green);box-shadow:0 0 calc(var(--vu)*2.4) calc(var(--vu)*.6) rgba(47,210,124,.65)}
 .lightprev[data-l^=red]{background:var(--red);box-shadow:0 0 calc(var(--vu)*2.4) calc(var(--vu)*.6) rgba(255,90,95,.7)}
 .lightprev[data-l^=yellow]{background:var(--amber);box-shadow:0 0 calc(var(--vu)*2.4) calc(var(--vu)*.6) rgba(255,187,51,.65)}
 .lightprev[data-l^=blue]{background:var(--blue);box-shadow:0 0 calc(var(--vu)*2.4) calc(var(--vu)*.6) rgba(74,141,255,.7)}
@@ -725,7 +734,7 @@ textarea::placeholder{color:rgba(255,255,255,.55)}
 </defs></svg>
 
 <script>
-const APP_VERSION = '5.15.1';
+const APP_VERSION = '5.16.0';
 const STORE_KEY = 'gluerIssueAlert.v1';
 
 /* ---------- text: [English, Spanish, Burmese] ---------- */
@@ -1389,6 +1398,8 @@ document.addEventListener('click', e => {
     case 'langmenu': langOpen = !langOpen; renderLang(); break;
     case 'lighttoggle': Light.toggle(); break;
     case 'lighttest': Light.test(b.dataset.c); break;
+    case 'lightnew': Light.newCode(); break;
+    case 'lightrelay': Light.relay(b.dataset.ch); break;
     case 'lang': setLang(b.dataset.l); break;
     case 'rolechange': view = {name:'role'}; render(); break;
     case 'role': myRole = b.dataset.r === 'operator' ? 'operator' : b.dataset.r === 'both' ? 'both' : 'packer'; try { localStorage.setItem('gluer.role', myRole); } catch(e){} view = {name:'home'}; render(); toastL(ROLE_NAME[myRole]); break;
@@ -1818,44 +1829,89 @@ KB = (() => {
 })();
 
 /* ---------- alert light ----------
-   The light does exactly what the top-bar lamps do: red flashing = a new red issue, yellow = a new yellow issue,
-   blue = the operator is on it, blue flashing = it is back with the packers, red/blue alternating = escalated.
-   A real light plugs in through Light.setDriver({ set(state) }). Until then the circle in Settings shows what it will do. */
+   The LED tower is switched by a Waveshare ESP32 relay board that connects out to the light service on the hub.
+   The tablet works out what the light should do - exactly what the top-bar lamps do - and sends it to the service,
+   which hands it to the board. Red flashing = new red issue, yellow = new yellow issue, blue = operator on it,
+   blue flashing = back with the packers, red/blue alternating = escalated, green = all clear.
+   Both tablets of a pair compute the same thing from the synced issues, so it does not matter which one is switched on. */
 Light = (() => {
   const KEY = 'gluer.light';
-  let st = { on: false };
-  try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) st = { on: !!s.on }; } catch (e) {}
-  let driver = null, last = '', testing = null, tt = null;
+  const DEF_MAP = { red: 1, yellow: 2, blue: 3, green: 4 };
+  let st = { on: false, code: '', map: Object.assign({}, DEF_MAP) };
+  try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) st = { on: !!s.on, code: String(s.code || ''), map: Object.assign({}, DEF_MAP, s.map || {}) }; } catch (e) {}
+  let ws = null, tries = 0, retry = null, hbT = null, linkOk = false, devN = 0, testing = null, tt = null, last = '';
   const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+  const mkCode = () => Array.from(crypto.getRandomValues(new Uint8Array(9)), b => 'abcdefghjkmnpqrstuvwxyz23456789'[b % 31]).join('');
+  const chOf = k => st.map[k] ? [Number(st.map[k])] : [];
   const want = () => {
     if (testing) return testing;
-    if (!st.on) return { c: 'off', m: 'steady' };
+    if (!st.on) return { c: 'off', m: 'steady', a: [], b: [] };
     const o = overall(), open = issues.filter(isOpen);
     const needPack = open.some(i => i.opResolvedAt || (i.cantFixAt && !isEsc(i)));
-    return o === 'cop' ? { c: 'cop', m: 'alt' } : o === 'red' ? { c: 'red', m: 'flash' } : o === 'yellow' ? { c: 'yellow', m: 'steady' }
-      : o === 'blue' ? { c: 'blue', m: needPack ? 'flash' : 'steady' } : { c: 'off', m: 'steady' };
+    return o === 'cop' ? { c: 'cop', m: 'alt', a: chOf('red'), b: chOf('blue') }
+      : o === 'red' ? { c: 'red', m: 'flash', a: chOf('red'), b: [] }
+      : o === 'yellow' ? { c: 'yellow', m: 'steady', a: chOf('yellow'), b: [] }
+      : o === 'blue' ? { c: 'blue', m: needPack ? 'flash' : 'steady', a: chOf('blue'), b: [] }
+      : { c: 'green', m: 'steady', a: chOf('green'), b: [] };
   };
+  const send = o => { if (ws && ws.readyState === 1) { try { ws.send(JSON.stringify(o)); return true; } catch (e) {} } return false; };
+  const push = w => send({ t: 'set', a: w.a, b: w.b, m: w.m });
+  const statEl = () => { document.querySelectorAll('.lightlink').forEach(e => { e.textContent = linkText(); e.dataset.s = !st.on ? 'off' : !linkOk ? 'wait' : devN > 0 ? 'ok' : 'warn'; }); };
+  const linkText = () => !st.on ? pk(['The light is OFF in this app.', 'La luz está APAGADA en esta app.', 'ဤအက်ပ်တွင် မီး ပိတ်ထားသည်။'])
+    : !linkOk ? pk(['Connecting to the light service…', 'Conectando con el servicio de la luz…', 'မီးဝန်ဆောင်မှုသို့ ချိတ်ဆက်နေသည်…'])
+    : devN > 0 ? pk(['Light controller connected ✓', 'Controlador de luz conectado ✓', 'မီးထိန်းကိရိယာ ချိတ်ဆက်ပြီး ✓'])
+    : pk(['The light controller is NOT connected. Check its power, its Wi-Fi, and that its light code matches the code above.', 'El controlador de la luz NO está conectado. Revise su energía, su Wi-Fi y que su código coincida con el de arriba.', 'မီးထိန်းကိရိယာ မချိတ်ဆက်ရသေးပါ။ ၎င်း၏ ဓာတ်အား၊ Wi-Fi နှင့် မီးကုဒ်သည် အထက်ပါကုဒ်နှင့် တူမတူ စစ်ပါ။']);
+  function close() {
+    clearTimeout(retry); retry = null; clearInterval(hbT);
+    if (ws) { ws.onopen = ws.onmessage = ws.onclose = ws.onerror = null; try { ws.close(); } catch (e) {} ws = null; }
+    linkOk = false; devN = 0;
+  }
+  function connect() {
+    clearTimeout(retry); retry = null;
+    if (ws || !st.on || !st.code) return;
+    const base = (localStorage.getItem('gluer.syncurl') || DEFAULT_SYNC_URL).replace(/\/ws$/, '/light');
+    let w; try { w = new WebSocket(base + '?code=' + encodeURIComponent(st.code.toLowerCase())); } catch (e) { retry = setTimeout(connect, 5000); return; }
+    ws = w;
+    w.onopen = () => {
+      tries = 0; linkOk = true; statEl(); last = ''; apply();
+      clearInterval(hbT); hbT = setInterval(() => send({ t: 'hb' }), 20000); send({ t: 'hb' });
+    };
+    w.onmessage = ev => { let m; try { m = JSON.parse(ev.data); } catch (e) { return; } if (m.t === 'dev') { devN = m.n || 0; statEl(); } };
+    w.onclose = () => { if (ws !== w) return; ws = null; linkOk = false; devN = 0; clearInterval(hbT); statEl(); if (st.on) retry = setTimeout(connect, Math.min(1000 * Math.pow(2, tries++), 15000)); };
+    w.onerror = () => {};
+  }
   function apply() {
     const w = want(), key = w.c + ' ' + w.m;
     document.querySelectorAll('.lightprev').forEach(e => { e.dataset.l = key; });
-    if (key !== last) { last = key; if (driver) { try { driver.set(w); } catch (e) {} } }
+    if (st.on && st.code && !ws && !retry) connect();
+    if (key !== last) { if (push(w) || !st.on) last = key; }
   }
+  const rerender = () => { if (view.name === 'settings') { const sc = document.querySelector('.hist'); const top = sc ? sc.scrollTop : 0; render(); const s2 = document.querySelector('.hist'); if (s2) s2.scrollTop = top; } };
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && st.on) { if (!ws) { tries = 0; connect(); } else send({ t: 'hb' }); } });
+  document.addEventListener('change', e => {
+    const t = e.target;
+    if (t.id === 'lightcode') { const v = t.value.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 24); if (v.length >= 8) { st.code = v; persist(); close(); last = ''; apply(); } t.value = st.code.toUpperCase(); rerender(); }
+    else if (t.dataset && t.dataset.lm) { st.map[t.dataset.lm] = Number(t.value) || 0; persist(); last = ''; apply(); }
+  });
   return {
-    state: () => ({ on: st.on, now: want(), connected: !!driver }),
-    toggle: () => { st.on = !st.on; persist(); last = ''; apply(); if (view.name === 'settings') render(); },
+    state: () => ({ on: st.on, now: want(), connected: linkOk && devN > 0, code: st.code, map: st.map, linkOk, devN }),
+    linkText,
+    toggle: () => { st.on = !st.on; if (st.on && !st.code) st.code = mkCode(); persist(); if (st.on) { last = ''; tries = 0; apply(); } else { push({ a: [], b: [], m: 'steady' }); setTimeout(close, 400); last = ''; } rerender(); },
+    newCode: () => { st.code = mkCode(); persist(); close(); last = ''; apply(); rerender(); },
     test: c => {
       clearTimeout(tt);
-      testing = c === 'off' ? null : { c, m: c === 'red' ? 'flash' : c === 'cop' ? 'alt' : 'steady' };
-      last = ''; apply(); if (view.name === 'settings') render();
-      tt = setTimeout(() => { testing = null; last = ''; apply(); if (view.name === 'settings') render(); }, 6000);
+      testing = c === 'off' ? null : { c, m: c === 'red' ? 'flash' : c === 'cop' ? 'alt' : 'steady', a: chOf(c === 'cop' ? 'red' : c), b: c === 'cop' ? chOf('blue') : [] };
+      last = ''; apply(); rerender();
+      tt = setTimeout(() => { testing = null; last = ''; apply(); rerender(); }, 6000);
     },
-    setDriver: d => { driver = d; last = ''; apply(); },
+    relay: ch => { if (!st.code) { st.code = mkCode(); persist(); } if (!ws) connect(); send({ t: 'relay', ch: Number(ch), on: true, ms: 3000 }); },
     apply
   };
 })();
 
 const LIGHT_NAMES = {
   'off steady': ['OFF','APAGADA','ပိတ်ထားသည်'],
+  'green steady': ['GREEN – all clear','VERDE – todo bien','အစိမ်း – အားလုံးကောင်း'],
   'red flash': ['RED, flashing – new red issue','ROJO parpadeando – problema rojo nuevo','အနီ မှိတ်တုတ် – အနီပြဿနာအသစ်'],
   'yellow steady': ['YELLOW – new yellow issue','AMARILLO – problema amarillo nuevo','အဝါ – အဝါပြဿနာအသစ်'],
   'blue steady': ['BLUE – operator is on it','AZUL – el operador está en ello','အပြာ – အော်ပရေတာ လုပ်ဆောင်နေသည်'],
@@ -1864,23 +1920,29 @@ const LIGHT_NAMES = {
 };
 function lightCard(){
   const s = Light.state(), key = s.now.c + ' ' + s.now.m;
-  const tip = ['When ON, the light copies the lamps in the top bar: red flashing for a new red issue, yellow for a new yellow issue, blue when the operator is on it, blue flashing when it is back with the packers, and red/blue alternating when escalated. If the light stops working, switch to two tablets (one for packers, one for the operator).',
-    'Si está ACTIVADA, la luz copia las luces de la barra superior: rojo parpadeante para un problema rojo nuevo, amarillo para uno amarillo nuevo, azul cuando el operador está en ello, azul parpadeante cuando vuelve a los empacadores, y rojo/azul alternando cuando se escala. Si la luz falla, use dos tablets (empacadores y operador).',
-    'ဖွင့်ထားလျှင် မီးသည် အပေါ်ဘားရှိ မီးများအတိုင်း လုပ်ဆောင်သည် - အနီပြဿနာအသစ်အတွက် အနီမှိတ်တုတ်၊ အဝါပြဿနာအသစ်အတွက် အဝါ၊ အော်ပရေတာ လုပ်ဆောင်နေစဉ် အပြာ၊ ထုပ်ပိုးသူများထံ ပြန်ရောက်လျှင် အပြာမှိတ်တုတ်၊ တင်ပြပြီးလျှင် အနီ/အပြာ ပြောင်းလှည့်။ မီးမကောင်းလျှင် တက်ဘလက်နှစ်လုံး (ထုပ်ပိုးသူနှင့် အော်ပရေတာ) သုံးပါ။'];
-  const note = s.connected ? ['Light connected','Luz conectada','မီး ချိတ်ဆက်ပြီး'] : ['No light connected yet – the circle shows what it will do','Aún no hay luz conectada – el círculo muestra lo que hará','မီး မချိတ်ဆက်ရသေးပါ – စက်ဝိုင်းက မီးလုပ်မည့်အတိုင်း ပြသည်'];
+  const tip = ['When ON, the light copies the lamps in the top bar: red flashing for a new red issue, yellow for a new yellow issue, blue when the operator is on it, blue flashing when it is back with the packers, red/blue alternating when escalated, and green when all is clear. If the light stops working, switch to two tablets (one for packers, one for the operator).',
+    'Si está ACTIVADA, la luz copia las luces de la barra superior: rojo parpadeante para un problema rojo nuevo, amarillo para uno amarillo nuevo, azul cuando el operador está en ello, azul parpadeante cuando vuelve a los empacadores, rojo/azul alternando cuando se escala, y verde cuando todo está bien. Si la luz falla, use dos tablets (empacadores y operador).',
+    'ဖွင့်ထားလျှင် မီးသည် အပေါ်ဘားရှိ မီးများအတိုင်း လုပ်ဆောင်သည် - အနီပြဿနာအသစ်အတွက် အနီမှိတ်တုတ်၊ အဝါပြဿနာအသစ်အတွက် အဝါ၊ အော်ပရေတာ လုပ်ဆောင်နေစဉ် အပြာ၊ ထုပ်ပိုးသူများထံ ပြန်ရောက်လျှင် အပြာမှိတ်တုတ်၊ တင်ပြပြီးလျှင် အနီ/အပြာ ပြောင်းလှည့်၊ အားလုံးကောင်းလျှင် အစိမ်း။ မီးမကောင်းလျှင် တက်ဘလက်နှစ်လုံး (ထုပ်ပိုးသူနှင့် အော်ပရေတာ) သုံးပါ။'];
   const nm = LIGHT_NAMES[key] || LIGHT_NAMES['off steady'];
-  const LB = { red:['Test red','Probar rojo','အနီ စမ်းမည်'], yellow:['Test yellow','Probar amarillo','အဝါ စမ်းမည်'], blue:['Test blue','Probar azul','အပြာ စမ်းမည်'], cop:['Test escalated','Probar escalado','တင်ပြပြီး စမ်းမည်'], off:['Stop test','Detener prueba','စမ်းသပ်မှု ရပ်မည်'] };
+  const LB = { red:['Test red','Probar rojo','အနီ စမ်းမည်'], yellow:['Test yellow','Probar amarillo','အဝါ စမ်းမည်'], blue:['Test blue','Probar azul','အပြာ စမ်းမည်'], green:['Test green','Probar verde','အစိမ်း စမ်းမည်'], cop:['Test escalated','Probar escalado','တင်ပြပြီး စမ်းမည်'], off:['Stop test','Detener prueba','စမ်းသပ်မှု ရပ်မည်'] };
   const onoff = s.on ? ['ON','ACTIVADA','ဖွင့်'] : ['OFF','APAGADA','ပိတ်'];
+  const COL = { red:['Red','Rojo','အနီ'], yellow:['Yellow','Amarillo','အဝါ'], blue:['Blue','Azul','အပြာ'], green:['Green','Verde','အစိမ်း'] };
+  const sel = k => `<label class="lmsel"><span>${pk(COL[k])}</span><select class="fsel" data-lm="${k}"><option value="0">—</option>${[1,2,3,4,5,6].map(n => `<option value="${n}" ${Number(s.map[k]) === n ? 'selected' : ''}>CH${n}</option>`).join('')}</select></label>`;
+  const idHelp = ['Identify the relays: tap a channel, it switches on for 3 seconds. Look at which colour lights up, then set the colours above.', 'Identificar los relés: toque un canal, se enciende 3 segundos. Mire qué color se enciende y luego ajuste los colores de arriba.', 'ရီလေးများ သိရန် - ချန်နယ်တစ်ခုကို နှိပ်ပါ၊ ၃ စက္ကန့် ဖွင့်မည်။ မည်သည့်အရောင် လင်းသည်ကို ကြည့်ပြီး အထက်ရှိ အရောင်များကို သတ်မှတ်ပါ။'];
+  const codeHelp = ['Light code – type this same code into the relay board once:', 'Código de la luz – escriba este mismo código en la placa de relés una sola vez:', 'မီးကုဒ် – ဤကုဒ်ကို ရီလေးဘုတ်တွင် တစ်ကြိမ်ထည့်ပါ -'];
   return `<div class="card lightcard">
     <div class="khead">${lg(['Alert light','Luz de alerta','သတိပေးမီး'],'inline')}</div>
     <div class="ktip"><p>${pk(tip)}</p>${lang==='en'?'':`<p class="ken">${tip[0]}</p>`}</div>
-    <div class="lightrow"><span class="lightprev" data-l="${key}"></span><div class="lighttxt"><b>${pk(nm)}</b>${lang==='en'?'':`<i class="ken">${nm[0]}</i>`}<small>${pk(note)}</small></div></div>
-    <div class="kbar">
-      <button class="pill ${s.on?'teal':''}" data-act="lighttoggle">${bx('Alert light: ' + onoff[0], pk(['Alert light','Luz de alerta','သတိပေးမီး']) + ': ' + pk(onoff))}</button>
-      ${Object.keys(LB).map(c => `<button class="pill ${c==='off'?'ghost':''}" data-act="lighttest" data-c="${c}">${bx(LB[c][0], pk(LB[c]))}</button>`).join('')}
-    </div>
+    <div class="lightrow"><span class="lightprev" data-l="${key}"></span><div class="lighttxt"><b>${pk(nm)}</b>${lang==='en'?'':`<i class="ken">${nm[0]}</i>`}<small class="lightlink" data-s="${!s.on?'off':!s.linkOk?'wait':s.devN>0?'ok':'warn'}">${Light.linkText()}</small></div></div>
+    <div class="kbar"><button class="pill ${s.on?'teal':''}" data-act="lighttoggle">${bx('Alert light: ' + onoff[0], pk(['Alert light','Luz de alerta','သတိပေးမီး']) + ': ' + pk(onoff))}</button></div>
+    ${s.on ? `<div class="lightcode"><div class="rlab">${pk(codeHelp)}</div><div class="lcrow"><input id="lightcode" class="rin" value="${esc2(s.code.toUpperCase())}" maxlength="24" autocomplete="off" spellcheck="false" autocapitalize="characters"><button class="pill" data-act="lightnew">${bx('New code', pk(['New code','Código nuevo','ကုဒ်အသစ်']))}</button></div></div>
+    <div class="lmrow">${['red','yellow','blue','green'].map(sel).join('')}</div>
+    <div class="ktip"><p>${pk(idHelp)}</p>${lang==='en'?'':`<p class="ken">${idHelp[0]}</p>`}</div>
+    <div class="kbar">${[1,2,3,4,5,6].map(n => `<button class="pill" data-act="lightrelay" data-ch="${n}">CH${n}</button>`).join('')}</div>` : ''}
+    <div class="kbar">${Object.keys(LB).map(c => `<button class="pill ${c==='off'?'ghost':''}" data-act="lighttest" data-c="${c}">${bx(LB[c][0], pk(LB[c]))}</button>`).join('')}</div>
   </div>`;
 }
+const esc2 = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 /* one shared tablet: after the operator answers, a big blue message tells them to hand the tablet back */
 function handoffBack(){

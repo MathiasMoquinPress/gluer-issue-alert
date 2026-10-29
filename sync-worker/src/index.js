@@ -9,10 +9,16 @@ const ALLOWED_ORIGINS = ['https://anthonymancino222.github.io', 'http://localhos
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
-    if (url.pathname !== '/ws' && url.pathname !== '/lobby') return new Response('Gluer Issue Alert sync is running.', { status: 200 });
+    if (url.pathname !== '/ws' && url.pathname !== '/lobby' && url.pathname !== '/light') return new Response('Gluer Issue Alert sync is running.', { status: 200 });
     const origin = req.headers.get('Origin') || '';
-    if (!ALLOWED_ORIGINS.some(o => origin === o || origin.startsWith(o + ':'))) return new Response('forbidden', { status: 403 });
+    const isDevice = url.pathname === '/light' && url.searchParams.get('d') === '1';   // the relay board has no browser Origin; its light code is the secret
+    if (!isDevice && !ALLOWED_ORIGINS.some(o => origin === o || origin.startsWith(o + ':'))) return new Response('forbidden', { status: 403 });
     if (req.headers.get('Upgrade') !== 'websocket') return new Response('expected websocket', { status: 426 });
+    if (url.pathname === '/light') {
+      const code = (url.searchParams.get('code') || '').toLowerCase();
+      if (!/^[a-z0-9]{8,24}$/.test(code)) return new Response('bad light code', { status: 400 });
+      return env.LIGHT.get(env.LIGHT.idFromName('light-' + code)).fetch(req);
+    }
     if (url.pathname === '/lobby') return env.LOBBY.get(env.LOBBY.idFromName('lobby')).fetch(req);
     const room = (url.searchParams.get('room') || '').toLowerCase();
     if (!/^[a-z0-9_-]{3,40}$/.test(room)) return new Response('bad room code', { status: 400 });
@@ -190,4 +196,50 @@ export class Lobby extends DurableObject {
   }
   async webSocketClose(ws, code) { try { ws.close(code, 'bye'); } catch (e) {} this.broadcast(); }
   async webSocketError() { this.broadcast(); }
+}
+
+/* ---------- the light service ----------
+   The LED tower is switched by an ESP32 relay board that connects out to this service (it never has to be reachable
+   from outside). Tablets tell it what the light should do; it keeps the latest state and hands it to the board the
+   moment the board connects. The "light code" in the URL is the shared secret. Nothing about issues is stored here. */
+const DEVICE_FRESH = 45000;
+export class LightHub extends DurableObject {
+  constructor(ctx, env) {
+    super(ctx, env);
+    ctx.setWebSocketAutoResponse(new WebSocketRequestResponsePair('ping', 'pong'));
+  }
+  async fetch(req) {
+    const dev = new URL(req.url).searchParams.get('d') === '1';
+    const [client, server] = Object.values(new WebSocketPair());
+    this.ctx.acceptWebSocket(server, [dev ? 'dev' : 'app']);
+    server.serializeAttachment({ seen: Date.now() });
+    const st = await this.ctx.storage.get('st');
+    if (dev && st) { try { server.send(JSON.stringify({ t: 'light', ...st })); } catch (e) {} }
+    queueMicrotask(() => this.presence());
+    return new Response(null, { status: 101, webSocket: client });
+  }
+  devCount(except) {
+    const t = Date.now();
+    return this.ctx.getWebSockets('dev').filter(w => w !== except && (w.deserializeAttachment() || {}).seen > t - DEVICE_FRESH).length;
+  }
+  send(ws, o) { try { ws.send(JSON.stringify(o)); } catch (e) {} }
+  presence(except) { const n = this.devCount(except); for (const w of this.ctx.getWebSockets('app')) if (w !== except) this.send(w, { t: 'dev', n }); }
+  async webSocketMessage(ws, msg) {
+    if (typeof msg !== 'string' || msg.length > 2000) return;
+    let m; try { m = JSON.parse(msg); } catch (e) { return; }
+    const a = ws.deserializeAttachment() || {}; a.seen = Date.now(); ws.serializeAttachment(a);
+    const chans = x => Array.isArray(x) ? x.map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= 8).slice(0, 8) : [];
+    if (m.t === 'hb') { this.send(ws, { t: 'dev', n: this.devCount() }); if (this.ctx.getWebSockets('dev').includes(ws)) this.presence(); }
+    else if (m.t === 'set') {
+      const st = { a: chans(m.a), b: chans(m.b), m: ['steady', 'flash', 'alt'].includes(m.m) ? m.m : 'steady', ts: Date.now() };
+      await this.ctx.storage.put('st', st);
+      for (const w of this.ctx.getWebSockets('dev')) this.send(w, { t: 'light', ...st });
+      this.send(ws, { t: 'dev', n: this.devCount() });
+    } else if (m.t === 'relay') {
+      const ch = Number(m.ch); if (!(ch >= 1 && ch <= 8)) return;
+      for (const w of this.ctx.getWebSockets('dev')) this.send(w, { t: 'relay', ch, on: m.on !== false, ms: Math.min(Number(m.ms) || 3000, 10000) });
+    }
+  }
+  async webSocketClose(ws, code) { try { ws.close(code, 'bye'); } catch (e) {} this.presence(ws); }
+  async webSocketError(ws) { this.presence(ws); }
 }
